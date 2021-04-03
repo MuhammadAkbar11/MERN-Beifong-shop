@@ -124,8 +124,8 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      title: 'React, Webpack and Babel Boilerplate',
-      template: path.resolve(__dirname, '..', 'src', 'index.html'),
+      title: 'Beifong Shop',
+      template: path.resolve(__dirname, '..', 'public', 'index.html'),
       filename: 'index.html',
       inject: 'body',
     }),
