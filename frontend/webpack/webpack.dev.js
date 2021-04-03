@@ -7,7 +7,7 @@ module.exports = {
   mode: 'development',
   devtool: 'eval-cheap-source-map',
   output: {
-    path: path.resolve(__dirname, '../', 'public'),
+    path: path.resolve(__dirname, '../', 'build-dev'),
     filename: 'js/[name].bundle-[contenthash].js',
     chunkFilename: 'js/chunk-[name]-[contenthash].js',
     publicPath: '/',

@@ -21,7 +21,7 @@ const webpackHotMiddleware = require('webpack-hot-middleware')(compiler);
 app.use(webpackDevMiddleware);
 app.use(webpackHotMiddleware);
 
-const staticFile = path.join(__dirname, '../', '../', 'public');
+const staticFile = path.join(__dirname, '../', '../', 'build-dev');
 
 app.use(express.static(staticFile));
 
