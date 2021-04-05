@@ -1,6 +1,6 @@
-$primary: #345e17;
+$primary: #386419;
 $primary-light: #5c9c2f;
-$primary-dark: #223b1f;
+$primary-dark: #1d3b19;
 
 $theme-colors: (
   'primary': $primary,
@@ -12,8 +12,8 @@ $theme-colors: (
   'dark': #1a1a1a,
 );
 
-$navbar-light-color: rgba($primary, 0.5);
-$navbar-light-hover-color: rgba($primary, 0.75);
-$navbar-light-active-color: $primary;
-$navbar-light-disabled-color: rgba($primary, 0.25);
-$navbar-light-toggler-border-color: rgba($primary, 0.1);
+$navbar-light-color: rgba($primary-dark, 0.5);
+$navbar-light-hover-color: rgba($primary-dark, 0.75);
+$navbar-light-active-color: $primary-dark;
+$navbar-light-disabled-color: rgba($primary-dark, 0.25);
+$navbar-light-toggler-border-color: rgba($primary-dark, 0.1);
