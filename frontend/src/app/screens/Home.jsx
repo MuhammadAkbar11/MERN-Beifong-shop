@@ -15,7 +15,7 @@ const Home = () => {
           /* eslint-disable */
           const id = product._id;
           return (
-            <Col className='mb-3' key={id} sm={12} md={6} lg={4} xl={3}>
+            <Col className='mb-3' key={id} xs={6} sm={6} md={6} lg={4} xl={3}>
               <Product product={product} />
             </Col>
           );

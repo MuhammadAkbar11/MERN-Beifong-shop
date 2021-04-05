@@ -4,6 +4,7 @@ import { Container } from 'react-bootstrap';
 import Home from '@app/screens/Home';
 import Footer from './components/Footer';
 import Header from './components/Header';
+import ProductScreen from './screens/ProductScreen';
 
 const App = () => {
   /* eslint-disable */
@@ -15,6 +16,12 @@ const App = () => {
         <Container>
           <Switch>
             <Route path='/' exact component={Home} />
+            <Route
+              path='/product/:id'
+              render={props => {
+                return <ProductScreen {...props} />;
+              }}
+            />
           </Switch>
         </Container>
       </main>
