@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const webpack = require('webpack');
+const httpProxy = require('http-proxy-middleware');
 
 const app = express();
 
@@ -9,6 +10,7 @@ const webpackConfig = require('../../webpack/webpack.config.js');
 
 const configs = { env: process.env.NODE_ENV };
 const devConfig = webpackConfig(configs);
+const devServerConfig = devConfig.devServer;
 const compiler = webpack(devConfig);
 
 const webpackDevMiddleware = require('webpack-dev-middleware')(compiler, {
@@ -17,9 +19,28 @@ const webpackDevMiddleware = require('webpack-dev-middleware')(compiler, {
   index: 'index.html',
 });
 const webpackHotMiddleware = require('webpack-hot-middleware')(compiler);
+const proxyMiddleware = httpProxy.createProxyMiddleware({
+  target: 'http://localhost:8080',
+  pathRewrite: { '^/api': '' },
+  changeOrigin: true,
+  onError(err, req, res) {
+    res.writeHead(500, {
+      'Content-Type': 'text/plain',
+    });
+    res.end(
+      'Something went wrong. And we are reporting a custom error message.' + err
+    );
+  },
+  headers: {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Credentials': '*',
+    'Access-Control-Allow-Methods': '*',
+  },
+});
 
 app.use(webpackDevMiddleware);
 app.use(webpackHotMiddleware);
+app.use(proxyMiddleware);
 
 const staticFile = path.join(__dirname, '../', '../', 'build-dev');
 
