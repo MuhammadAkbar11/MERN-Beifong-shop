@@ -1,8 +1,19 @@
+$primary: #345e17;
+$primary-light: #5c9c2f;
+$primary-dark: #223b1f;
+
 $theme-colors: (
-  'primary': #345e17,
-  'primary-dark': #223b1f,
+  'primary': $primary,
+  'primary-light': $primary-light,
+  'primary-dark': $primary-dark,
   'yellow': #efce36,
   'yellow-dark': #bd9c0a,
   'brown': #955b3c,
   'dark': #1a1a1a,
 );
+
+$navbar-light-color: rgba($primary, 0.5);
+$navbar-light-hover-color: rgba($primary, 0.75);
+$navbar-light-active-color: $primary;
+$navbar-light-disabled-color: rgba($primary, 0.25);
+$navbar-light-toggler-border-color: rgba($primary, 0.1);
