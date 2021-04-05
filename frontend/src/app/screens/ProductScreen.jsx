@@ -53,25 +53,27 @@ const ProductScreen = ({ match }) => {
             <Card>
               <ListGroup variant='flush'>
                 <ListGroup.Item className=''>
-                  <Row>
-                    <Col>Price :</Col>
-                    <Col>
+                  <div className='d-flex justify-content-between'>
+                    <div>
+                      <span className='text-nowrap'>Price :</span>
+                    </div>
+                    <div>
                       <strong className=' font-weight-bold '>
                         ${formatRupiah(product.price)}
                       </strong>
-                    </Col>
-                  </Row>
+                    </div>
+                  </div>
                 </ListGroup.Item>
 
                 <ListGroup.Item className=''>
-                  <Row>
-                    <Col>Status :</Col>
-                    <Col>
+                  <div className='d-flex justify-content-between'>
+                    <div>Status :</div>
+                    <div>
                       <strong>
                         {product.countInStock > 0 ? 'In Stock' : 'out of Stock'}
                       </strong>
-                    </Col>
-                  </Row>
+                    </div>
+                  </div>
                 </ListGroup.Item>
                 <ListGroup.Item className=''>
                   <Button
