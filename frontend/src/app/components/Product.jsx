@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import Rating from './Rating';
 import formatRupiah from '../utils/formatRupiah';
 
 const defaultProps = {
@@ -21,15 +22,20 @@ const Product = props => {
         <Card.Img src={product.image} variant='top' />
       </a>
       <Card.Body className='px-0 text-nowrap '>
-        <a href={`/product/${product._id}`}>
+        <a
+          className='text-dark '
+          href={`/product/${product._id}`}
+          title={product.name}
+        >
           <Card.Title as='div' className=' text-ellipsis'>
             <strong> {product.name}</strong>
           </Card.Title>
         </a>
         <Card.Text>
-          <div className='my-3'>
-            {product.rating} from {product.numReviews}
-          </div>
+          <Rating
+            value={product.rating}
+            text={`${product.numReviews} reviews`}
+          />
         </Card.Text>
         <Card.Text as='h5'>{price}</Card.Text>
       </Card.Body>
