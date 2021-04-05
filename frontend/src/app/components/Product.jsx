@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Card } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import Rating from './Rating';
@@ -18,19 +19,19 @@ const Product = props => {
   return (
     <Card className='my-3 p-3 rounded h-100 overflow-hidden  '>
       {/* eslint-disable */}
-      <a href={`/product/${product._id}`}>
+      <Link to={`/product/${product._id}`}>
         <Card.Img src={product.image} variant='top' />
-      </a>
+      </Link>
       <Card.Body className='px-0 text-nowrap '>
-        <a
+        <Link
           className='text-dark '
-          href={`/product/${product._id}`}
+          to={`/product/${product._id}`}
           title={product.name}
         >
           <Card.Title as='div' className=' text-ellipsis'>
             <strong> {product.name}</strong>
           </Card.Title>
-        </a>
+        </Link>
         <Card.Text>
           <Rating
             value={product.rating}
