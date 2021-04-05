@@ -10,14 +10,16 @@ if (process.env.NODE_ENV === 'dev') {
   HOT = true;
 }
 
+const indexFile = HOT
+  ? [
+      path.resolve(__dirname, '../', 'src/index.js'),
+      'webpack-hot-middleware/client',
+    ]
+  : path.resolve(__dirname, '../', 'src/index.js');
+
 module.exports = {
   entry: {
-    index: HOT
-      ? [
-          path.resolve(__dirname, '../', 'src/index.js'),
-          'webpack-hot-middleware/client',
-        ]
-      : path.resolve(__dirname, '../', 'src/index.js'),
+    index: indexFile,
   },
   resolve: {
     extensions: ['.css', '.js', '.jsx', '.json'],
@@ -36,7 +38,6 @@ module.exports = {
   devServer: {
     contentBase: path.join(__dirname, '..', 'dist'),
     hot: true,
-    open: true,
     overlay: true,
     compress: true,
     historyApiFallback: {

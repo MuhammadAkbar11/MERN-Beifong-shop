@@ -13,7 +13,6 @@
   "author": "Muhammad Akbar",
   "main": "index.js",
   "license": "MIT",
-  "private": true,
   "scripts": {
     "start": "export NODE_ENV=dev && nodemon src/server/server.main.js ",
     "prod": "yarn build:prod & yarn start:prod",
@@ -24,6 +23,8 @@
     "@babel/core": "^7.13.14",
     "@babel/plugin-proposal-class-properties": "^7.13.0",
     "@babel/plugin-transform-react-jsx": "^7.13.12",
+    "@babel/plugin-transform-runtime": "^7.13.10",
+    "@babel/polyfill": "^7.12.1",
     "@babel/preset-env": "^7.13.12",
     "@babel/preset-react": "^7.13.13",
     "@babel/register": "^7.13.14",
@@ -69,6 +70,8 @@
     "webpack-merge": "^5.7.3"
   },
   "dependencies": {
+    "@babel/runtime": "^7.13.10",
+    "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
     "bootswatch": "^4.6.0",
     "dotenv": "^8.2.0",
