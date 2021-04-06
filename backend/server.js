@@ -3,11 +3,18 @@ const products = require("./data/products");
 
 const app = express();
 
-const PORT = process.env.PORT || 3030;
+const PORT = process.env.PORT || 8080;
 
 app.get("/", (req, res) => {
   res.send("API is Running dude!! ");
 });
+
+app.get("/api", (req, res) => {
+  res.json({
+    message: "Connected!",
+  });
+});
+
 app.get("/api/products", (req, res) => {
   return res.json({
     status: true,

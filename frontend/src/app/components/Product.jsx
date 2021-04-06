@@ -15,12 +15,15 @@ const proptypes = {
 
 const Product = props => {
   const { product } = props;
+  /* eslint-disable  */
+  const imageSrc = require(`../../../public${product.image}`).default;
+  // const imageSrc = `../../../public${product.image}`;
   const price = formatRupiah(product.price);
   return (
     <Card className='my-3 p-3 rounded h-100 overflow-hidden  '>
       {/* eslint-disable */}
       <Link to={`/product/${product._id}`}>
-        <Card.Img src={product.image} variant='top' />
+        <Card.Img src={imageSrc} variant='top' />
       </Link>
       <Card.Body className='px-0 text-nowrap '>
         <Link

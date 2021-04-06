@@ -1,9 +1,33 @@
 import React from 'react';
 import { Col, Row } from 'react-bootstrap';
 import Product from '@components/Product';
-import products from '../../../public/products';
+import axios from 'axios';
 
 const Home = () => {
+  const [products, setProducts] = React.useState([]);
+
+  React.useEffect(() => {
+    /* eslint-disable */
+
+    const fetchProducts = async () => {
+      try {
+        const { request, data } = await axios({
+          method: 'GET',
+          url: '/api/products',
+        });
+
+        setProducts(data.products);
+      } catch (error) {
+        console.log(error.response);
+      }
+    };
+
+    fetchProducts();
+    return () => {
+      setProducts([]);
+    };
+  }, []);
+
   return (
     <>
       {' '}
