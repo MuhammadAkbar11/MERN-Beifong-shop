@@ -16,6 +16,9 @@ const compiler = webpack(devConfig);
 const webpackDevMiddleware = require('webpack-dev-middleware')(compiler, {
   publicPath: devConfig.output.publicPath,
   writeToDisk: true,
+  stats: {
+    colors: true,
+  },
   index: 'index.html',
 });
 const webpackHotMiddleware = require('webpack-hot-middleware')(compiler);
