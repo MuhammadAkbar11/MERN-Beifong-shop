@@ -43,7 +43,7 @@ const ProductScreen = ({ match }) => {
     return () => {
       setProduct(null);
     };
-  }, []);
+  }, [id]);
 
   return (
     <>

@@ -4,12 +4,19 @@
   "description": "e-commerce shop using mern stack",
   "main": "server.js",
   "scripts": {
-    "start": "node backend/server.js"
+    "server": "nodemon backend/server.js",
+    "start": "node backend/server.js",
+    "client": "yarn --cwd ./frontend/ start",
+    "dev": "concurrently \"yarn server\" \"yarn client\""
   },
   "repository": "git@github.com:MuhammadAkbar11/MERN-Beifong-shop.git",
   "author": "MuhammadAkbar11 <muhammadakbarletlet@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "concurrently": "^6.0.1",
+    "nodemon": "^2.0.7"
   }
 }
