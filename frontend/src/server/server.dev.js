@@ -19,9 +19,9 @@ const webpackDevMiddleware = require('webpack-dev-middleware')(compiler, {
   index: 'index.html',
 });
 const webpackHotMiddleware = require('webpack-hot-middleware')(compiler);
-const proxyMiddleware = httpProxy.createProxyMiddleware({
+const proxyMiddleware = httpProxy.createProxyMiddleware('/api', {
   target: 'http://localhost:8080',
-  pathRewrite: { '^/api': '' },
+  pathRewrite: { '^/api/api': '/api' },
   changeOrigin: true,
   onError(err, req, res) {
     res.writeHead(500, {
@@ -40,7 +40,7 @@ const proxyMiddleware = httpProxy.createProxyMiddleware({
 
 app.use(webpackDevMiddleware);
 app.use(webpackHotMiddleware);
-app.use(proxyMiddleware);
+app.use('/api', proxyMiddleware);
 
 const staticFile = path.join(__dirname, '../', '../', 'build-dev');
 
