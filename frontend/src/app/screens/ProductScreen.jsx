@@ -67,7 +67,7 @@ const ProductScreen = ({ match }) => {
                 />
               </ListGroup.Item>
               <ListGroup.Item>
-                <span className=' text-primary-dark '>${product.price}</span>
+                <span className=' text-primary '>${product.price}</span>
               </ListGroup.Item>
               <ListGroup.Item>
                 Description : <br /> {product.description}
@@ -102,7 +102,7 @@ const ProductScreen = ({ match }) => {
                 </ListGroup.Item>
                 <ListGroup.Item className=''>
                   <Button
-                    className='btn-block '
+                    className='btn-block bg-gradient-primary '
                     type='button'
                     disabled={product.countInStock === 0}
                   >
