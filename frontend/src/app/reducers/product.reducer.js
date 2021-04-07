@@ -1,11 +1,14 @@
 import {
+  PRODUCT_DETAILS_FAIL,
+  PRODUCT_DETAILS_REQ,
+  PRODUCT_DETAILS_SUCCESS,
   PRODUCT_LIST_FAIL,
   PRODUCT_LIST_REQ,
   PRODUCT_LIST_SUCCESS,
 } from '../constants/product.constants';
 
 const initState = {
-  loading: false,
+  loading: true,
   products: [],
 };
 
@@ -30,6 +33,34 @@ const productListReducer = (state = initState, action) => {
   }
 };
 
+const detailInitState = {
+  product: {
+    reviews: [],
+  },
+  loading: true,
+};
+
+const productDetailsReducer = (state = detailInitState, action) => {
+  switch (action.type) {
+    case PRODUCT_DETAILS_REQ:
+      return {
+        loading: true,
+        ...state,
+      };
+
+    case PRODUCT_DETAILS_SUCCESS:
+      return {
+        loading: false,
+        product: action.payload,
+      };
+
+    case PRODUCT_DETAILS_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
 /* eslint-disable */
 
-export { productListReducer };
+export { productListReducer, productDetailsReducer };
