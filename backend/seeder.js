@@ -28,6 +28,7 @@ const importData = async () => {
       return {
         ...product,
         user: adminUser,
+        image: `/uploads${product.image}`,
         price: {
           num: product.price,
           rupiah: convertRupiah(product.price),
