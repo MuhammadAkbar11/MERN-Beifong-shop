@@ -1,6 +1,6 @@
-import Mongoose from "mongoose";
+import mongoose from "mongoose";
 
-const userSchema = Mongoose.Schema(
+const userSchema = mongoose.Schema(
   {
     name: {
       type: String,
@@ -9,7 +9,7 @@ const userSchema = Mongoose.Schema(
     email: {
       type: String,
       required: true,
-      unique,
+      unique: true,
     },
     password: {
       type: String,
@@ -26,6 +26,6 @@ const userSchema = Mongoose.Schema(
   }
 );
 
-const UserModel = Mongoose.model("UserModel", userSchema, "users");
+const UserModel = mongoose.model("UserModel", userSchema, "users");
 
 export default UserModel;

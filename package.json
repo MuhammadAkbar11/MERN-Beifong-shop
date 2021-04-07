@@ -8,7 +8,9 @@
     "server": "nodemon backend/server.js",
     "start": "node backend/server.js",
     "client": "yarn --cwd ./frontend/ start",
-    "dev": "concurrently \"yarn server\" \"yarn client\""
+    "dev": "concurrently \"yarn server\" \"yarn client\"",
+    "data:import": "node backend/seeder.js",
+    "data:destroy": "node backend/seeder.js -d"
   },
   "repository": "git@github.com:MuhammadAkbar11/MERN-Beifong-shop.git",
   "author": "MuhammadAkbar11 <muhammadakbarletlet@gmail.com>",

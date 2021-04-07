@@ -103,6 +103,6 @@ const orderModel = mongoose.Schema(
   }
 );
 
-const OrderModel = Mongoose.model("OrderModel", orderModel, "orders");
+const OrderModel = mongoose.model("OrderModel", orderModel, "orders");
 
 export default OrderModel;
