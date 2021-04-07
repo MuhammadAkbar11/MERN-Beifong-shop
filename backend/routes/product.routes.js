@@ -25,19 +25,31 @@ router.get(
 router.get(
   "/:id",
   asyncHandler(async (req, res) => {
-    const id = req.params.id;
-    const product = await ProductModel.findById(id);
+    try {
+      const id = req.params.id;
+      const product = await ProductModel.findById(id);
+      if (product) {
+        res.json({
+          status: true,
+          product,
+        });
+      } else {
+        res.status(404);
+        const error = new Error("Product not found");
+        error.statusCode = 404;
+        throw error;
+      }
+    } catch (err) {
+      console.log(err);
+      const errorObj = new Error();
+      errorObj.statusCode = 500;
+      errorObj.message = "Something went wrong";
 
-    if (product) {
-      return res.json({
-        status: true,
-        product,
-      });
-    } else {
-      res.status(404).json({
-        status: false,
-        message: "Product not found",
-      });
+      if (err.kind === "ObjectId" || err.statusCode) {
+        errorObj.statusCode = 404;
+        errorObj.message = "Product not found";
+      }
+      throw errorObj;
     }
   })
 );

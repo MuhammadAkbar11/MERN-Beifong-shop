@@ -3,6 +3,7 @@ import colors from "colors";
 import express from "express";
 import connectDB from "./configs/db.js";
 import productRoutes from "./routes/product.routes.js";
+import { errorHandler, notFound } from "./middleware/error.middleware.js";
 
 dotenv.config();
 
@@ -18,6 +19,10 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/products", productRoutes);
+
+app.use(notFound);
+
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(
