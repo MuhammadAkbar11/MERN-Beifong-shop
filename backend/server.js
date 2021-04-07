@@ -17,7 +17,7 @@ app.get("/", (req, res) => {
   res.send("API is Running dude!! ");
 });
 
-app.use("/api", productRoutes);
+app.use("/api/products", productRoutes);
 
 app.listen(PORT, () => {
   console.log(

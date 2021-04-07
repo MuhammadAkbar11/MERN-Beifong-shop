@@ -9,7 +9,7 @@ const router = express.Router();
 // @route GET /api/products
 // @access Public
 router.get(
-  "/products",
+  "/",
   asyncHandler(async (req, res) => {
     const products = await ProductModel.find({});
     return res.json({
@@ -23,7 +23,7 @@ router.get(
 // @route GET /api/product/:id
 // @access Public
 router.get(
-  "/product/:id",
+  "/:id",
   asyncHandler(async (req, res) => {
     const id = req.params.id;
     const product = await ProductModel.findById(id);
