@@ -11,7 +11,6 @@ import {
   Container,
 } from 'react-bootstrap';
 import Rating from '@components/Rating';
-import formatRupiah from '../utils/formatRupiah';
 import axios from 'axios';
 
 const ProductScreen = ({ match }) => {
@@ -24,14 +23,11 @@ const ProductScreen = ({ match }) => {
       try {
         const response = await axios({
           method: 'GET',
-          url: `/api/product/${id}`,
+          url: `/api/products/${id}`,
         });
         mount = true;
         const { data } = response;
         if (mount) {
-          data.product.price = formatRupiah(data.product.price);
-          data.product.image = require(`../../../public${data.product.image}`).default;
-
           setProduct(data.product);
         }
       } catch (error) {
@@ -53,7 +49,7 @@ const ProductScreen = ({ match }) => {
         </Link>
         <Row className='pt-3 '>
           <Col md={12} lg={6} className='pb-5'>
-            <Image fluid src={product.image} alt={product.name} />
+            <Image fluid src={`/files${product.image}`} alt={product.name} />
           </Col>
           <Col md={8} lg={3}>
             <ListGroup variant='flush'>
@@ -67,7 +63,7 @@ const ProductScreen = ({ match }) => {
                 />
               </ListGroup.Item>
               <ListGroup.Item>
-                <span className=' text-primary '>${product.price}</span>
+                <span className=' text-primary '>{product.price?.rupiah}</span>
               </ListGroup.Item>
               <ListGroup.Item>
                 Description : <br /> {product.description}
@@ -84,7 +80,7 @@ const ProductScreen = ({ match }) => {
                     </div>
                     <div>
                       <strong className=' font-weight-bold '>
-                        ${product.price}
+                        {product.price?.rupiah}
                       </strong>
                     </div>
                   </div>

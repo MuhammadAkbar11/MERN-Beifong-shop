@@ -22,6 +22,13 @@ const webpackDevMiddleware = require('webpack-dev-middleware')(compiler, {
   index: 'index.html',
 });
 const webpackHotMiddleware = require('webpack-hot-middleware')(compiler);
+
+const proxyHeader = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': '*',
+  'Access-Control-Allow-Methods': '*',
+};
+
 const proxyMiddleware = httpProxy.createProxyMiddleware('/api', {
   target: 'http://localhost:8080',
   pathRewrite: { '^/api/api': '/api' },
@@ -34,16 +41,28 @@ const proxyMiddleware = httpProxy.createProxyMiddleware('/api', {
       'Something went wrong. And we are reporting a custom error message.' + err
     );
   },
-  headers: {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Credentials': '*',
-    'Access-Control-Allow-Methods': '*',
+  headers: proxyHeader,
+});
+
+const assetsMiddleware = httpProxy.createProxyMiddleware('/files', {
+  target: 'http://localhost:8080',
+  pathRewrite: { '^/files': '/files' },
+  changeOrigin: true,
+  onError(err, req, res) {
+    res.writeHead(500, {
+      'Content-Type': 'text/plain',
+    });
+    res.end(
+      'Something went wrong. And we are reporting a custom error message.' + err
+    );
   },
+  headers: proxyHeader,
 });
 
 app.use(webpackDevMiddleware);
 app.use(webpackHotMiddleware);
 app.use('/api', proxyMiddleware);
+app.use('/files', assetsMiddleware);
 
 const staticFile = path.join(__dirname, '../', '../', 'build-dev');
 
