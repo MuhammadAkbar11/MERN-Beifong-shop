@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import colors from "colors";
 import express from "express";
 import connectDB from "./configs/db.js";
-import products from "./data/products.js";
+import productRoutes from "./routes/product.routes.js";
 
 dotenv.config();
 
@@ -17,25 +17,7 @@ app.get("/", (req, res) => {
   res.send("API is Running dude!! ");
 });
 
-app.get("/api", (req, res) => {
-  res.json({
-    message: "Connected!",
-  });
-});
-
-app.get("/api/products", (req, res) => {
-  return res.json({
-    status: true,
-    products,
-  });
-});
-app.get("/api/product/:id", (req, res) => {
-  const product = products.find(p => p._id === req.params.id);
-  return res.json({
-    status: true,
-    product,
-  });
-});
+app.use("/api", productRoutes);
 
 app.listen(PORT, () => {
   console.log(
