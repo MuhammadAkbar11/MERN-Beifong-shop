@@ -1,32 +1,20 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Col, Row } from 'react-bootstrap';
 import Product from '@components/Product';
-import axios from 'axios';
+import { listProducts } from '../actions/product.actions';
 
 const Home = () => {
-  const [products, setProducts] = React.useState([]);
+  const dispatch = useDispatch();
+
+  const productList = useSelector(state => state.productList);
+  const { products, error, loading } = productList;
 
   React.useEffect(() => {
     /* eslint-disable */
-
-    const fetchProducts = async () => {
-      try {
-        const { request, data } = await axios({
-          method: 'GET',
-          url: '/api/products',
-        });
-
-        setProducts(data.products);
-      } catch (error) {
-        console.log(error.response);
-      }
-    };
-
-    fetchProducts();
-    return () => {
-      setProducts([]);
-    };
-  }, []);
+    dispatch(listProducts());
+    return () => {};
+  }, [dispatch]);
 
   return (
     <>
@@ -34,17 +22,27 @@ const Home = () => {
       <br />
       <br />
       <h1>Latets Products</h1>
-      <Row className=' align-items-stretch '>
-        {products.map(product => {
-          /* eslint-disable */
-          const id = product._id;
-          return (
-            <Col className='mb-3' key={id} xs={6} sm={6} md={6} lg={4} xl={3}>
-              <Product product={product} />
-            </Col>
-          );
-        })}
-      </Row>
+      {loading ? (
+        <div className='mt-4'>
+          <h4 className='text-dark'>Loading...</h4>
+        </div>
+      ) : error ? (
+        <div className='mt-4'>
+          <h5 className='text-danger text-capitalize'>{error}</h5>
+        </div>
+      ) : (
+        <Row className=' align-items-stretch '>
+          {products.map(product => {
+            /* eslint-disable */
+            const id = product._id;
+            return (
+              <Col className='mb-3' key={id} xs={6} sm={6} md={6} lg={4} xl={3}>
+                <Product product={product} />
+              </Col>
+            );
+          })}
+        </Row>
+      )}
     </>
   );
 };
