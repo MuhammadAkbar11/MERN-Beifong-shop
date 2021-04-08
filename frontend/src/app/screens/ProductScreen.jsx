@@ -1,5 +1,5 @@
-import React from 'react';
 /* eslint-disable */
+import React from 'react';
 import { Link } from 'react-router-dom';
 import {
   Row,
@@ -9,13 +9,16 @@ import {
   Card,
   Button,
   Container,
+  Form,
 } from 'react-bootstrap';
 import Rating from '@components/Rating';
 import { useDispatch, useSelector } from 'react-redux';
 import { listProductDetails } from '../actions/product.actions';
 import Loader from '../components/Loader';
 
-const ProductScreen = ({ match }) => {
+const ProductScreen = ({ history, match }) => {
+  const [qty, setQty] = React.useState(1);
+
   const dispatch = useDispatch();
   const { product, loading } = useSelector(state => state.productDetails);
 
@@ -23,6 +26,10 @@ const ProductScreen = ({ match }) => {
     dispatch(listProductDetails(match.params.id));
     return () => {};
   }, [dispatch, match]);
+
+  const addToCartHandler = () => {
+    history.push(`/cart/${match.params.id}?qty=${qty}`);
+  };
 
   return (
     <>
@@ -94,8 +101,36 @@ const ProductScreen = ({ match }) => {
                         </div>
                       </div>
                     </ListGroup.Item>
+
+                    {product.countInStock > 0 && (
+                      <ListGroup.Item>
+                        <div className='d-flex justify-content-between'>
+                          <div>Quantity :</div>
+                          <div>
+                            <Form.Control
+                              size='sm'
+                              as='select'
+                              value={qty}
+                              onChange={e => setQty(e.target.value)}
+                            >
+                              {[...Array(product.countInStock).keys()].map(
+                                x => {
+                                  const key = x + 1;
+                                  return (
+                                    <option key={key} value={key}>
+                                      {key}
+                                    </option>
+                                  );
+                                }
+                              )}
+                            </Form.Control>
+                          </div>
+                        </div>
+                      </ListGroup.Item>
+                    )}
                     <ListGroup.Item className=''>
                       <Button
+                        onClick={addToCartHandler}
                         className='btn-block bg-gradient-primary '
                         type='button'
                         disabled={product.countInStock === 0}

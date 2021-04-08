@@ -5,6 +5,7 @@ import Home from '@app/screens/Home';
 import Footer from './components/Footer';
 import Header from './components/Header';
 import ProductScreen from './screens/ProductScreen';
+import CartScreen from './screens/CartScreen';
 
 const App = () => {
   /* eslint-disable */
@@ -20,6 +21,12 @@ const App = () => {
               path='/product/:id'
               render={props => {
                 return <ProductScreen {...props} />;
+              }}
+            />
+            <Route
+              path='/cart/:productId?'
+              render={props => {
+                return <CartScreen {...props} />;
               }}
             />
           </Switch>

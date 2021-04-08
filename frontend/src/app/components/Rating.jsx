@@ -13,8 +13,6 @@ const proptypes = {
 const Rating = props => {
   const { value, text } = props;
   /* eslint-disable */
-
-  console.log(typeof value);
   return (
     <div className='rating text-warning    '>
       <span>
