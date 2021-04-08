@@ -1,9 +1,35 @@
 import React from 'react';
-import { Container, Col, Row, Button } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  Container,
+  Col,
+  Row,
+  ListGroup,
+  Image,
+  Form,
+  Button,
+  Card,
+} from 'react-bootstrap';
+import Message from '@components/Message';
+import { addToCart } from '../actions/cart.actions';
 
 /* eslint-disable */
 
-const CartScreen = ({ history }) => {
+const CartScreen = ({ history, match, location }) => {
+  const productId = match.params.productId;
+
+  const qty = location.search ? +location.search.split('=')[1] : 1;
+
+  const dispatch = useDispatch();
+
+  const cart = useSelector(state => state.cart);
+
+  React.useEffect(() => {
+    if (productId) {
+      dispatch(addToCart(productId, qty));
+    }
+  }, [dispatch, productId, qty]);
+
   return (
     <Container fluid className='px-0 py-3'>
       <Button onClick={() => history.goBack()} className='btn btn-light'>
