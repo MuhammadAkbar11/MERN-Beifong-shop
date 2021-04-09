@@ -7,12 +7,23 @@ const notFound = (req, res, next) => {
 const errorHandler = (err, req, res, next) => {
   const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
 
-  res.status(statusCode).json({
+  const isErrorsEmpty = obj => {
+    return Object.keys(obj).length === 0;
+  };
+
+  const resErrorData = {
     status: false,
     statusCode: statusCode,
     message: err.message,
+    errors: err.errors,
     stack: process.env.NODE_ENV === "production" ? null : err.stack,
-  });
+  };
+
+  if (isErrorsEmpty(err.errors)) {
+    delete resErrorData.errors;
+  }
+
+  res.status(statusCode).json(resErrorData);
 };
 
 export { notFound, errorHandler };
