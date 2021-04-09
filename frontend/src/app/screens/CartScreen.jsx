@@ -15,7 +15,7 @@ import {
   Table,
 } from 'react-bootstrap';
 import Message from '@components/Message';
-import { addToCart } from '../actions/cart.actions';
+import { addToCart, removeFromCart } from '../actions/cart.actions';
 import FormatRupiah from '../components/FormatRupiah';
 
 /* eslint-disable */
@@ -43,7 +43,7 @@ const CartScreen = ({ history, match, location }) => {
   };
 
   const removeFromCartHandler = id => {
-    console.log(id);
+    dispatch(removeFromCart(id));
   };
 
   const checkoutHandler = () => {
@@ -82,7 +82,7 @@ const CartScreen = ({ history, match, location }) => {
             {cartItems.length === 0 ? (
               <h6 className='text-capitalize'>
                 Your cart is empty{' '}
-                <Link to='/' className='text-slate'>
+                <Link to='/' className='text-primary-light'>
                   Go Back
                 </Link>
               </h6>
@@ -190,7 +190,7 @@ const CartScreen = ({ history, match, location }) => {
           </div>
         </Col>
         <Col md={4}>
-          <Card className='bg-slate-light border-0 py-4'>
+          <Card className='bg-slate-light border-0 pt-4 pb-3'>
             <ListGroup variant='flush' className=' bg-transparent px-4 '>
               <ListGroup.Item className=' bg-transparent px-0  '>
                 <h5>
