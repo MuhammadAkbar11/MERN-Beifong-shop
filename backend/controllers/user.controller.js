@@ -5,7 +5,6 @@ import generateToken from "../utils/generateToken.js";
 // @desc Auth user & get token
 // @route POST /api/users/login
 // @access Public
-
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
@@ -51,4 +50,34 @@ const authUser = asyncHandler(async (req, res) => {
   }
 });
 
-export { authUser };
+// @desc Get user profile
+// @route POST /api/users/profile
+// @access Private
+const getUserProfile = asyncHandler(async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.user._id).select(
+      "-__v -password"
+    );
+
+    if (user) {
+      return res.status(200).json({
+        status: true,
+        message: "User exits",
+        user: user,
+      });
+    } else {
+      const errorObj = new Error();
+      errorObj.statusCode = 404;
+      errorObj.message = "User not found";
+      throw errorObj;
+    }
+  } catch (error) {
+    const errorObj = new Error();
+    errorObj.statusCode = error.statusCode || 500;
+    errorObj.message = error.message;
+
+    throw errorObj;
+  }
+});
+
+export { authUser, getUserProfile };
