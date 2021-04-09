@@ -1,4 +1,4 @@
-import path, { dirname } from "path";
+import path from "path";
 import dotenv from "dotenv";
 import colors from "colors";
 import express from "express";
@@ -9,7 +9,14 @@ import { errorHandler, notFound } from "./middleware/error.middleware.js";
 
 const __dirname = path.resolve();
 
-dotenv.config();
+let envFile = ".env";
+if (process.argv[2] === "--dev") {
+  envFile = ".env.dev";
+}
+
+dotenv.config({
+  path: envFile,
+});
 
 connectDB();
 

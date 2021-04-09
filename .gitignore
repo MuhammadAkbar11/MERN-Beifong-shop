@@ -2,3 +2,4 @@ frontend/build/
 node_modules/
 frontend/.env
 frontend/build-dev/
+.env.*
