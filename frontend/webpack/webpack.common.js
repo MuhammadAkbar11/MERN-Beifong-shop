@@ -107,17 +107,24 @@ module.exports = {
       },
       {
         test: /\.(svg|png|jpg|jpeg|gif)(\?v=[0-9]\.[0-9]\.[0-9])?$/i,
-        use: {
-          loader: 'file-loader',
-          options: {
-            name: '[path][name].[hash].[ext]',
-            context: 'src',
-          },
+        type: 'asset/resource',
+        generator: {
+          filename: 'images/[name]-[hash][ext][query]',
         },
+        // use: {
+        //   loader: 'file-loader',
+        //   options: {
+        //     name: '[path][name].[hash].[ext]',
+        //     context: 'src',
+        //   },
+        // },
       },
       {
-        test: /\.(eot|gif|otf|ttf|woff|woff2)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        use: ['url-loader?limit=100000'],
+        test: /\.(eot|gif|otf|ttf|woff|woff2)(\?v=[0-9]\.[0-9]\.[0-9])?$/i,
+        type: 'asset/resource',
+        generator: {
+          filename: 'static/[name]-[hash][ext][query]',
+        },
       },
     ],
   },

@@ -10,6 +10,7 @@ module.exports = {
     path: path.resolve(__dirname, '../', 'build-dev'),
     filename: 'js/[name].bundle-[contenthash].js',
     chunkFilename: 'js/chunk-[name]-[contenthash].js',
+    assetModuleFilename: 'assets/[name]-[hash][ext][query]',
     publicPath: '/',
   },
   watchOptions: {
@@ -31,6 +32,11 @@ module.exports = {
         components: {
           name: 'components',
           test: /[\\/]components[\\/]/,
+          chunks: 'all',
+        },
+        screens: {
+          name: 'screens',
+          test: /[\\/]screens[\\/]/,
           chunks: 'all',
         },
         containers: {
