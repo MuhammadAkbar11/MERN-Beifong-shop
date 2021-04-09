@@ -1,6 +1,9 @@
 import asyncHandler from "express-async-handler";
+import { validationResult } from "express-validator";
 import UserModel from "../models/userModel.js";
+import errMessageValidation from "../utils/errMessagesValidation.js";
 import generateToken from "../utils/generateToken.js";
+import ResponseError from "../utils/responseError.js";
 
 // @desc Auth user & get token
 // @route POST /api/users/login
@@ -8,45 +11,53 @@ import generateToken from "../utils/generateToken.js";
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
+  const errors = validationResult(req);
+  const errorMsg = errMessageValidation(errors.array());
+
+  if (!errors.isEmpty()) {
+    res.statusCode = 400;
+    throw new ResponseError(400, "Bad validation", { validation: errorMsg });
+  }
+
   try {
     const user = await UserModel.findOne({ email });
-    const doMatchPw = await user.matchPassword(password);
 
-    if (user && doMatchPw) {
-      return res.status(200).json({
-        status: true,
-        message: "Login success",
-        request: {
-          email,
-          password,
-        },
-        user: {
-          isAdmin: user.isAdmin,
-          _id: user._id,
-          name: user.name,
-          email: user.email,
-          token: generateToken(user._id),
-          createdAt: user.createdAt,
-          updatedAt: user.updatedAt,
-        },
-      });
+    if (user) {
+      const doMatchPw = await user.matchPassword(password);
+      if (doMatchPw) {
+        return res.status(200).json({
+          status: true,
+          message: "Login success",
+          request: {
+            email,
+            password,
+          },
+          user: {
+            isAdmin: user.isAdmin,
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            token: generateToken(user._id),
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt,
+          },
+        });
+      } else {
+        res.status(400);
+        console.log("not match");
+        throw new ResponseError(400, "Wrong password");
+      }
     } else {
       res.status(401);
-
-      const errorObj = new Error();
-      errorObj.statusCode = 401;
-      errorObj.message = "Invalid email or password";
-
-      throw errorObj;
+      throw new ResponseError(400, "Opps user not found", {
+        validation: {
+          email: "oppss",
+        },
+      });
     }
   } catch (error) {
     console.log(error);
-
-    const errorObj = new Error();
-    errorObj.statusCode = 500;
-    errorObj.message = error.message;
-
-    throw errorObj;
+    throw new ResponseError(error.statusCode, error.message, error.errors);
   }
 });
 
