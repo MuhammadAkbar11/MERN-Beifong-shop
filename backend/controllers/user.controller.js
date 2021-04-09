@@ -80,4 +80,58 @@ const getUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
-export { authUser, getUserProfile };
+// @desc Register a new user
+// @route POST /api/users/register
+// @access Private
+const registerUser = asyncHandler(async (req, res) => {
+  const { name, email, password } = req.body;
+
+  try {
+    const getUser = await UserModel.findOne({ email });
+
+    if (getUser) {
+      res.status(400);
+      const errorObj = new Error();
+      errorObj.statusCode = 400;
+      errorObj.message = "user already exists";
+      throw errorObj;
+    }
+
+    const user = await UserModel.create({
+      name,
+      email,
+      password,
+    });
+
+    if (user) {
+      return res.status(201).json({
+        status: true,
+        message: "Register success",
+        user: {
+          isAdmin: user.isAdmin,
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          password: user.password,
+          token: generateToken(user._id),
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt,
+        },
+      });
+    } else {
+      res.status(400);
+      const errorObj = new Error();
+      errorObj.message = "Failed to create new user";
+      throw errorObj;
+    }
+  } catch (error) {
+    console.log(error);
+    const errorObj = new Error();
+    errorObj.statusCode = 500;
+    errorObj.message = error.message;
+
+    throw errorObj;
+  }
+});
+
+export { authUser, getUserProfile, registerUser };
