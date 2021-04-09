@@ -5,7 +5,7 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "server": "nodemon backend/server.js",
+    "server": "nodemon backend/server.js --dev",
     "start": "node backend/server.js",
     "client": "yarn --cwd ./frontend/ start",
     "dev": "concurrently \"yarn server\" \"yarn client\"",
@@ -21,6 +21,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-async-handler": "^1.1.4",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.12.3",
     "path": "^0.12.7"
   },
