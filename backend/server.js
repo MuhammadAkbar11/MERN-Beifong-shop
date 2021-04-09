@@ -4,6 +4,7 @@ import colors from "colors";
 import express from "express";
 import connectDB from "./configs/db.js";
 import productRoutes from "./routes/product.routes.js";
+import userRoutes from "./routes/user.routes.js";
 import { errorHandler, notFound } from "./middleware/error.middleware.js";
 
 const __dirname = path.resolve();
@@ -17,6 +18,8 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 const MODE = process.env.NODE_ENV;
 
+app.use(express.json());
+
 const staticFile = express.static(path.join(__dirname, "/backend/uploads"));
 console.log(path.join(__dirname, "/backend/uploads"));
 app.use("/files/uploads", staticFile);
@@ -26,7 +29,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/products", productRoutes);
-
+app.use("/api/users", userRoutes);
 app.use(notFound);
 
 app.use(errorHandler);
