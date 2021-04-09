@@ -1,19 +1,20 @@
-$primary: #63ac54;
-$primary-light: #8edd8e;
-$primary-dark: #1d3b19;
-
+$primary: #1c392b;
+$primary-light: #588b76;
+$slate: #dadada;
+$slate-light: #f7f7f9;
 $theme-colors: (
   'primary': $primary,
   'primary-light': $primary-light,
-  'primary-dark': $primary-dark,
+  'slate': $slate,
+  'slate-light': $slate-light,
   'yellow': #efce36,
   'yellow-dark': #bd9c0a,
   'brown': #955b3c,
   'dark': #1a1a1a,
 );
 
-$navbar-light-color: rgba($primary-dark, 0.5);
-$navbar-light-hover-color: rgba($primary-dark, 0.75);
-$navbar-light-active-color: $primary-dark;
-$navbar-light-disabled-color: rgba($primary-dark, 0.25);
-$navbar-light-toggler-border-color: rgba($primary-dark, 0.1);
+$navbar-light-color: rgba($primary, 0.5);
+$navbar-light-hover-color: rgba($primary, 0.75);
+$navbar-light-active-color: $primary;
+$navbar-light-disabled-color: rgba($primary, 0.25);
+$navbar-light-toggler-border-color: rgba($primary, 0.1);
