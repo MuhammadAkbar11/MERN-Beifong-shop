@@ -6,6 +6,7 @@ import Footer from './components/Footer';
 import Header from './components/Header';
 import ProductScreen from './screens/ProductScreen';
 import CartScreen from './screens/CartScreen';
+import LoginScreen from './screens/LoginScreen';
 
 const App = () => {
   /* eslint-disable */
@@ -16,7 +17,12 @@ const App = () => {
       <main className='py-3 bg-light '>
         <Container>
           <Switch>
-            <Route path='/' exact component={Home} />
+            <Route
+              path='/login'
+              render={props => {
+                return <LoginScreen {...props} />;
+              }}
+            />
             <Route
               path='/product/:id'
               render={props => {
@@ -29,6 +35,7 @@ const App = () => {
                 return <CartScreen {...props} />;
               }}
             />
+            <Route path='/' exact component={Home} />
           </Switch>
         </Container>
       </main>

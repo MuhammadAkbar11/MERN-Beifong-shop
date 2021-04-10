@@ -31,16 +31,16 @@ export const login = (email, password) => async dispatch => {
 
     localStorage.setItem('userInfo', JSON.stringify(data.user));
   } catch (error) {
-    console.log(error, 'error login');
-
     let errData = {
       message: error.message,
     };
 
     if (error.response && error.response.data.message) {
+      const errorData =
+        error.response.data.errors && error.response.data.errors;
       errData = {
         message: error.response.data.message,
-        errors: error.errors ? error.errors : null,
+        ...errorData,
       };
     }
 

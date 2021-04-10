@@ -49,11 +49,7 @@ const authUser = asyncHandler(async (req, res) => {
       }
     } else {
       res.status(401);
-      throw new ResponseError(400, "Opps user not found", {
-        validation: {
-          email: "oppss",
-        },
-      });
+      throw new ResponseError(400, "User not found");
     }
   } catch (error) {
     console.log(error);
