@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import { LinkContainer } from 'react-router-bootstrap';
 import Rating from './Rating';
 
 const defaultProps = {
@@ -18,13 +19,16 @@ const Product = props => {
   return (
     <Card className='my-3 p-3 rounded h-100 overflow-hidden bei-card  '>
       {/* eslint-disable */}
-      <Link to={`/product/${product._id}`}>
+      <LinkContainer
+        style={{ cursor: 'pointer' }}
+        to={`/product/${product._id}`}
+      >
         <Card.Img
           className='bei-card-img'
           src={`files${product.image}`}
           variant='top'
         />
-      </Link>
+      </LinkContainer>
       <Card.Body className='px-0 text-nowrap'>
         <Link
           className='text-dark '
@@ -35,7 +39,7 @@ const Product = props => {
             <strong> {product.name}</strong>
           </Card.Title>
         </Link>
-        <Card.Text>
+        <Card.Text as='div' className='lead mb-3'>
           <Rating
             value={product.rating}
             text={`${product.numReviews} reviews`}
