@@ -97,15 +97,20 @@ const getUserProfile = asyncHandler(async (req, res) => {
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
 
+  const errors = validationResult(req);
+  const errorMsg = errMessageValidation(errors.array());
+
+  if (!errors.isEmpty()) {
+    res.statusCode = 400;
+    throw new ResponseError(400, "Validation failed", { validation: errorMsg });
+  }
+
   try {
     const getUser = await UserModel.findOne({ email });
 
     if (getUser) {
       res.status(400);
-      const errorObj = new Error();
-      errorObj.statusCode = 400;
-      errorObj.message = "user already exists";
-      throw errorObj;
+      throw new ResponseError(400, "User already exists");
     }
 
     const user = await UserModel.create({
@@ -131,17 +136,11 @@ const registerUser = asyncHandler(async (req, res) => {
       });
     } else {
       res.status(400);
-      const errorObj = new Error();
-      errorObj.message = "Failed to create new user";
-      throw errorObj;
+      throw new ResponseError(400, "Failed to create new user");
     }
   } catch (error) {
     console.log(error);
-    const errorObj = new Error();
-    errorObj.statusCode = 500;
-    errorObj.message = error.message;
-
-    throw errorObj;
+    throw new ResponseError(error.statusCode, error.message, error.errors);
   }
 });
 
