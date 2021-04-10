@@ -5,7 +5,7 @@ import { Col, Container, Row } from 'react-bootstrap';
 const defaultProps = {};
 
 const proptypes = {
-  children: PropTypes.node,
+  children: PropTypes.node.isRequired,
 };
 
 const FormContainer = ({ children }) => {
