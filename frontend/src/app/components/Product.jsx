@@ -16,10 +16,14 @@ const Product = props => {
   const { product } = props;
   /* eslint-disable  */
   return (
-    <Card className='my-3 p-3 rounded h-100 overflow-hidden  '>
+    <Card className='my-3 p-3 rounded h-100 overflow-hidden bei-card  '>
       {/* eslint-disable */}
       <Link to={`/product/${product._id}`}>
-        <Card.Img src={`files${product.image}`} variant='top' />
+        <Card.Img
+          className='bei-card-img'
+          src={`files${product.image}`}
+          variant='top'
+        />
       </Link>
       <Card.Body className='px-0 text-nowrap'>
         <Link

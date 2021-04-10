@@ -1,0 +1,13 @@
+.bei-card {
+  .bei-card-img {
+    height: 150px;
+    object-fit: cover;
+  }
+
+  @include media-breakpoint-up(sm) {
+    .bei-card-img {
+      height: 178px;
+      object-fit: cover;
+    }
+  }
+}
