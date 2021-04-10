@@ -71,6 +71,18 @@ const products = [
     rating: 4,
     numReviews: 12,
   },
+  {
+    name: "Samsung Galaxy a32",
+    image: "/images/products/samsung.jpg",
+    description:
+      "Galaxy A32's multi-lens camera system takes photos to the next level. Go ultra high-res on the 64MP Main Camera for crisp, clear photos throughout the day. Expand the viewing angle with Ultra Wide Camera. Customize focus with Depth Camera, or get closer to the details with Macro Camera.",
+    brand: "samsung",
+    category: "Electronics",
+    price: 3599000,
+    countInStock: 0,
+    rating: 4,
+    numReviews: 12,
+  },
 ];
 
 export default products;

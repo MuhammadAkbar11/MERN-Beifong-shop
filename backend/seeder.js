@@ -11,7 +11,7 @@ import ProductModel from "./models/productModel.js";
 import UserModel from "./models/userModel.js";
 import convertRupiah from "./utils/convertRupiah.js";
 
-dotenv.config();
+dotenv.config({ path: ".env.dev" });
 
 connectDB();
 
