@@ -1,6 +1,9 @@
 /* eslint-disable */
 import axios from 'axios';
 import {
+  USER_DETAILS_FAIL,
+  USER_DETAILS_REQUEST,
+  USER_DETAILS_SUCCESS,
   USER_LOGIN_FAIL,
   USER_LOGIN_REQUEST,
   USER_LOGIN_SUCCESS,
@@ -115,4 +118,49 @@ export const userLogout = () => dispatch => {
   console.log('logout sir');
   localStorage.removeItem('userInfo');
   dispatch({ type: USER_LOGOUT, userInfo: null });
+};
+
+export const getUserDetailsAction = id => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: USER_DETAILS_REQUEST,
+    });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get(`/api/users/${id}`, config);
+
+    dispatch({
+      type: USER_DETAILS_SUCCESS,
+      payload: data.user,
+    });
+  } catch (error) {
+    console.log(error);
+    let errData = {
+      message: error.message,
+    };
+
+    if (error.response && error.response.data.message) {
+      const errorData =
+        error.response.data.errors && error.response.data.errors;
+      errData = {
+        message: error.response.data.message,
+        ...errorData,
+      };
+    }
+
+    dispatch({
+      type: USER_DETAILS_FAIL,
+      payload: errData,
+    });
+  }
 };

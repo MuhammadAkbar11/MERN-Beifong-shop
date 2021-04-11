@@ -5,25 +5,26 @@ import { Breadcrumb } from 'react-bootstrap';
 import { useHistory } from 'react-router';
 
 const defaultProps = {
+  parentClass: '',
   items: '',
 };
 
 const proptypes = {
+  parentClass: PropTypes.string,
   items: PropTypes.arrayOf(PropTypes.object),
 };
 
-const BreadcrumbContainer = ({ items }) => {
+const BreadcrumbContainer = ({ items, parentClass }) => {
   /* eslint-disable */
   const history = useHistory();
 
   return (
-    <Breadcrumb>
-      {items.map(item => {
+    <Breadcrumb className={`${parentClass}`}>
+      {items.map((item, index) => {
         return !item.isActive ? (
           <Breadcrumb.Item
-            key={item.name}
+            key={index}
             as='li'
-            className=''
             href={item.href}
             onClick={e => {
               e.preventDefault();
@@ -33,7 +34,7 @@ const BreadcrumbContainer = ({ items }) => {
             {item.name}
           </Breadcrumb.Item>
         ) : (
-          <Breadcrumb.Item key={item.name} active>
+          <Breadcrumb.Item key={index} active>
             {item.name}
           </Breadcrumb.Item>
         );
