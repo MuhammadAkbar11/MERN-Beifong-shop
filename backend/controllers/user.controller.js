@@ -57,36 +57,6 @@ const authUser = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc Get user profile
-// @route POST /api/users/profile
-// @access Private
-const getUserProfile = asyncHandler(async (req, res) => {
-  try {
-    const user = await UserModel.findById(req.user._id).select(
-      "-__v -password"
-    );
-
-    if (user) {
-      return res.status(200).json({
-        status: true,
-        message: "User exits",
-        user: user,
-      });
-    } else {
-      const errorObj = new Error();
-      errorObj.statusCode = 404;
-      errorObj.message = "User not found";
-      throw errorObj;
-    }
-  } catch (error) {
-    const errorObj = new Error();
-    errorObj.statusCode = error.statusCode || 500;
-    errorObj.message = error.message;
-
-    throw errorObj;
-  }
-});
-
 // @desc Register a new user
 // @route POST /api/users/register
 // @access Private
@@ -140,4 +110,70 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
-export { authUser, getUserProfile, registerUser };
+// @desc Get user profile
+// @route POST /api/users/profile
+// @access Private
+const getUserProfile = asyncHandler(async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.user._id).select(
+      "-__v -password"
+    );
+
+    if (user) {
+      return res.status(200).json({
+        status: true,
+        message: "User exits",
+        user: user,
+      });
+    } else {
+      const errorObj = new Error();
+      errorObj.statusCode = 404;
+      errorObj.message = "User not found";
+      throw errorObj;
+    }
+  } catch (error) {
+    const errorObj = new Error();
+    errorObj.statusCode = error.statusCode || 500;
+    errorObj.message = error.message;
+
+    throw errorObj;
+  }
+});
+
+// @desc Update user profile
+// @route PUT /api/users/profile
+// @access Private
+const updateUserProfile = asyncHandler(async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.user._id);
+
+    if (user) {
+      user.name = req.body.name || user.name;
+      user.email = req.body.email || user.email;
+      if (req.body.password) {
+        user.password = req.body.password;
+      }
+
+      const updatedUser = await user.save();
+
+      return res.status(200).json({
+        status: true,
+        message: "Updated profile success",
+        user: updatedUser,
+      });
+    } else {
+      const errorObj = new Error();
+      errorObj.statusCode = 404;
+      errorObj.message = "Update failed";
+      throw errorObj;
+    }
+  } catch (error) {
+    const errorObj = new Error();
+    errorObj.statusCode = error.statusCode || 500;
+    errorObj.message = error.message;
+
+    throw errorObj;
+  }
+});
+
+export { authUser, getUserProfile, registerUser, updateUserProfile };
