@@ -4,24 +4,27 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
-import { userLoginAction } from '../actions/user.actions';
+import { userRegisterAction } from '../actions/user.actions';
 import FormContainer from '../components/FormContainer';
 import BreadcrumbContainer from '../components/BreadcrumbContainer';
 
 /* eslint-disable */
-const LoginScreen = ({ location, history }) => {
+const RegisterScreen = ({ location, history }) => {
   const [breadcrumbItems] = React.useState([
     { name: 'Home', href: '/' },
-    { name: 'Login', isActive: true },
+    { name: 'Registration', isActive: true },
   ]);
+
   const [disabledSubmit, setDisabledSubmit] = React.useState(false);
+  const [name, setName] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [password2, setPassword2] = React.useState('');
 
   const dispatch = useDispatch();
 
-  const userLogin = useSelector(state => state.userLogin);
-  const { loading, error, userInfo } = userLogin;
+  const userRegister = useSelector(state => state.userRegister);
+  const { loading, error, userInfo } = userRegister;
 
   const redirect = location.search ? location.search.split('=')[1] : '/';
 
@@ -46,19 +49,38 @@ const LoginScreen = ({ location, history }) => {
   const submitHandler = e => {
     e.preventDefault();
 
-    dispatch(userLoginAction(email, password));
+    dispatch(userRegisterAction(name, email, password, password2));
   };
   return (
     <Container className='px-0 py-3'>
       <BreadcrumbContainer items={breadcrumbItems} />
       <FormContainer>
-        <h3 className='text-primary'>Sign in</h3>
+        <h3 className='text-primary'>Registration</h3>
 
         {error && !error.validation && (
           <Message variant='danger'>{error.message}</Message>
         )}
 
         <Form onSubmit={submitHandler}>
+          <Form.Group controlId='name'>
+            <Form.Label>Name</Form.Label>
+            <Form.Control
+              type='text'
+              placeholder='Enter your name'
+              value={name}
+              onChange={e => {
+                setName(e.target.value);
+                setDisabledSubmit(false);
+              }}
+              isInvalid={!!error?.validation?.name}
+            />
+
+            {error?.validation?.name ? (
+              <Form.Control.Feedback type='invalid'>
+                {error.validation.name.message[0]}
+              </Form.Control.Feedback>
+            ) : null}
+          </Form.Group>
           <Form.Group controlId='email'>
             <Form.Label>Email Address</Form.Label>
             <Form.Control
@@ -96,6 +118,24 @@ const LoginScreen = ({ location, history }) => {
               </Form.Control.Feedback>
             ) : null}
           </Form.Group>
+          <Form.Group controlId='password2'>
+            <Form.Label>Comfirm password</Form.Label>
+            <Form.Control
+              type='password'
+              placeholder='Confirmation your password'
+              value={password2}
+              onChange={e => {
+                setPassword2(e.target.value);
+                setDisabledSubmit(false);
+              }}
+              isInvalid={!!error?.validation?.password2}
+            />
+            {error?.validation?.password2 ? (
+              <Form.Control.Feedback type='invalid'>
+                {error.validation.password2.message[0]}
+              </Form.Control.Feedback>
+            ) : null}
+          </Form.Group>
           <Form.Group>
             <Button
               type='submit'
@@ -106,21 +146,19 @@ const LoginScreen = ({ location, history }) => {
               {loading ? (
                 <>
                   <Loader width={11} height={11} />{' '}
-                  <span className='ml-2'> Login</span>
+                  <span className='ml-2'> Register</span>
                 </>
               ) : (
-                'Login'
+                'Register'
               )}
             </Button>
           </Form.Group>
         </Form>
         <Row className='py-3'>
           <Col>
-            new Customer?{' '}
-            <Link
-              to={redirect ? `/register?redirect=${redirect}` : '/register'}
-            >
-              Register
+            Have an account?{' '}
+            <Link to={redirect ? `/login?redirect=${redirect}` : '/login'}>
+              Login
             </Link>
           </Col>
         </Row>
@@ -130,4 +168,4 @@ const LoginScreen = ({ location, history }) => {
   );
 };
 
-export default LoginScreen;
+export default RegisterScreen;

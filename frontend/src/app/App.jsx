@@ -7,6 +7,7 @@ import Header from './components/Header';
 import ProductScreen from './screens/ProductScreen';
 import CartScreen from './screens/CartScreen';
 import LoginScreen from './screens/LoginScreen';
+import RegisterScreen from './screens/RegisterScreen';
 
 const App = () => {
   /* eslint-disable */
@@ -21,6 +22,12 @@ const App = () => {
               path='/login'
               render={props => {
                 return <LoginScreen {...props} />;
+              }}
+            />
+            <Route
+              path='/register'
+              render={props => {
+                return <RegisterScreen {...props} />;
               }}
             />
             <Route
