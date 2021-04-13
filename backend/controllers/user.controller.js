@@ -126,17 +126,13 @@ const getUserProfile = asyncHandler(async (req, res) => {
         user: user,
       });
     } else {
-      const errorObj = new Error();
-      errorObj.statusCode = 404;
-      errorObj.message = "User not found";
-      throw errorObj;
+      res.status(404);
+      throw new ResponseError(404, "User not found");
     }
   } catch (error) {
-    const errorObj = new Error();
-    errorObj.statusCode = error.statusCode || 500;
-    errorObj.message = error.message;
-
-    throw errorObj;
+    console.log(error);
+    res.status(error.statusCode || 500);
+    throw new ResponseError(error.statusCode, error.message, error.errors);
   }
 });
 
@@ -151,7 +147,10 @@ const updateUserProfile = asyncHandler(async (req, res) => {
       user.name = req.body.name || user.name;
       user.email = req.body.email || user.email;
       if (req.body.password) {
-        user.password = req.body.password;
+        const doMatchPw = await user.matchPassword(password);
+        if (!doMatchPw) {
+        }
+        // user.password = req.body.password;
       }
 
       const setUpdatedUser = await user.save();
@@ -171,17 +170,12 @@ const updateUserProfile = asyncHandler(async (req, res) => {
         user: updatedUser,
       });
     } else {
-      const errorObj = new Error();
-      errorObj.statusCode = 404;
-      errorObj.message = "Update failed";
-      throw errorObj;
+      res.status(400);
+      throw new ResponseError(400, "Update failed");
     }
   } catch (error) {
-    const errorObj = new Error();
-    errorObj.statusCode = error.statusCode || 500;
-    errorObj.message = error.message;
-
-    throw errorObj;
+    res.status(error.statusCode || 500);
+    throw new ResponseError(error.statusCode, error.message, error.errors);
   }
 });
 
