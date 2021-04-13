@@ -5,8 +5,10 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+  resetChangePasswordFeedBackAction,
   resetUpdateProfileFeedBackAction,
   updateUserProfileAction,
+  userChangePasswordAction,
 } from '../actions/user.actions';
 import Loader from './Loader';
 import Message from './Message';
@@ -42,7 +44,9 @@ const ProfileUpdate = props => {
 
   const dispatch = useDispatch();
 
-  const { userUpdateProfile } = useSelector(state => state);
+  const { userUpdateProfile, userChangePassword } = useSelector(state => state);
+
+  const { success } = userChangePassword;
 
   const userProfileFormik = useFormik({
     validationSchema: updateProfileSchema,
@@ -65,14 +69,28 @@ const ProfileUpdate = props => {
       newPassword: '',
       newPassword2: '',
     },
-    onSubmit: values => {},
+    onSubmit: values => {
+      dispatch(
+        userChangePasswordAction(values.oldPassword, values.newPassword)
+      );
+    },
   });
 
-  document.title = 'Profile Update';
+  React.useEffect(() => {
+    document.title = 'Profile Update | Beifong Shop';
+    if (success) {
+      userPasswordFormik.resetForm({
+        oldPassword: '',
+        newPassword: '',
+        newPassword2: '',
+      });
+    }
+  }, [success]);
 
   React.useEffect(() => {
     return () => {
       dispatch(resetUpdateProfileFeedBackAction());
+      dispatch(resetChangePasswordFeedBackAction());
     };
   }, [dispatch]);
 
@@ -158,7 +176,21 @@ const ProfileUpdate = props => {
         </Col>
       </Row>
       <hr />
-
+      <Row className='pt-3'>
+        {userChangePassword.success && (
+          <Col xs={12}>
+            <Message variant='success'> {userChangePassword.message}</Message>
+          </Col>
+        )}
+        {userChangePassword.error && (
+          <Col xs={12}>
+            <Message variant='danger'>
+              {' '}
+              {userChangePassword.errorMessage}
+            </Message>
+          </Col>
+        )}
+      </Row>
       <Form onSubmit={userPasswordFormik.handleSubmit}>
         <Row>
           <Col className='pl-3 pt-4' md={3}>
@@ -229,10 +261,18 @@ const ProfileUpdate = props => {
               <Button
                 type='submit'
                 disabled={
-                  !userPasswordFormik.isValid || userPasswordFormik.isSubmitting
+                  userChangePassword.loading || !userPasswordFormik.isValid
                 }
+                className='d-flex'
               >
-                Update password
+                {userChangePassword.loading ? (
+                  <>
+                    <Loader height={15} width={15} />
+                    <span className='ml-2'>Change password</span>
+                  </>
+                ) : (
+                  'Change password'
+                )}
               </Button>
             </Form.Group>
           </Col>

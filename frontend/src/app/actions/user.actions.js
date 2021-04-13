@@ -15,6 +15,10 @@ import {
   USER_UPDATE_PROFILE_SUCCESS,
   USER_UPDATE_PROFILE_FAIL,
   USER_UPDATE_PROFILE_RESET,
+  USER_CHANGE_PASSWORD_REQUEST,
+  USER_CHANGE_PASSWORD_SUCCESS,
+  USER_CHANGE_PASSWORD_FAIL,
+  USER_CHANGE_PASSWORD_RESET,
 } from '../constants/user.constants';
 
 export const userLoginAction = (email, password) => async dispatch => {
@@ -269,5 +273,67 @@ export const resetUpdateProfileFeedBackAction = () => dispatch => {
       success: false,
       loading: false,
     },
+  });
+};
+
+export const userChangePasswordAction = (
+  currentPassword,
+  newPassword
+) => async (dispatch, getState) => {
+  const {
+    userLogin: { userInfo },
+  } = getState();
+  try {
+    dispatch({
+      type: USER_CHANGE_PASSWORD_REQUEST,
+    });
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.put(
+      `/api/users/profile`,
+      { oldPassword: currentPassword, newPassword: newPassword },
+      config
+    );
+
+    console.log(data);
+    dispatch({
+      type: USER_CHANGE_PASSWORD_SUCCESS,
+      payload: {
+        message: data.message,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    let errData = {
+      message: error.message,
+    };
+
+    if (error.response && error.response.data.message) {
+      const errorData =
+        error.response.data.errors && error.response.data.errors;
+      errData = {
+        message: error.response.data.message,
+        ...errorData,
+      };
+    }
+
+    dispatch({
+      type: USER_CHANGE_PASSWORD_FAIL,
+      payload: {
+        message: errData.message,
+      },
+    });
+  }
+};
+
+export const resetChangePasswordFeedBackAction = () => dispatch => {
+  dispatch({
+    type: USER_CHANGE_PASSWORD_RESET,
   });
 };

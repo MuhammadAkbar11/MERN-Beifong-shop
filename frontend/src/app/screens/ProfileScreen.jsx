@@ -28,7 +28,7 @@ const ProfileScreen = ({ match, history, location }) => {
 
   const userDetails = useSelector(state => state.userDetails);
 
-  const { loading, error, user } = userDetails;
+  const { user } = userDetails;
 
   React.useEffect(() => {
     if (!userInfo) {

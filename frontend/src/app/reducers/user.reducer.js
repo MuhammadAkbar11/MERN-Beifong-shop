@@ -13,6 +13,10 @@ import {
   USER_UPDATE_PROFILE_SUCCESS,
   USER_UPDATE_PROFILE_FAIL,
   USER_UPDATE_PROFILE_RESET,
+  USER_CHANGE_PASSWORD_REQUEST,
+  USER_CHANGE_PASSWORD_SUCCESS,
+  USER_CHANGE_PASSWORD_FAIL,
+  USER_CHANGE_PASSWORD_RESET,
 } from '../constants/user.constants';
 
 const initState = {
@@ -58,7 +62,6 @@ const userDetailsReducer = (
   },
   action
 ) => {
-  console.log(action.payload);
   switch (action.type) {
     case USER_DETAILS_REQUEST:
       return { ...state, ...action.payload };
@@ -100,6 +103,40 @@ const userUpdateProfileReducer = (state = {}, action) => {
   }
 };
 
+const userChangePasswordReducer = (state = { loading: false }, action) => {
+  switch (action.type) {
+    case USER_CHANGE_PASSWORD_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case USER_CHANGE_PASSWORD_SUCCESS:
+      return {
+        loading: false,
+        success: true,
+        message: action.payload.message,
+      };
+    case USER_CHANGE_PASSWORD_FAIL:
+      return {
+        loading: false,
+        success: false,
+        message: null,
+        error: true,
+        errorMessage: action.payload.message,
+      };
+    case USER_CHANGE_PASSWORD_RESET:
+      return {
+        loading: false,
+        success: false,
+        message: null,
+        error: false,
+        errorMessage: null,
+      };
+    default:
+      return state;
+  }
+};
+
 /* eslint-disable */
 
 export {
@@ -107,4 +144,5 @@ export {
   userRegisterReducer,
   userDetailsReducer,
   userUpdateProfileReducer,
+  userChangePasswordReducer,
 };
