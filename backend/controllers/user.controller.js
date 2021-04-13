@@ -146,11 +146,14 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     if (user) {
       user.name = req.body.name || user.name;
       user.email = req.body.email || user.email;
-      if (req.body.password) {
-        const doMatchPw = await user.matchPassword(password);
+      if (req.body.oldPassword) {
+        const doMatchPw = await user.matchPassword(req.body.oldPassword);
         if (!doMatchPw) {
+          res.status(400);
+          throw new ResponseError(400, "Current password is wrong");
+        } else {
+          user.password = req.body.newPassword;
         }
-        // user.password = req.body.password;
       }
 
       const setUpdatedUser = await user.save();
@@ -166,7 +169,9 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 
       return res.status(200).json({
         status: true,
-        message: "Updated profile success",
+        message: req.body.oldPassword
+          ? "Changen password successfully"
+          : "Updated profile success",
         user: updatedUser,
       });
     } else {
