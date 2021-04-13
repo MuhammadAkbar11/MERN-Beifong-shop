@@ -11,6 +11,10 @@ import {
   USER_REGISTER_FAIL,
   USER_REGISTER_REQUEST,
   USER_REGISTER_SUCCESS,
+  USER_UPDATE_PROFILE_REQUEST,
+  USER_UPDATE_PROFILE_SUCCESS,
+  USER_UPDATE_PROFILE_FAIL,
+  USER_UPDATE_PROFILE_RESET,
 } from '../constants/user.constants';
 
 export const userLoginAction = (email, password) => async dispatch => {
@@ -124,6 +128,9 @@ export const getUserDetailsAction = id => async (dispatch, getState) => {
   try {
     dispatch({
       type: USER_DETAILS_REQUEST,
+      payload: {
+        loading: true,
+      },
     });
 
     const {
@@ -141,7 +148,10 @@ export const getUserDetailsAction = id => async (dispatch, getState) => {
 
     dispatch({
       type: USER_DETAILS_SUCCESS,
-      payload: data.user,
+      payload: {
+        loading: false,
+        user: data.user,
+      },
     });
   } catch (error) {
     console.log(error);
@@ -160,7 +170,104 @@ export const getUserDetailsAction = id => async (dispatch, getState) => {
 
     dispatch({
       type: USER_DETAILS_FAIL,
-      payload: errData,
+      payload: {
+        loading: false,
+        error: errData,
+      },
     });
   }
+};
+
+export const updateUserProfileAction = ({ ...user }) => async (
+  dispatch,
+  getState
+) => {
+  const {
+    userLogin: { userInfo },
+  } = getState();
+
+  try {
+    dispatch({
+      type: USER_UPDATE_PROFILE_REQUEST,
+      payload: {
+        success: null,
+        loading: true,
+      },
+    });
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.put(
+      `/api/users/profile`,
+      { email: user.email, name: user.name },
+      config
+    );
+
+    const newUserData = {
+      token: userInfo.token,
+      ...data.user,
+    };
+
+    dispatch({
+      type: USER_UPDATE_PROFILE_SUCCESS,
+      payload: {
+        userInfo: data.user,
+        success: {
+          message: data.message,
+        },
+        loading: false,
+      },
+    });
+
+    dispatch({
+      type: USER_LOGIN_SUCCESS,
+      payload: newUserData,
+    });
+
+    dispatch({
+      type: USER_DETAILS_SUCCESS,
+      payload: {
+        user: data.user,
+      },
+    });
+
+    localStorage.setItem('userInfo', JSON.stringify(newUserData));
+  } catch (error) {
+    console.log(error);
+    let errData = {
+      message: error.message,
+    };
+
+    if (error.response && error.response.data.message) {
+      const errorData =
+        error.response.data.errors && error.response.data.errors;
+      errData = {
+        message: error.response.data.message,
+        ...errorData,
+      };
+    }
+
+    dispatch({
+      type: USER_UPDATE_PROFILE_FAIL,
+      payload: {
+        errors: errData,
+        loading: false,
+      },
+    });
+  }
+};
+
+export const resetUpdateProfileFeedBackAction = () => dispatch => {
+  dispatch({
+    type: USER_UPDATE_PROFILE_RESET,
+    payload: {
+      success: false,
+      loading: false,
+    },
+  });
 };

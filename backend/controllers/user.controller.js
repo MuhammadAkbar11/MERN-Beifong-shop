@@ -122,7 +122,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
     if (user) {
       return res.status(200).json({
         status: true,
-        message: "User exits",
+        message: "user is found",
         user: user,
       });
     } else {
@@ -154,7 +154,16 @@ const updateUserProfile = asyncHandler(async (req, res) => {
         user.password = req.body.password;
       }
 
-      const updatedUser = await user.save();
+      const setUpdatedUser = await user.save();
+
+      const updatedUser = {
+        isAdmin: setUpdatedUser.isAdmin,
+        _id: setUpdatedUser._id,
+        name: setUpdatedUser.name,
+        email: setUpdatedUser.email,
+        createdAt: setUpdatedUser.createdAt,
+        updatedAt: setUpdatedUser.updatedAt,
+      };
 
       return res.status(200).json({
         status: true,

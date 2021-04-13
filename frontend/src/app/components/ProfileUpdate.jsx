@@ -3,12 +3,17 @@ import PropTypes from 'prop-types';
 import { Form, Row, Col, Button } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import useBeiForm from '../hooks/useBeiForm';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  resetUpdateProfileFeedBackAction,
+  updateUserProfileAction,
+} from '../actions/user.actions';
+import Loader from './Loader';
+import Message from './Message';
 
 const defaultProps = {
   user: {},
 };
-s;
 
 const proptypes = {
   user: PropTypes.shape({
@@ -17,7 +22,10 @@ const proptypes = {
   }),
 };
 
-const nameSchema = Yup.string().required('Enter yourname').min(3, 'To short');
+const updateProfileSchema = Yup.object().shape({
+  email: Yup.string().required('Email is required').email('Invalid Email'),
+  name: Yup.string().required('Name is required').min(3, 'name to short!'),
+});
 
 const updatePasswordSchema = Yup.object().shape({
   oldPassword: Yup.string().required('Enter your current password'),
@@ -32,11 +40,21 @@ const updatePasswordSchema = Yup.object().shape({
 const ProfileUpdate = props => {
   const { user } = props;
 
-  const nameForm = useBeiForm({
-    validationSchema: nameSchema,
-    initialValues: 'Loading..',
+  const dispatch = useDispatch();
+
+  const { userUpdateProfile } = useSelector(state => state);
+
+  const userProfileFormik = useFormik({
+    validationSchema: updateProfileSchema,
+    enableReinitialize: true,
+    initialValues: {
+      email: user.email,
+      name: user.name,
+    },
     onSubmit: values => {
-      console.log(values);
+      dispatch(
+        updateUserProfileAction({ email: values.email, name: values.name })
+      );
     },
   });
 
@@ -47,41 +65,59 @@ const ProfileUpdate = props => {
       newPassword: '',
       newPassword2: '',
     },
-    onSubmit: values => {
-      console.log(values);
-    },
+    onSubmit: values => {},
   });
 
+  document.title = 'Profile Update';
+
   React.useEffect(() => {
-    nameForm.setInitValues(user.name);
-  }, [user]);
+    return () => {
+      dispatch(resetUpdateProfileFeedBackAction());
+    };
+  }, [dispatch]);
+
+  // console.log( || !userProfileFormik.isValid);
 
   return (
     <>
       <div>
         <h4 className='text-left'>Update Profile</h4>
       </div>
+
       <Row>
+        {userUpdateProfile.success && (
+          <Col xs={12} className='mt-3'>
+            <Message variant={userUpdateProfile.success?.type}>
+              {' '}
+              {userUpdateProfile.success?.message}
+            </Message>
+          </Col>
+        )}
         <Col className='pl-3 pt-4' md={3}>
           <h6 className='text-primary'>Profile</h6>
         </Col>
-        <Col className='pt-4' md={9} lg={9}>
-          <Form.Group controlId='email'>
-            <Form.Label className='text-nowrap'>Email</Form.Label>
 
-            <Row>
-              <Col sm={8} md={6} lg={8}>
-                <Form.Control
-                  type='text'
-                  name='email'
-                  defaultValue={user.email}
-                  readOnly
-                  // isValid={touched.lastName && !errors.lastName}
-                />
-              </Col>
-            </Row>
-          </Form.Group>
-          <Form onSubmit={nameForm.handleSubmit}>
+        <Col className='pt-4' md={9} lg={9}>
+          <Form onSubmit={userProfileFormik.handleSubmit}>
+            <Form.Group controlId='email'>
+              <Form.Label className='text-nowrap'>Email</Form.Label>
+              <Row className=' align-self-stretch '>
+                <Col sm={8} md={6} lg={8}>
+                  <Form.Control
+                    type='email'
+                    name='email'
+                    value={userProfileFormik.values.email}
+                    onChange={userProfileFormik.handleChange}
+                    isInvalid={!!userProfileFormik.errors.email}
+                  />
+
+                  <Form.Control.Feedback type='invalid'>
+                    {userProfileFormik.errors.email}
+                  </Form.Control.Feedback>
+                </Col>
+              </Row>
+            </Form.Group>
+
             <Form.Group className='mt-2' controlId='name'>
               <Form.Label className='text-nowrap'>Name</Form.Label>
               <Row className=' align-self-stretch '>
@@ -89,39 +125,34 @@ const ProfileUpdate = props => {
                   <Form.Control
                     type='text'
                     name='name'
-                    value={nameForm.values}
-                    onChange={nameForm.handleChange}
-                    // isValid={name.isChange}
-                    isInvalid={!!nameForm.errors}
+                    value={userProfileFormik.values.name}
+                    onChange={userProfileFormik.handleChange}
+                    isInvalid={!!userProfileFormik.errors.name}
                   />
 
                   <Form.Control.Feedback type='invalid'>
-                    {nameForm.errors}
+                    {userProfileFormik.errors.name}
                   </Form.Control.Feedback>
                 </Col>
-                <Col
-                  sm={4}
-                  md={6}
-                  lg={4}
-                  className=' d-flex align-items-stretch'
-                >
-                  {nameForm.isChanges && (
-                    <>
-                      <Button size='sm' type='submit'>
-                        Save
-                      </Button>{' '}
-                      <Button
-                        type='button'
-                        onClick={nameForm.handleCancel}
-                        size='sm'
-                        variant='outline-primary ml-1'
-                      >
-                        Cancel
-                      </Button>
-                    </>
-                  )}
-                </Col>
               </Row>
+            </Form.Group>
+            <Form.Group className='mt-2'>
+              <Button
+                type='submit'
+                disabled={
+                  userUpdateProfile.loading || !userProfileFormik.isValid
+                }
+                className='d-flex'
+              >
+                {userUpdateProfile.loading ? (
+                  <>
+                    <Loader height={15} width={15} />
+                    <span className='ml-2'>Update Profile</span>
+                  </>
+                ) : (
+                  'Update Profile'
+                )}
+              </Button>
             </Form.Group>
           </Form>
         </Col>

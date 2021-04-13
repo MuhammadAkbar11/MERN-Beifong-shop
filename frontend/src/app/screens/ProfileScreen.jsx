@@ -1,10 +1,8 @@
 import React from 'react';
-import { Form, Button, Row, Col, Container, Nav } from 'react-bootstrap';
+import { Row, Col, Container, Nav } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, Route, Switch } from 'react-router-dom';
-import Message from '../components/Message';
-import Loader from '../components/Loader';
+import { Route, Switch } from 'react-router-dom';
 import { getUserDetailsAction } from '../actions/user.actions';
 import BreadcrumbContainer from '../components/BreadcrumbContainer';
 import ProfileUpdate from '../components/ProfileUpdate';
@@ -72,7 +70,6 @@ const ProfileScreen = ({ match, history, location }) => {
 
   const activeClass =
     'border-bottom font-weight-bold text-primary border-primary ';
-
   return (
     <Container fluid className='px-1 px-sm-0 py-3 h-100 '>
       <BreadcrumbContainer items={breadcrumbItems} parentClass='ml-n3' />

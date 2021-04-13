@@ -9,6 +9,10 @@ import {
   USER_DETAILS_REQUEST,
   USER_DETAILS_SUCCESS,
   USER_DETAILS_FAIL,
+  USER_UPDATE_PROFILE_REQUEST,
+  USER_UPDATE_PROFILE_SUCCESS,
+  USER_UPDATE_PROFILE_FAIL,
+  USER_UPDATE_PROFILE_RESET,
 } from '../constants/user.constants';
 
 const initState = {
@@ -54,13 +58,42 @@ const userDetailsReducer = (
   },
   action
 ) => {
+  console.log(action.payload);
   switch (action.type) {
     case USER_DETAILS_REQUEST:
-      return { ...state, loading: true };
+      return { ...state, ...action.payload };
     case USER_DETAILS_SUCCESS:
-      return { ...state, loading: false, user: action.payload };
+      return {
+        ...state,
+        ...action.payload,
+      };
     case USER_DETAILS_FAIL:
-      return { ...state, loading: false, error: action.payload };
+      return {
+        ...state,
+        ...action.payload,
+      };
+
+    default:
+      return state;
+  }
+};
+
+const userUpdateProfileReducer = (state = {}, action) => {
+  switch (action.type) {
+    case USER_UPDATE_PROFILE_REQUEST:
+      return {
+        ...state,
+        ...action.payload,
+      };
+    case USER_UPDATE_PROFILE_SUCCESS:
+      return {
+        ...state,
+        ...action.payload,
+      };
+    case USER_UPDATE_PROFILE_FAIL:
+      return { ...state, ...action.payload };
+    case USER_UPDATE_PROFILE_RESET:
+      return { ...state, ...action.payload };
 
     default:
       return state;
@@ -69,4 +102,9 @@ const userDetailsReducer = (
 
 /* eslint-disable */
 
-export { userLoginReducer, userRegisterReducer, userDetailsReducer };
+export {
+  userLoginReducer,
+  userRegisterReducer,
+  userDetailsReducer,
+  userUpdateProfileReducer,
+};
