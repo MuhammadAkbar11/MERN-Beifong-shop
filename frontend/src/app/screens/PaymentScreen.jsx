@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Button, Container, Form, Col } from 'react-bootstrap';
+import { Button, Container, Form, Row, Col } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import FormContainer from '../components/FormContainer';
 import { savePaymentMethod } from '../actions/cart.actions';
 import CheckoutSteps from '../components/CheckoutSteps';
+import BreadcrumbContainer from '../components/BreadcrumbContainer';
 import isObjectEmpty from '../utils/isObjectEmpty';
 
 /* eslint-disable */
@@ -28,12 +29,25 @@ const PaymentScreen = ({ history }) => {
   const submitHandler = form => {
     form.preventDefault();
     dispatch(savePaymentMethod(paymentMethod));
-    history.push('/placeorder');
+    history.push('/summary');
   };
 
   return (
     <Container fluid className='px-1 px-sm-0 py-3 h-100 '>
-      <CheckoutSteps step1 step2 step3 />
+      <Row className='mb-5'>
+        <Col md={5}>
+          <BreadcrumbContainer
+            items={[
+              { name: 'Home', href: '/' },
+              { name: 'Checkout', isActive: true },
+              { name: 'Payment', isActive: true },
+            ]}
+          />
+        </Col>
+        <Col md={7}>
+          <CheckoutSteps step1 step2 step3 currentStep='step3' />
+        </Col>
+      </Row>
       <FormContainer>
         <h3 className='text-primary'>Payment Method</h3>
         <br />

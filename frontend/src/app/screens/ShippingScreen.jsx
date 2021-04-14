@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Container, Form } from 'react-bootstrap';
+import { Button, Container, Form, Row, Col } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useSelector, useDispatch } from 'react-redux';
@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import FormContainer from '../components/FormContainer';
 import { saveShippingAddressAction } from '../actions/cart.actions';
 import CheckoutSteps from '../components/CheckoutSteps';
+import BreadcrumbContainer from '../components/BreadcrumbContainer';
 
 const shippingSchema = Yup.object().shape({
   address: Yup.string().required('Address is required'),
@@ -59,7 +60,21 @@ const ShippingScreen = ({ history }) => {
 
   return (
     <Container fluid className='px-1 px-sm-0 py-3 h-100 '>
-      <CheckoutSteps step1 step2 />
+      <Row className='mb-5'>
+        <Col md={5}>
+          <BreadcrumbContainer
+            items={[
+              { name: 'Home', href: '/' },
+              { name: 'Checkout', isActive: true },
+              { name: 'Shipping', isActive: true },
+            ]}
+          />
+        </Col>
+        <Col md={7}>
+          <CheckoutSteps step1 step2 currentStep='step2' />
+        </Col>
+      </Row>
+
       <FormContainer>
         <h3 className='text-primary'>Shipping</h3>
         <br />
