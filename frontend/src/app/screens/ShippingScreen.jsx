@@ -3,7 +3,7 @@ import { Button, Container, Form } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useSelector, useDispatch } from 'react-redux';
-import BreadcrumbContainer from '../components/BreadcrumbContainer';
+
 import FormContainer from '../components/FormContainer';
 import { saveShippingAddressAction } from '../actions/cart.actions';
 import CheckoutSteps from '../components/CheckoutSteps';
@@ -22,11 +22,6 @@ const ShippingScreen = ({ history }) => {
   const cart = useSelector(state => state.cart);
 
   const { shippingAddress } = cart;
-
-  const [bcItems] = React.useState([
-    { name: 'Home', href: '/' },
-    { name: 'Shipping', isActive: true },
-  ]);
 
   let shippingAddressFormsInitValues = {
     address: '',
@@ -64,7 +59,6 @@ const ShippingScreen = ({ history }) => {
 
   return (
     <Container fluid className='px-1 px-sm-0 py-3 h-100 '>
-      <BreadcrumbContainer items={bcItems} />
       <CheckoutSteps step1 step2 />
       <FormContainer>
         <h3 className='text-primary'>Shipping</h3>
