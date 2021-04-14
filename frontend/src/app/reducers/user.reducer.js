@@ -19,9 +19,7 @@ import {
   USER_CHANGE_PASSWORD_RESET,
 } from '../constants/user.constants';
 
-const initState = {
-  loading: false,
-};
+const initState = {};
 
 const userLoginReducer = (state = initState, action) => {
   switch (action.type) {

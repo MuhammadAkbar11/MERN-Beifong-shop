@@ -8,7 +8,7 @@ import BreadcrumbContainer from '../components/BreadcrumbContainer';
 import ProfileUpdate from '../components/ProfileUpdate';
 
 /* eslint-disable */
-const ProfileScreen = ({ match, history, location }) => {
+const UserProfileScreen = ({ match, history, location }) => {
   const [breadcrumbItems, setBreadcrumbItems] = React.useState([
     { name: 'Home', href: '/' },
     { name: 'Profile', isActive: true },
@@ -22,26 +22,20 @@ const ProfileScreen = ({ match, history, location }) => {
 
   const dispatch = useDispatch();
 
-  // Checking user is Login
-  const userLogin = useSelector(state => state.userLogin);
+  const { userLogin, userDetails } = useSelector(state => state);
   const { userInfo } = userLogin;
-
-  const userDetails = useSelector(state => state.userDetails);
-
   const { user } = userDetails;
 
   React.useEffect(() => {
     if (!userInfo) {
       history.push('/login');
+    } else if (!user.name) {
+      dispatch(getUserDetailsAction('profile'));
     } else {
-      if (!user.name) {
-        dispatch(getUserDetailsAction('profile'));
-      } else {
-        setProfile({
-          name: user.name,
-          email: user.email,
-        });
-      }
+      setProfile({
+        name: user.name,
+        email: user.email,
+      });
     }
 
     return () => {};
@@ -58,15 +52,6 @@ const ProfileScreen = ({ match, history, location }) => {
 
     setBreadcrumbItems(newBrItems);
   }, [user]);
-
-  const submitHandler = e => {
-    e.preventDefault();
-    // dipatch profile
-  };
-
-  const changeTabHandler = key => {
-    dispatch(userChageTabAction(key));
-  };
 
   const activeClass =
     'border-bottom font-weight-bold text-primary border-primary ';
@@ -133,4 +118,4 @@ const ProfileScreen = ({ match, history, location }) => {
   );
 };
 
-export default ProfileScreen;
+export default UserProfileScreen;

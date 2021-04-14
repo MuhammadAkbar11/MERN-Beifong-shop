@@ -8,7 +8,7 @@ import ProductScreen from './screens/ProductScreen';
 import CartScreen from './screens/CartScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
-import ProfileScreen from './screens/ProfileScreen';
+import UserProfileScreen from './screens/UserProfileScreen';
 
 const App = () => {
   /* eslint-disable */
@@ -34,7 +34,7 @@ const App = () => {
             <Route
               path='/profile'
               render={props => {
-                return <ProfileScreen {...props} />;
+                return <UserProfileScreen {...props} />;
               }}
             />
             <Route
