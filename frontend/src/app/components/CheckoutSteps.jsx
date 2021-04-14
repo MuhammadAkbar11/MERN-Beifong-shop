@@ -15,56 +15,63 @@ const proptypes = {
   step2: PropTypes.bool,
   step3: PropTypes.bool,
   step4: PropTypes.bool,
+  currentStep: PropTypes.string.isRequired,
 };
 
-const CheckoutSteps = ({ step1, step2, step3, step4 }) => {
-  const activeClass = 'font-weight-bold text-primary ';
+const CheckoutSteps = ({ step1, step2, step3, step4, currentStep }) => {
+  const navLinkActiveClass = 'font-weight-bold text-primary ';
   return (
-    <Nav className=' justify-content-center mb-5 mt-3 '>
-      <Nav.Item className='mr-1'>
+    <Nav className=' justify-content-center step-nav '>
+      <Nav.Item
+        className={`step-nav-item px-2 ${
+          currentStep === 'step1' ? 'step-active' : ''
+        } ${step1 && step2 && 'prev-step'} `}
+      >
         {step1 ? (
-          <LinkContainer to='/login' className={activeClass}>
-            <Nav.Link>
-              Sign in <i className='fa fa-check-circle ml-1' />
-            </Nav.Link>
+          <LinkContainer to='/login' className={navLinkActiveClass}>
+            <Nav.Link>Sign in</Nav.Link>
           </LinkContainer>
         ) : (
           <Nav.Link disabled>Sign In</Nav.Link>
         )}
       </Nav.Item>
-      <Nav.Item className='mr-1'>
+      <Nav.Item
+        className={`step-nav-item px-2 ${
+          currentStep === 'step2' ? 'step-active' : ''
+        } ${step2 && step3 && 'prev-step'}`}
+      >
         {step2 ? (
-          <LinkContainer to='/shipping' className={activeClass}>
-            <Nav.Link>
-              Shipping{' '}
-              {step2 && step3 && <i className='fa fa-check-circle ml-1' />}
-            </Nav.Link>
+          <LinkContainer to='/shipping' className={navLinkActiveClass}>
+            <Nav.Link>Shipping </Nav.Link>
           </LinkContainer>
         ) : (
           <Nav.Link disabled>shipping</Nav.Link>
         )}
       </Nav.Item>
-      <Nav.Item className='mr-1'>
+      <Nav.Item
+        className={`step-nav-item px-2 ${
+          currentStep === 'step3' ? 'step-active' : ''
+        } ${step3 && step4 && 'prev-step'}`}
+      >
         {step3 ? (
-          <LinkContainer to='/payment' className={activeClass}>
-            <Nav.Link>
-              Payment{' '}
-              {step3 && step4 && <i className='fa fa-check-circle ml-1' />}
-            </Nav.Link>
+          <LinkContainer to='/payment' className={navLinkActiveClass}>
+            <Nav.Link>Payment </Nav.Link>
           </LinkContainer>
         ) : (
           <Nav.Link disabled>Payment</Nav.Link>
         )}
       </Nav.Item>
-      <Nav.Item className='mr-1'>
+      <Nav.Item
+        className={`step-nav-item px-2 ${
+          currentStep === 'step4' ? 'step-active' : ''
+        }`}
+      >
         {step4 ? (
-          <LinkContainer to='/placeorder' className={activeClass}>
-            <Nav.Link>
-              Place Order <i className='fa fa-check-circle ml-1' />
-            </Nav.Link>
+          <LinkContainer to='/summary' className={navLinkActiveClass}>
+            <Nav.Link>Order Summary</Nav.Link>
           </LinkContainer>
         ) : (
-          <Nav.Link disabled>Place Order</Nav.Link>
+          <Nav.Link disabled>Order Summary</Nav.Link>
         )}
       </Nav.Item>
     </Nav>

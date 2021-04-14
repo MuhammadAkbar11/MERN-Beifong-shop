@@ -1,0 +1,30 @@
+.step-nav {
+  justify-content: flex-end;
+}
+
+.step-nav-item {
+  text-align: center;
+  margin-left: 0;
+  margin-right: 0;
+  flex: 1;
+  font-size: 13px;
+  transition: 0.2s all;
+  white-space: nowrap;
+  border-bottom: 2px solid $gray-200;
+
+  &.prev-step {
+    &:hover > * {
+      color: $primary-light !important;
+    }
+  }
+
+  &.step-active {
+    border-bottom: 2px solid $primary;
+    &:hover {
+      border-bottom: 2px solid $primary-light;
+      & > * {
+        color: $primary-light !important;
+      }
+    }
+  }
+}
