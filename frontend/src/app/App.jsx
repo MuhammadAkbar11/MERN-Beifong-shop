@@ -9,6 +9,7 @@ import CartScreen from './screens/CartScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import UserProfileScreen from './screens/UserProfileScreen';
+import ShippingScreen from './screens/ShippingScreen';
 
 const App = () => {
   /* eslint-disable */
@@ -19,6 +20,12 @@ const App = () => {
       <main className='py-3 bg-light '>
         <Container>
           <Switch>
+            <Route
+              path='/shipping'
+              render={props => {
+                return <ShippingScreen {...props} />;
+              }}
+            />
             <Route
               path='/login'
               render={props => {
