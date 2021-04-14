@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import BreadcrumbContainer from '../components/BreadcrumbContainer';
 import FormContainer from '../components/FormContainer';
 import { saveShippingAddressAction } from '../actions/cart.actions';
+import CheckoutSteps from '../components/CheckoutSteps';
 
 const shippingSchema = Yup.object().shape({
   address: Yup.string().required('Address is required'),
@@ -64,6 +65,7 @@ const ShippingScreen = ({ history }) => {
   return (
     <Container fluid className='px-1 px-sm-0 py-3 h-100 '>
       <BreadcrumbContainer items={bcItems} />
+      <CheckoutSteps step1 step2 />
       <FormContainer>
         <h3 className='text-primary'>Shipping</h3>
         <br />
