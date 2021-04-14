@@ -2,20 +2,23 @@ import React from 'react';
 import { Spinner } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
+/* eslint-disable */
 const defaultProps = {
+  className: '',
   height: 100,
   width: 100,
 };
-/* eslint-disable */
+
 const proptypes = {
+  className: PropTypes.string,
   height: PropTypes.any,
   width: PropTypes.any,
 };
 
-const Loader = ({ height, width }) => {
+const Loader = ({ height, width, className }) => {
   return (
     <Spinner
-      className='my-2'
+      className={`${className}`}
       variant='primary-light'
       animation='border'
       role='status'
