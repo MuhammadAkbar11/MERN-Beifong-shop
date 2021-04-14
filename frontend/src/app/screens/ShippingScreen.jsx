@@ -129,7 +129,7 @@ const ShippingScreen = ({ history }) => {
               }
               className='d-flex ml-auto'
             >
-              Next
+              Continue
             </Button>
           </Form.Group>
         </Form>

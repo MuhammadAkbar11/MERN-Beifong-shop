@@ -3,8 +3,10 @@ import {
   CART_ADD_ITEM,
   CART_REMOVE_ITEM,
   CART_SAVE_SHIPPING_ADDRESS,
+  CART_SAVE_PAYMENT_METHOD,
 } from '../constants/cart.constants';
 /* eslint-disable */
+
 export const addToCart = (id, qty) => async (dispatch, getState) => {
   const { data } = await axios.get(`/api/products/${id}`);
 
@@ -41,4 +43,12 @@ export const saveShippingAddressAction = data => dispatch => {
   });
 
   localStorage.setItem('shippingAddress', JSON.stringify(data));
+};
+
+export const savePaymentMethod = method => dispatch => {
+  dispatch({
+    type: CART_SAVE_PAYMENT_METHOD,
+    payload: method,
+  });
+  localStorage.setItem('paymentMethod', JSON.stringify(method));
 };

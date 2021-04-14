@@ -10,6 +10,7 @@ import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import UserProfileScreen from './screens/UserProfileScreen';
 import ShippingScreen from './screens/ShippingScreen';
+import PaymentScreen from './screens/PaymentScreen';
 
 const App = () => {
   /* eslint-disable */
@@ -24,6 +25,12 @@ const App = () => {
               path='/shipping'
               render={props => {
                 return <ShippingScreen {...props} />;
+              }}
+            />
+            <Route
+              path='/payment'
+              render={props => {
+                return <PaymentScreen {...props} />;
               }}
             />
             <Route
