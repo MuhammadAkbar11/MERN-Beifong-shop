@@ -16,8 +16,10 @@ import CheckoutSteps from '../components/CheckoutSteps';
 import Message from '../components/Message';
 import FormatRupiah from '../components/FormatRupiah';
 import { addToCart } from '../actions/cart.actions';
-
-const OrderSummarycreen = () => {
+import { createOrderAction } from '../actions/order.actions';
+import Loader from '../components/Loader';
+/* eslint-disable */
+const OrderSummarycreen = ({ history }) => {
   const dispatch = useDispatch();
   const cart = useSelector(state => state.cart);
 
@@ -31,8 +33,28 @@ const OrderSummarycreen = () => {
   cart.taxPrice = Number(0.05 * cart.itemsPrice);
   cart.totalPrice = +cart.itemsPrice + +cart.shippingPrice + +cart.taxPrice;
 
-  const placeOrderHandler = e => {
-    console.log('okk');
+  const orderCreate = useSelector(state => state.orderCreate);
+
+  const { loading, order, success, error, orderError } = orderCreate;
+
+  React.useEffect(() => {
+    if (success) {
+      history.push(`/order/${order._id}`);
+    }
+  }, [history, success]);
+
+  const placeOrderHandler = () => {
+    dispatch(
+      createOrderAction({
+        orderItems: cart.cartItems,
+        shippingAddress: cart.shippingAddress,
+        paymentMethod: cart.paymentMethod,
+        itemsPrice: cart.itemsPrice,
+        shippingPrice: cart.shippingPrice,
+        taxPrice: cart.taxPrice,
+        totalPrice: cart.totalPrice,
+      })
+    );
   };
 
   return (
@@ -181,14 +203,32 @@ const OrderSummarycreen = () => {
                 <span>Total Price</span>
                 <FormatRupiah value={cart.totalPrice || 0} />
               </ListGroup.Item>
+
+              {error ? (
+                <ListGroup.Item className=' border-bottom-0  d-flex  bg-transparent px-0 pb-0  '>
+                  <div className='flex-grow-1 text-center'>
+                    <Message variant='danger'>{orderError.message}</Message>
+                  </div>
+                </ListGroup.Item>
+              ) : null}
+
               <ListGroup.Item className='bg-transparent px-0'>
                 <Button
                   onClick={placeOrderHandler}
                   type='button'
-                  className='btn btn-primary btn-block'
-                  disabled={cart.cartItems.length === 0}
+                  className='btn btn-primary btn-block d-flex justify-content-center'
+                  disabled={cart.cartItems.length === 0 || loading}
                 >
-                  Order now
+                  {loading ? (
+                    <>
+                      <div className='d-flex'>
+                        <Loader height={15} width={15} />
+                        <span className='ml-2'>Order now</span>
+                      </div>
+                    </>
+                  ) : (
+                    'Order now'
+                  )}
                 </Button>
               </ListGroup.Item>
             </ListGroup>

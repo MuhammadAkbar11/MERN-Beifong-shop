@@ -57,6 +57,13 @@ const orderModel = mongoose.Schema(
       type: String,
       required: true,
     },
+    itemsPrice: {
+      num: {
+        type: Number,
+        required: true,
+      },
+      rupiah: String,
+    },
     paymentResult: {
       id: { type: String },
       status: { type: String },
@@ -64,23 +71,27 @@ const orderModel = mongoose.Schema(
       email_address: { type: String },
     },
     taxPrice: {
-      type: Number,
-      required: true,
-      default: 0.0,
+      num: {
+        type: Number,
+        required: true,
+        default: 0,
+      },
+      rupiah: String,
     },
     shippingPrice: {
-      type: Number,
-      required: true,
-      default: 0.0,
+      num: {
+        type: Number,
+        required: true,
+        default: 7000,
+      },
+      rupiah: String,
     },
     totalPrice: {
-      price: {
-        num: {
-          type: Number,
-          required: true,
-        },
-        rupiah: String,
+      num: {
+        type: Number,
+        required: true,
       },
+      rupiah: String,
     },
     isPaid: {
       type: Boolean,
@@ -93,6 +104,7 @@ const orderModel = mongoose.Schema(
     isDelivered: {
       type: Boolean,
       required: true,
+      default: false,
     },
     delivereddAt: {
       type: Date,

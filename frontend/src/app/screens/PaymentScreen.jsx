@@ -12,7 +12,7 @@ const PaymentScreen = ({ history }) => {
   const cart = useSelector(state => state.cart);
 
   const { shippingAddress } = cart;
-  console.log(shippingAddress);
+
   if (isObjectEmpty(shippingAddress)) {
     history.push('/shipping');
   }
