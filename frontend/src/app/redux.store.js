@@ -14,8 +14,10 @@ import {
   userUpdateProfileReducer,
 } from './reducers/user.reducer';
 import { orderCreateReducer } from './reducers/order.reducer';
+import { redirectReducer } from './reducers/redirect.reducer';
 
 const reducer = combineReducers({
+  redirect: redirectReducer,
   productList: productListReducer,
   productDetails: productDetailsReducer,
   cart: cartReducer,
