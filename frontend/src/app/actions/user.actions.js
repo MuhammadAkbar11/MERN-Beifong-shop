@@ -271,6 +271,7 @@ export const resetUpdateProfileFeedBackAction = () => dispatch => {
     type: USER_UPDATE_PROFILE_RESET,
     payload: {
       success: false,
+      errors: false,
       loading: false,
     },
   });

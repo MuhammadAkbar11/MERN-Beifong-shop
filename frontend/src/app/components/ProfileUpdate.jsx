@@ -105,9 +105,17 @@ const ProfileUpdate = props => {
       <Row>
         {userUpdateProfile.success && (
           <Col xs={12} className='mt-3'>
-            <Message variant={userUpdateProfile.success?.type}>
+            <Message variant='success'>
               {' '}
               {userUpdateProfile.success?.message}
+            </Message>
+          </Col>
+        )}
+        {userUpdateProfile.errors && (
+          <Col xs={12} className='mt-3'>
+            <Message variant='danger'>
+              {' '}
+              {userUpdateProfile.errors?.message}
             </Message>
           </Col>
         )}

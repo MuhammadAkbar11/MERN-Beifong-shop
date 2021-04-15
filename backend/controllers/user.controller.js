@@ -142,10 +142,20 @@ const getUserProfile = asyncHandler(async (req, res) => {
 const updateUserProfile = asyncHandler(async (req, res) => {
   try {
     const user = await UserModel.findById(req.user._id);
-
+    const oldEmail = user.email;
     if (user) {
       user.name = req.body.name || user.name;
-      user.email = req.body.email || user.email;
+      if (req.body.email && req.body.email !== oldEmail) {
+        const getUser = await UserModel.findOne({ email: req.body.email });
+        if (getUser) {
+          res.status(400);
+          throw new ResponseError(400, "Email already exits");
+        }
+        user.email = req.body.email;
+      } else {
+        user.email = oldEmail;
+      }
+
       if (req.body.oldPassword) {
         const doMatchPw = await user.matchPassword(req.body.oldPassword);
         if (!doMatchPw) {
@@ -179,6 +189,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
       throw new ResponseError(400, "Update failed");
     }
   } catch (error) {
+    console.log(error);
     res.status(error.statusCode || 500);
     throw new ResponseError(error.statusCode, error.message, error.errors);
   }
