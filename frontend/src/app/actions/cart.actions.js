@@ -5,32 +5,66 @@ import {
   CART_SAVE_SHIPPING_ADDRESS,
   CART_SAVE_PAYMENT_METHOD,
 } from '../constants/cart.constants';
+import { PAGE_REDIRECT } from '../constants/page.constants';
 /* eslint-disable */
 
 export const addToCart = (id, qty) => async (dispatch, getState) => {
-  const { data } = await axios.get(`/api/products/${id}`);
+  const {
+    cart: { cartItems },
+  } = getState();
 
-  const { product } = data;
+  const getProduct = await axios.get(`/api/products/${id}`);
+
+  const { product } = getProduct.data;
+
+  const newCartItem = {
+    product: product._id,
+    name: product.name,
+    image: `/files/${product.image}`,
+    price: product.price,
+    countInStock: product.countInStock,
+    qty: qty,
+  };
+
+  const existCartItem = cartItems.find(x => x.product === newCartItem.product);
+
+  let updatedCartItems;
+
+  if (existCartItem) {
+    updatedCartItems = cartItems.map(x => {
+      return x.product === existCartItem.product ? newCartItem : x;
+    });
+  } else {
+    updatedCartItems = [...cartItems, newCartItem];
+  }
 
   dispatch({
     type: CART_ADD_ITEM,
     payload: {
-      product: product._id,
-      name: product.name,
-      image: `/files/${product.image}`,
-      price: product.price,
-      countInStock: product.countInStock,
-      qty: qty,
+      cartItems: updatedCartItems,
     },
   });
 
   localStorage.setItem('cartItems', JSON.stringify(getState().cart.cartItems));
+
+  dispatch({
+    type: PAGE_REDIRECT,
+    payload: '/cart',
+  });
 };
 
 export const removeFromCart = id => (dispatch, getState) => {
+  const {
+    cart: { cartItems },
+  } = getState();
+
+  const updatedCartItems = cartItems.filter(x => x.product !== id);
+
   dispatch({
     type: CART_REMOVE_ITEM,
-    payload: id,
+    payload: {
+      cartItems: updatedCartItems,
+    },
   });
 
   localStorage.setItem('cartItems', JSON.stringify(getState().cart.cartItems));

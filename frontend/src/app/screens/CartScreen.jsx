@@ -17,6 +17,7 @@ import {
 import Message from '@components/Message';
 import { addToCart, removeFromCart } from '../actions/cart.actions';
 import FormatRupiah from '../components/FormatRupiah';
+import { redirectAction } from '../actions/redirect.actions';
 
 /* eslint-disable */
 
@@ -28,14 +29,15 @@ const CartScreen = ({ history, match, location }) => {
   const dispatch = useDispatch();
 
   const cart = useSelector(state => state.cart);
+  const pageRedirect = useSelector(state => state.redirect);
 
   const { cartItems } = cart;
 
   React.useEffect(() => {
-    if (productId) {
-      dispatch(addToCart(productId, qty));
+    if (pageRedirect.redirectTo) {
+      dispatch(redirectAction());
     }
-  }, [dispatch, productId, qty]);
+  }, [dispatch, pageRedirect.redirectTo]);
 
   const goHome = e => {
     e.preventDefault();

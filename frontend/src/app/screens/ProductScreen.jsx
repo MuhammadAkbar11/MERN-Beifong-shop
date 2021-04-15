@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import {
   Row,
   Col,
@@ -15,12 +15,14 @@ import Rating from '@components/Rating';
 import { useDispatch, useSelector } from 'react-redux';
 import { listProductDetails } from '../actions/product.actions';
 import Loader from '../components/Loader';
+import { addToCart } from '../actions/cart.actions';
 
 const ProductScreen = ({ history, match }) => {
   const [qty, setQty] = React.useState(1);
 
   const dispatch = useDispatch();
   const { product, loading } = useSelector(state => state.productDetails);
+  const pageRedirect = useSelector(state => state.redirect);
 
   React.useEffect(() => {
     dispatch(listProductDetails(match.params.id));
@@ -28,8 +30,11 @@ const ProductScreen = ({ history, match }) => {
   }, [dispatch, match]);
 
   const addToCartHandler = () => {
-    history.push(`/cart/${match.params.id}?qty=${qty}`);
+    dispatch(addToCart(match.params.id, +qty));
   };
+  if (pageRedirect.redirectTo) {
+    return <Redirect to={pageRedirect.redirectTo} />;
+  }
 
   return (
     <>
@@ -130,7 +135,7 @@ const ProductScreen = ({ history, match }) => {
                     )}
                     <ListGroup.Item className=''>
                       <Button
-                        onClick={addToCartHandler}
+                        onClick={() => addToCartHandler()}
                         className='btn-block bg-gradient-primary '
                         type='button'
                         disabled={product.countInStock === 0}
