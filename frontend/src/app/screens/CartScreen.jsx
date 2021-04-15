@@ -80,7 +80,7 @@ const CartScreen = ({ history, match, location }) => {
           <hr />
           <div className='w-100 mt-5 text-center'>
             {cartItems.length === 0 ? (
-              <h6 className='text-capitalize'>
+              <h6 className='text-capitalize mb-4'>
                 Your cart is empty{' '}
                 <Link to='/' className='text-primary-light'>
                   Go Back

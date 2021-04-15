@@ -1,5 +1,6 @@
 /* eslint-disable */
 import axios from 'axios';
+import { CART_RESET_ITEMS } from '../constants/cart.constants';
 import {
   ORDER_CREATE_SUCCESS,
   ORDER_CREATE_REQUEST,
@@ -34,6 +35,10 @@ export const createOrderAction = order => async (dispatch, getState) => {
         order: data.order,
       },
     });
+
+    dispatch({ type: CART_RESET_ITEMS });
+    localStorage.setItem('cartItems', JSON.stringify([]));
+    // localStorage.removeItem('cartItems');
   } catch (error) {
     console.log(error);
     let errData = {

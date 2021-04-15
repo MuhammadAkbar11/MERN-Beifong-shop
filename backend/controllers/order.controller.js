@@ -55,6 +55,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
       });
     }
   } catch (error) {
+    console.log(error);
     res.status(error.statusCode || 500);
     throw new ResponseError(
       error.statusCode,

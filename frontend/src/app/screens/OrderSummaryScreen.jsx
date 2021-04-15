@@ -178,28 +178,28 @@ const OrderSummarycreen = ({ history }) => {
               <ListGroup.Item className=' bg-transparent px-0 border-bottom-0 pb-0 '>
                 <h5>Order Summary</h5>
               </ListGroup.Item>
-              <ListGroup.Item className=' border-bottom-0  d-flex justify-content-between bg-transparent px-0  pb-0 '>
+              <ListGroup.Item className=' border-bottom-0  d-flex flex-md-column flex-lg-row justify-content-between bg-transparent px-0  pb-0 '>
                 <span>Subtotal</span>
                 <FormatRupiah
                   className='font-weight-bold text-dark '
                   value={cart.itemsPrice}
                 />
               </ListGroup.Item>
-              <ListGroup.Item className='  d-flex justify-content-between bg-transparent px-0  '>
+              <ListGroup.Item className='  d-flex flex-md-column flex-lg-row  justify-content-between bg-transparent px-0  '>
                 <span>Shipping Price</span>
                 <FormatRupiah
                   className='font-weight-bold text-dark '
                   value={cart.shippingPrice || 0}
                 />
               </ListGroup.Item>
-              <ListGroup.Item className='   d-flex justify-content-between bg-transparent px-0 '>
+              <ListGroup.Item className='   d-flex flex-md-column flex-lg-row  justify-content-between bg-transparent px-0 '>
                 <span>Tax</span>
                 <FormatRupiah
                   className='font-weight-bold text-dark '
                   value={cart.taxPrice || 0}
                 />
               </ListGroup.Item>
-              <ListGroup.Item className='  d-flex justify-content-between bg-transparent px-0 text-primary font-weight-bold  '>
+              <ListGroup.Item className='  d-flex flex-md-column flex-lg-row  justify-content-between bg-transparent px-0 text-primary font-weight-bold  '>
                 <span>Total Price</span>
                 <FormatRupiah value={cart.totalPrice || 0} />
               </ListGroup.Item>
