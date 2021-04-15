@@ -5,6 +5,7 @@ import express from "express";
 import connectDB from "./configs/db.js";
 import productRoutes from "./routes/product.routes.js";
 import userRoutes from "./routes/user.routes.js";
+import orderRoutes from "./routes/order.routes.js";
 import { errorHandler, notFound } from "./middleware/error.middleware.js";
 
 const __dirname = path.resolve();
@@ -37,6 +38,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/orders", orderRoutes);
 app.use(notFound);
 
 app.use(errorHandler);
