@@ -11,6 +11,7 @@ import RegisterScreen from './screens/RegisterScreen';
 import UserProfileScreen from './screens/UserProfileScreen';
 import ShippingScreen from './screens/ShippingScreen';
 import PaymentScreen from './screens/PaymentScreen';
+import OrderSummarycreen from './screens/OrderSummaryScreen';
 
 const App = () => {
   /* eslint-disable */
@@ -31,6 +32,13 @@ const App = () => {
               path='/payment'
               render={props => {
                 return <PaymentScreen {...props} />;
+              }}
+            />
+
+            <Route
+              path='/summary'
+              render={props => {
+                return <OrderSummarycreen {...props} />;
               }}
             />
             <Route

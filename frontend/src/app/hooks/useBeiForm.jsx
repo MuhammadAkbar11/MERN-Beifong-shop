@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 
 const useBeiForm = ({ validationSchema, initialValues, onSubmit }) => {
+  const [submitStatus, setSubmitStatus] = useState(false);
   const [errors, setErrors] = useState(null);
   const [isChanges, setIsChanges] = useState(false);
   const [defaultValues, setDefaultValues] = useState('');
@@ -9,12 +10,9 @@ const useBeiForm = ({ validationSchema, initialValues, onSubmit }) => {
   const handleChange = useCallback(
     e => {
       const { value } = e.target;
-      console.log(
-        defaultValues !== '' && defaultValues !== value,
-        defaultValues,
-        value
-      );
+
       setIsChanges(defaultValues !== value);
+      setSubmitStatus(defaultValues !== value);
       setValues(value);
     },
     [defaultValues]
@@ -23,10 +21,13 @@ const useBeiForm = ({ validationSchema, initialValues, onSubmit }) => {
   const handleSubmit = useCallback(
     async event => {
       event.preventDefault();
+
       try {
         const isValid = await validationSchema.validate(values);
-
-        onSubmit(isValid);
+        if (submitStatus) {
+          onSubmit(isValid);
+          setIsChanges(false);
+        }
         setErrors(null);
       } catch (error) {
         setErrors(error.errors[0]);
