@@ -17,6 +17,25 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    cart: {
+      items: [
+        {
+          productId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "ProductModel",
+            required: true,
+          },
+          quantity: {
+            type: Number,
+            required: true,
+          },
+          total: {
+            type: Number,
+            required: true,
+          },
+        },
+      ],
+    },
     isAdmin: {
       type: Boolean,
       required: true,
