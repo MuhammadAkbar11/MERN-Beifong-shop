@@ -23,6 +23,13 @@ const ProductScreen = ({ history, match }) => {
   const dispatch = useDispatch();
   const { product, loading } = useSelector(state => state.productDetails);
   const pageRedirect = useSelector(state => state.redirect);
+  const { cartItems } = useSelector(state => state.cart);
+
+  const isProductInCart = cartItems.find(item => {
+    return match.params.id === item.product;
+  });
+
+  console.log(isProductInCart);
 
   React.useEffect(() => {
     dispatch(listProductDetails(match.params.id));
@@ -32,6 +39,7 @@ const ProductScreen = ({ history, match }) => {
   const addToCartHandler = () => {
     dispatch(addToCart(match.params.id, +qty));
   };
+
   if (pageRedirect.redirectTo) {
     return <Redirect to={pageRedirect.redirectTo} />;
   }
@@ -106,44 +114,63 @@ const ProductScreen = ({ history, match }) => {
                         </div>
                       </div>
                     </ListGroup.Item>
-
-                    {product.countInStock > 0 && (
-                      <ListGroup.Item>
-                        <div className='d-flex justify-content-between'>
-                          <div>Quantity :</div>
-                          <div>
-                            <Form.Control
-                              size='sm'
-                              as='select'
-                              value={qty}
-                              onChange={e => setQty(e.target.value)}
-                            >
-                              {[...Array(product.countInStock).keys()].map(
-                                x => {
-                                  const key = x + 1;
-                                  return (
-                                    <option key={key} value={key}>
-                                      {key}
-                                    </option>
-                                  );
-                                }
-                              )}
-                            </Form.Control>
+                    {!isProductInCart ? (
+                      <>
+                        {product.countInStock > 0 && (
+                          <ListGroup.Item>
+                            <div className='d-flex justify-content-between'>
+                              <div>Quantity :</div>
+                              <div>
+                                <Form.Control
+                                  size='sm'
+                                  as='select'
+                                  value={qty}
+                                  onChange={e => setQty(e.target.value)}
+                                >
+                                  {[...Array(product.countInStock).keys()].map(
+                                    x => {
+                                      const key = x + 1;
+                                      return (
+                                        <option key={key} value={key}>
+                                          {key}
+                                        </option>
+                                      );
+                                    }
+                                  )}
+                                </Form.Control>
+                              </div>
+                            </div>
+                          </ListGroup.Item>
+                        )}
+                        <ListGroup.Item className=''>
+                          <Button
+                            onClick={() => addToCartHandler()}
+                            className='btn-block bg-gradient-primary '
+                            type='button'
+                            disabled={product.countInStock === 0}
+                          >
+                            {' '}
+                            Add to cart
+                          </Button>
+                        </ListGroup.Item>
+                      </>
+                    ) : (
+                      <>
+                        <ListGroup.Item>
+                          <div className='text-left text-primary font-weight-bold'>
+                            Already put in the Cart
                           </div>
-                        </div>
-                      </ListGroup.Item>
+                        </ListGroup.Item>
+                        <ListGroup.Item>
+                          <Link
+                            className='btn btn-primary btn-block'
+                            to='/cart'
+                          >
+                            Go To Cart
+                          </Link>
+                        </ListGroup.Item>
+                      </>
                     )}
-                    <ListGroup.Item className=''>
-                      <Button
-                        onClick={() => addToCartHandler()}
-                        className='btn-block bg-gradient-primary '
-                        type='button'
-                        disabled={product.countInStock === 0}
-                      >
-                        {' '}
-                        Add to cart
-                      </Button>
-                    </ListGroup.Item>
                   </ListGroup>
                 </Card>
               </Col>
