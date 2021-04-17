@@ -1,4 +1,5 @@
 import express from "express";
+import { postCart } from "../controllers/cart.controller.js";
 import {
   authUser,
   getUserProfile,
@@ -15,5 +16,7 @@ router.post("/register", [registerValidation], registerUser);
 router.post("/login", [loginValidation], authUser);
 router.get("/profile", protect, getUserProfile);
 router.put("/profile", protect, updateUserProfile);
+
+router.post("/cart", protect, postCart);
 
 export default router;

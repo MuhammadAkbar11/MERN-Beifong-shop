@@ -13,7 +13,7 @@ const protect = asyncHandler(async (req, res, next) => {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
       const user = await UserModel.findById(decoded.id).select(
-        "_id name email createdAt updatedAt"
+        "_id name email cart createdAt updatedAt"
       );
 
       req.user = user;

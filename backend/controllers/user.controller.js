@@ -21,7 +21,6 @@ const authUser = asyncHandler(async (req, res) => {
 
   try {
     const user = await UserModel.findOne({ email });
-
     if (user) {
       const doMatchPw = await user.matchPassword(password);
       if (doMatchPw) {
