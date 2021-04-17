@@ -25,11 +25,11 @@ const userSchema = mongoose.Schema(
             ref: "ProductModel",
             required: true,
           },
-          quantity: {
+          qty: {
             type: Number,
             required: true,
           },
-          total: {
+          subtotal: {
             type: Number,
             required: true,
           },
@@ -75,15 +75,15 @@ userSchema.methods.updateCart = async function (cartItems, products) {
       );
 
       if (cartProductIndex >= 0) {
-        let newQty = cartItems[cartItemIndex].quantity;
+        let newQty = cartItems[cartItemIndex].qty;
         const totalPrice = product.price.num * newQty;
-        updatedCart[cartProductIndex].quantity = newQty;
-        updatedCart[cartProductIndex].total = totalPrice;
+        updatedCart[cartProductIndex].qty = newQty;
+        updatedCart[cartProductIndex].subtotal = totalPrice;
       } else {
         const setItem = {
           product: cartItems[cartItemIndex].product,
-          total: cartItems[cartItemIndex].total,
-          quantity: cartItems[cartItemIndex].quantity,
+          subtotal: cartItems[cartItemIndex].subtotal,
+          qty: cartItems[cartItemIndex].qty,
         };
 
         updatedCart.push(setItem);
@@ -104,19 +104,18 @@ userSchema.methods.addToCart = function (product, qty) {
     return cp.product.toString() === product._id.toString();
   });
 
-  let newQuantity = qty;
+  let newQty = qty;
   const updatedCartItems = [...this.cart.items];
 
   if (cartProductIndex >= 0) {
-    newQuantity = +qty;
-    updatedCartItems[cartProductIndex].quantity = newQuantity;
-    updatedCartItems[cartProductIndex].total =
-      +newQuantity * +product.price.num;
+    newQty = +qty;
+    updatedCartItems[cartProductIndex].qty = newQty;
+    updatedCartItems[cartProductIndex].subtotal = +newQty * +product.price.num;
   } else {
     updatedCartItems.push({
-      productId: product._id,
-      quantity: newQuantity,
-      total: +newQuantity * +product.price.num,
+      product: product._id,
+      qty: newQty,
+      subtotal: +newQty * +product.price.num,
     });
   }
 
