@@ -1,5 +1,5 @@
 import express from "express";
-import { postCart } from "../controllers/cart.controller.js";
+import { getCart, postCart } from "../controllers/cart.controller.js";
 import {
   authUser,
   getUserProfile,
@@ -17,6 +17,7 @@ router.post("/login", [loginValidation], authUser);
 router.get("/profile", protect, getUserProfile);
 router.put("/profile", protect, updateUserProfile);
 
+router.get("/cart", protect, getCart);
 router.post("/cart", protect, postCart);
 
 export default router;

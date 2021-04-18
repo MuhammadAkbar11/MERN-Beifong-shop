@@ -74,3 +74,23 @@ export const postCart = asyncHandler(async (req, res, next) => {
     }
   }
 });
+
+export const getCart = asyncHandler(async (req, res, next) => {
+  try {
+    const userCart = await req.user
+      .populate({
+        path: "cart.items.product",
+        select: "name image countInStock price",
+      })
+      .execPopulate();
+
+    res.status(200).json({
+      status: true,
+      message: "success",
+      cart: userCart.cart,
+    });
+  } catch (error) {
+    res.status(500);
+    throw new ResponseError(error.statusCode, error.message, error.errors);
+  }
+});
