@@ -24,6 +24,7 @@ export const addToCart = (id, qty) => async (dispatch, getState) => {
     price: product.price,
     countInStock: product.countInStock,
     qty: qty,
+    subtotal: +qty * product.price.num,
   };
 
   const existCartItem = cartItems.find(x => x.product === newCartItem.product);
