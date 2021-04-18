@@ -22,16 +22,12 @@ import { redirectAction } from '../actions/redirect.actions';
 /* eslint-disable */
 
 const CartScreen = ({ history, match, location }) => {
-  const productId = match.params.productId;
-
-  const qty = location.search ? +location.search.split('=')[1] : 1;
-
   const dispatch = useDispatch();
 
   const cart = useSelector(state => state.cart);
   const pageRedirect = useSelector(state => state.redirect);
 
-  const { cartItems } = cart;
+  const { cartItems, loading } = cart;
 
   React.useEffect(() => {
     if (pageRedirect.redirectTo) {
@@ -148,6 +144,7 @@ const CartScreen = ({ history, match, location }) => {
                                     size='sm'
                                     as='select'
                                     value={item.qty}
+                                    readOnly={loading}
                                     onChange={e =>
                                       dispatch(
                                         addToCart(item.product, +e.target.value)
@@ -176,6 +173,7 @@ const CartScreen = ({ history, match, location }) => {
                                   onClick={() =>
                                     removeFromCartHandler(item.product)
                                   }
+                                  disabled={loading}
                                 >
                                   <i className='fas fa-trash'></i>
                                 </Button>
@@ -206,7 +204,7 @@ const CartScreen = ({ history, match, location }) => {
                   onClick={checkoutHandler}
                   type='button'
                   className='btn btn-primary btn-block'
-                  disabled={cartItems.length === 0}
+                  disabled={cartItems.length === 0 || loading}
                 >
                   Proceed to Checkout
                 </Button>

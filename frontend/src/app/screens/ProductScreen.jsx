@@ -23,13 +23,14 @@ const ProductScreen = ({ history, match }) => {
   const dispatch = useDispatch();
   const { product, loading } = useSelector(state => state.productDetails);
   const pageRedirect = useSelector(state => state.redirect);
-  const { cartItems } = useSelector(state => state.cart);
+  const cart = useSelector(state => state.cart);
 
-  const isProductInCart = cartItems.find(item => {
+  let cartAddItemLoading = cart.loading;
+
+  // console.log();
+  const isProductInCart = cart.cartItems.find(item => {
     return match.params.id === item.product;
   });
-
-  console.log(isProductInCart);
 
   React.useEffect(() => {
     dispatch(listProductDetails(match.params.id));
@@ -147,10 +148,14 @@ const ProductScreen = ({ history, match }) => {
                             onClick={() => addToCartHandler()}
                             className='btn-block bg-gradient-primary '
                             type='button'
-                            disabled={product.countInStock === 0}
+                            disabled={
+                              product.countInStock === 0 || cartAddItemLoading
+                            }
                           >
                             {' '}
-                            Add to cart
+                            {cartAddItemLoading
+                              ? 'Adding to cart...'
+                              : 'Add to cart'}
                           </Button>
                         </ListGroup.Item>
                       </>

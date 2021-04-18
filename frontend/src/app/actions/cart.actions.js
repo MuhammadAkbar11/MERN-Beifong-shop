@@ -1,7 +1,11 @@
 import axios from 'axios';
 import {
-  CART_ADD_ITEM,
-  CART_REMOVE_ITEM,
+  CART_ADD_ITEM_REQ,
+  CART_ADD_ITEM_SUCCESS,
+  CART_ADD_ITEM_FAIL,
+  CART_REMOVE_ITEM_REQ,
+  CART_REMOVE_ITEM_SUCCESS,
+  CART_REMOVE_ITEM_FAIL,
   CART_SAVE_SHIPPING_ADDRESS,
   CART_SAVE_PAYMENT_METHOD,
 } from '../constants/cart.constants';
@@ -10,52 +14,111 @@ import { PAGE_REDIRECT } from '../constants/page.constants';
 
 export const addToCart = (id, qty) => async (dispatch, getState) => {
   const {
+    userLogin: { userInfo },
     cart: { cartItems },
   } = getState();
 
-  const getProduct = await axios.get(`/api/products/${id}`);
+  dispatch({
+    type: CART_ADD_ITEM_REQ,
+  });
 
-  const { product } = getProduct.data;
+  try {
+    const getProduct = await axios.get(`/api/products/${id}`);
 
-  const newCartItem = {
-    product: product._id,
-    name: product.name,
-    image: `/files/${product.image}`,
-    price: product.price,
-    countInStock: product.countInStock,
-    qty: qty,
-    subtotal: +qty * product.price.num,
-  };
+    const { product } = getProduct.data;
+    let updatedCartItems = cartItems;
+    if (!userInfo) {
+      const newCartItem = {
+        product: product._id,
+        name: product.name,
+        image: `/files/${product.image}`,
+        price: product.price,
+        countInStock: product.countInStock,
+        qty: qty,
+        subtotal: +qty * product.price.num,
+      };
 
-  const existCartItem = cartItems.find(x => x.product === newCartItem.product);
+      const existCartItem = cartItems.find(
+        x => x.product === newCartItem.product
+      );
 
-  let updatedCartItems;
+      if (existCartItem) {
+        updatedCartItems = cartItems.map(x => {
+          return x.product === existCartItem.product ? newCartItem : x;
+        });
+      } else {
+        updatedCartItems = [...cartItems, newCartItem];
+      }
+    } else {
+      const userToken = userInfo.token;
+      const userAddNewCartItem = await axios.post(
+        `/api/users/cart?product=${product._id}&qty=${qty}`,
+        { cartItems: [] },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${userToken}`,
+          },
+        }
+      );
 
-  if (existCartItem) {
-    updatedCartItems = cartItems.map(x => {
-      return x.product === existCartItem.product ? newCartItem : x;
+      const updatedUserCartItems = userAddNewCartItem.data.cart;
+
+      updatedCartItems = updatedUserCartItems.items.map(item => {
+        return {
+          product: item.product._id,
+          name: item.product.name,
+          price: item.product.price,
+          image: `/files/${item.product.image}`,
+          countInStock: item.product.countInStock,
+          subtotal: item.subtotal,
+          qty: item.qty,
+        };
+      });
+    }
+
+    setTimeout(() => {
+      dispatch({
+        type: CART_ADD_ITEM_SUCCESS,
+        payload: {
+          cartItems: updatedCartItems,
+        },
+      });
+
+      localStorage.setItem(
+        'cartItems',
+        JSON.stringify(getState().cart.cartItems)
+      );
+
+      dispatch({
+        type: PAGE_REDIRECT,
+        payload: '/cart',
+      });
+    }, 1000);
+  } catch (error) {
+    let errData = {
+      message: error.message,
+    };
+
+    if (error.response && error.response.data.message) {
+      const errorData =
+        error.response.data.errors && error.response.data.errors;
+      errData = {
+        message: error.response.data.message,
+        ...errorData,
+      };
+    }
+
+    dispatch({
+      type: CART_ADD_ITEM_FAIL,
+      payload: errData,
     });
-  } else {
-    updatedCartItems = [...cartItems, newCartItem];
   }
-
-  dispatch({
-    type: CART_ADD_ITEM,
-    payload: {
-      cartItems: updatedCartItems,
-    },
-  });
-
-  localStorage.setItem('cartItems', JSON.stringify(getState().cart.cartItems));
-
-  dispatch({
-    type: PAGE_REDIRECT,
-    payload: '/cart',
-  });
 };
 
 export const removeFromCart = id => (dispatch, getState) => {
   const {
+    userLogin: { userInfo },
     cart: { cartItems },
   } = getState();
 

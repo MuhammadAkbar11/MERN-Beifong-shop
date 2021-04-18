@@ -1,6 +1,6 @@
 /* eslint-disable */
 import axios from 'axios';
-import { CART_USER_LOAD } from '../constants/cart.constants';
+import { CART_RESET_ITEMS, CART_USER_LOAD } from '../constants/cart.constants';
 import {
   USER_DETAILS_FAIL,
   USER_DETAILS_REQUEST,
@@ -49,16 +49,16 @@ export const userLoginAction = (email, password) => async (
 
     const userCart = data.user.cart;
     const userToken = data.user.token;
-    console.log(userCart);
-    if (userCart.items.length === 0) {
-      const userCartItems = cartItems.map(cart => {
-        return {
-          product: cart.product,
-          qty: cart.qty,
-          subtotal: cart.qty * cart.price.num,
-        };
-      });
 
+    const userCartItems = cartItems.map(cart => {
+      return {
+        product: cart.product,
+        qty: cart.qty,
+        subtotal: cart.qty * cart.price.num,
+      };
+    });
+
+    if (userCart.items.length === 0) {
       const insertNewCartItems = await axios.post(
         `/api/users/cart`,
         { cartItems: userCartItems },
@@ -71,6 +71,19 @@ export const userLoginAction = (email, password) => async (
       );
 
       data.user.cart = insertNewCartItems.data.cart;
+    } else {
+      const updateCartItems = await axios.post(
+        `/api/users/cart`,
+        { cartItems: userCartItems },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${userToken}`,
+          },
+        }
+      );
+
+      data.user.cart = updateCartItems.data.cart;
     }
 
     const updatedUserCart = data.user.cart;
@@ -236,7 +249,10 @@ export const userRegisterAction = (name, email, password, password2) => async (
 export const userLogout = () => dispatch => {
   console.log('logout sir');
   localStorage.removeItem('userInfo');
+  localStorage.removeItem('cartItems');
+
   dispatch({ type: USER_LOGOUT, userInfo: null });
+  dispatch({ type: CART_RESET_ITEMS });
 };
 
 export const getUserDetailsAction = id => async (dispatch, getState) => {
