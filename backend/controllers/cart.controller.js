@@ -25,13 +25,20 @@ export const postCart = asyncHandler(async (req, res, next) => {
         });
         userCart = await req.user.updateCart(cartItems, products);
       } else {
-        userCart = await req.user.updateCart(cartItems, {});
+        userCart = await req.user.updateCart(cartItems, null);
       }
+
+      const updatedCart = await userCart
+        .populate({
+          path: "cart.items.product",
+          select: "name image countInStock price",
+        })
+        .execPopulate();
 
       res.status(200).json({
         status: true,
         message: "success",
-        user: userCart,
+        cart: updatedCart.cart,
       });
     } catch (error) {
       console.log(error);
@@ -49,10 +56,17 @@ export const postCart = asyncHandler(async (req, res, next) => {
       }
       const userCart = await req.user.addToCart(product, qty);
 
+      const updatedCart = await userCart
+        .populate({
+          path: "cart.items.product",
+          select: "name image countInStock price",
+        })
+        .execPopulate();
+
       res.status(200).json({
         status: true,
         message: "success",
-        user: userCart,
+        cart: updatedCart.cart,
       });
     } catch (error) {
       console.log(error);
