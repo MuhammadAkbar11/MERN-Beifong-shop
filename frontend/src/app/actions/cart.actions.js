@@ -126,13 +126,10 @@ export const removeFromCart = id => async (dispatch, getState) => {
     cart: { cartItems },
   } = getState();
 
-  try {
-    let updatedCartItems = cartItems;
-    const userToken = userInfo.token;
-
-    if (!userInfo) {
-      updatedCartItems = await cartItems.filter(x => x.product !== id);
-    } else {
+  if (userInfo) {
+    try {
+      let updatedCartItems = cartItems;
+      const userToken = userInfo.token;
       const removeCartItem = await axios.post(
         `/api/users/cart/delete`,
         { product: id },
@@ -157,8 +154,45 @@ export const removeFromCart = id => async (dispatch, getState) => {
           qty: item.qty,
         };
       });
+
+      setTimeout(() => {
+        dispatch({
+          type: CART_REMOVE_ITEM_SUCCESS,
+          payload: {
+            cartItems: updatedCartItems,
+          },
+        });
+
+        localStorage.setItem(
+          'cartItems',
+          JSON.stringify(getState().cart.cartItems)
+        );
+      }, 500);
+    } catch (error) {
+      let errData = {
+        message: error.message,
+      };
+
+      if (error.response && error.response.data.message) {
+        const errorData =
+          error.response.data.errors && error.response.data.errors;
+        errData = {
+          message: error.response.data.message,
+          ...errorData,
+        };
+      }
+
+      setTimeout(() => {
+        dispatch({
+          type: CART_REMOVE_ITEM_FAIL,
+          payload: errData,
+        });
+      }, 500);
     }
 
+    return;
+  } else {
+    const updatedCartItems = cartItems.filter(x => x.product !== id);
     setTimeout(() => {
       dispatch({
         type: CART_REMOVE_ITEM_SUCCESS,
@@ -171,26 +205,6 @@ export const removeFromCart = id => async (dispatch, getState) => {
         'cartItems',
         JSON.stringify(getState().cart.cartItems)
       );
-    }, 500);
-  } catch (error) {
-    let errData = {
-      message: error.message,
-    };
-
-    if (error.response && error.response.data.message) {
-      const errorData =
-        error.response.data.errors && error.response.data.errors;
-      errData = {
-        message: error.response.data.message,
-        ...errorData,
-      };
-    }
-
-    setTimeout(() => {
-      dispatch({
-        type: CART_REMOVE_ITEM_FAIL,
-        payload: errData,
-      });
     }, 500);
   }
 };
