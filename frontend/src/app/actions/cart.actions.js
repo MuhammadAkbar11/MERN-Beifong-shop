@@ -94,7 +94,7 @@ export const addToCart = (id, qty) => async (dispatch, getState) => {
         type: PAGE_REDIRECT,
         payload: '/cart',
       });
-    }, 1000);
+    }, 500);
   } catch (error) {
     let errData = {
       message: error.message,
@@ -116,22 +116,83 @@ export const addToCart = (id, qty) => async (dispatch, getState) => {
   }
 };
 
-export const removeFromCart = id => (dispatch, getState) => {
+export const removeFromCart = id => async (dispatch, getState) => {
+  dispatch({
+    type: CART_REMOVE_ITEM_REQ,
+  });
+
   const {
     userLogin: { userInfo },
     cart: { cartItems },
   } = getState();
 
-  const updatedCartItems = cartItems.filter(x => x.product !== id);
+  try {
+    let updatedCartItems = cartItems;
+    const userToken = userInfo.token;
 
-  dispatch({
-    type: CART_REMOVE_ITEM,
-    payload: {
-      cartItems: updatedCartItems,
-    },
-  });
+    if (!userInfo) {
+      updatedCartItems = await cartItems.filter(x => x.product !== id);
+    } else {
+      const removeCartItem = await axios.post(
+        `/api/users/cart/delete`,
+        { product: id },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${userToken}`,
+          },
+        }
+      );
 
-  localStorage.setItem('cartItems', JSON.stringify(getState().cart.cartItems));
+      const updatedUserCart = removeCartItem.data.cart;
+
+      updatedCartItems = updatedUserCart.items.map(item => {
+        return {
+          product: item.product._id,
+          name: item.product.name,
+          price: item.product.price,
+          image: `/files/${item.product.image}`,
+          countInStock: item.product.countInStock,
+          subtotal: item.subtotal,
+          qty: item.qty,
+        };
+      });
+    }
+
+    setTimeout(() => {
+      dispatch({
+        type: CART_REMOVE_ITEM_SUCCESS,
+        payload: {
+          cartItems: updatedCartItems,
+        },
+      });
+
+      localStorage.setItem(
+        'cartItems',
+        JSON.stringify(getState().cart.cartItems)
+      );
+    }, 500);
+  } catch (error) {
+    let errData = {
+      message: error.message,
+    };
+
+    if (error.response && error.response.data.message) {
+      const errorData =
+        error.response.data.errors && error.response.data.errors;
+      errData = {
+        message: error.response.data.message,
+        ...errorData,
+      };
+    }
+
+    setTimeout(() => {
+      dispatch({
+        type: CART_REMOVE_ITEM_FAIL,
+        payload: errData,
+      });
+    }, 500);
+  }
 };
 
 export const saveShippingAddressAction = data => dispatch => {

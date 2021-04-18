@@ -126,22 +126,22 @@ userSchema.methods.addToCart = function (product, qty) {
   return this.save();
 };
 
-userSchema.methods.removeCartItem = function (productId) {
+userSchema.methods.removeCartItem = async function (productId) {
   const updatedCartItems = this.cart.items.filter(item => {
-    return item.productId.toString() !== productId.toString();
+    return item.product.toString() !== productId.toString();
   });
 
   this.cart.items = updatedCartItems;
 
-  return this.save();
+  return await this.save();
 };
 
-userSchema.methods.clearCart = function () {
+userSchema.methods.clearCart = async function () {
   this.cart = {
     items: [],
   };
 
-  return this.save();
+  return await this.save();
 };
 
 const UserModel = mongoose.model("UserModel", userSchema, "users");

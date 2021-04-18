@@ -1,6 +1,5 @@
 /* eslint-disable */
 import {
-  CART_REMOVE_ITEM,
   CART_SAVE_SHIPPING_ADDRESS,
   CART_SAVE_PAYMENT_METHOD,
   CART_RESET_ITEMS,
@@ -8,12 +7,16 @@ import {
   CART_ADD_ITEM_REQ,
   CART_ADD_ITEM_SUCCESS,
   CART_ADD_ITEM_FAIL,
+  CART_REMOVE_ITEM_REQ,
+  CART_REMOVE_ITEM_SUCCESS,
+  CART_REMOVE_ITEM_FAIL,
 } from '../constants/cart.constants';
 
 export const cartReducer = (
   state = { cartItems: [], shippingAddress: {}, loading: false },
   action
 ) => {
+  action.payload;
   switch (action.type) {
     case CART_ADD_ITEM_REQ:
       return {
@@ -32,10 +35,24 @@ export const cartReducer = (
         loading: false,
         cartItems: action.payload.cartItems,
       };
-    case CART_REMOVE_ITEM:
+    case CART_REMOVE_ITEM_REQ:
       return {
         ...state,
+        loading: true,
+      };
+    case CART_REMOVE_ITEM_SUCCESS:
+      return {
+        ...state,
+        loading: false,
         cartItems: action.payload.cartItems,
+      };
+    case CART_REMOVE_ITEM_FAIL:
+      return {
+        ...state,
+        errors: {
+          message: 'Failed to remove cart',
+        },
+        loading: false,
       };
 
     case CART_USER_LOAD:

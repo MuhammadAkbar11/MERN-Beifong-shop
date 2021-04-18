@@ -5,6 +5,7 @@ import {
   registerUser,
   updateUserProfile,
   userPostCart,
+  userRemoveCart,
 } from "../controllers/user.controller.js";
 import { protect } from "../middleware/auth.middlerware.js";
 import loginValidation from "../middleware/validations/login.validation.js";
@@ -18,5 +19,6 @@ router.get("/profile", protect, getUserProfile);
 router.put("/profile", protect, updateUserProfile);
 
 router.post("/cart", protect, userPostCart);
+router.post("/cart/delete", protect, userRemoveCart);
 
 export default router;

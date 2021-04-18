@@ -1,6 +1,7 @@
 import asyncHandler from "express-async-handler";
 import { validationResult } from "express-validator";
 import UserModel from "../models/userModel.js";
+import ProductModel from "../models/productModel.js";
 import errMessageValidation from "../utils/errMessagesValidation.js";
 import generateToken from "../utils/generateToken.js";
 import ResponseError from "../utils/responseError.js";
@@ -274,10 +275,35 @@ const userPostCart = asyncHandler(async (req, res, next) => {
   }
 });
 
+const userRemoveCart = asyncHandler(async (req, res, next) => {
+  const productId = req.body.product;
+  console.log(productId);
+  try {
+    const removeItem = await req.user.removeCartItem(productId);
+
+    const updatedCart = await removeItem
+      .populate({
+        path: "cart.items.product",
+        select: "name image countInStock price",
+      })
+      .execPopulate();
+
+    res.status(201).json({
+      status: true,
+      message: "1 item removed",
+      cart: updatedCart.cart,
+    });
+  } catch (error) {
+    console.log(error);
+    throw new ResponseError(error.statusCode, error.message, error.errors);
+  }
+});
+
 export {
   authUser,
   getUserProfile,
   registerUser,
   updateUserProfile,
   userPostCart,
+  userRemoveCart,
 };

@@ -72,18 +72,20 @@ export const userLoginAction = (email, password) => async (
 
       data.user.cart = insertNewCartItems.data.cart;
     } else {
-      const updateCartItems = await axios.post(
-        `/api/users/cart`,
-        { cartItems: userCartItems },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${userToken}`,
-          },
-        }
-      );
+      if (cartItems.length !== 0) {
+        const updateCartItems = await axios.post(
+          `/api/users/cart`,
+          { cartItems: userCartItems },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${userToken}`,
+            },
+          }
+        );
 
-      data.user.cart = updateCartItems.data.cart;
+        data.user.cart = updateCartItems.data.cart;
+      }
     }
 
     const updatedUserCart = data.user.cart;
