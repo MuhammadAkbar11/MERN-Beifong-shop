@@ -59,42 +59,41 @@ userSchema.pre("save", async function (next) {
   this.password = await bcrypt.hash(this.password, 12);
 });
 
+userSchema.methods.insertUserCart = async function (cartItems) {
+  this.cart = {
+    items: cartItems,
+  };
+  return await this.save();
+};
+
 userSchema.methods.updateCart = async function (cartItems, products = null) {
-  let newCartItems;
   const updatedCart = [...this.cart.items];
-
-  if (this.cart.items.length === 0 && products === null) {
-    newCartItems = cartItems;
-  } else {
-    products.map(product => {
-      const cartProductIndex = updatedCart.findIndex(x => {
-        return x.product.toString() === product._id.toString();
-      });
-
-      const cartItemIndex = cartItems.findIndex(
-        x => x.product.toString() === product._id.toString()
-      );
-
-      if (cartProductIndex >= 0) {
-        let newQty = cartItems[cartItemIndex].qty;
-        const totalPrice = product.price.num * newQty;
-        updatedCart[cartProductIndex].qty = newQty;
-        updatedCart[cartProductIndex].subtotal = totalPrice;
-      } else {
-        const setItem = {
-          product: cartItems[cartItemIndex].product,
-          subtotal: cartItems[cartItemIndex].subtotal,
-          qty: cartItems[cartItemIndex].qty,
-        };
-
-        updatedCart.push(setItem);
-      }
+  products.map(product => {
+    const cartProductIndex = updatedCart.findIndex(x => {
+      return x.product.toString() === product._id.toString();
     });
-    newCartItems = updatedCart;
-  }
+    const cartItemIndex = cartItems.findIndex(
+      x => x.product.toString() === product._id.toString()
+    );
+
+    if (cartProductIndex >= 0) {
+      let newQty = cartItems[cartItemIndex].qty;
+      const totalPrice = product.price.num * newQty;
+      updatedCart[cartProductIndex].qty = newQty;
+      updatedCart[cartProductIndex].subtotal = totalPrice;
+    } else {
+      const setItem = {
+        product: cartItems[cartItemIndex].product,
+        subtotal: cartItems[cartItemIndex].subtotal,
+        qty: cartItems[cartItemIndex].qty,
+      };
+
+      updatedCart.push(setItem);
+    }
+  });
 
   this.cart = {
-    items: newCartItems,
+    items: updatedCart,
   };
 
   return await this.save();
@@ -124,6 +123,24 @@ userSchema.methods.addToCart = function (product, qty) {
     items: updatedCartItems,
   };
   this.cart = updatedCart;
+  return this.save();
+};
+
+userSchema.methods.removeCartItem = function (productId) {
+  const updatedCartItems = this.cart.items.filter(item => {
+    return item.productId.toString() !== productId.toString();
+  });
+
+  this.cart.items = updatedCartItems;
+
+  return this.save();
+};
+
+userSchema.methods.clearCart = function () {
+  this.cart = {
+    items: [],
+  };
+
   return this.save();
 };
 
