@@ -1,5 +1,6 @@
 /* eslint-disable */
 import axios from 'axios';
+import { CART_ADD_ITEM } from '../constants/cart.constants';
 import {
   USER_DETAILS_FAIL,
   USER_DETAILS_REQUEST,
@@ -66,13 +67,15 @@ export const userLoginAction = (email, password) => async dispatch => {
   }
 };
 
-export const userRegisterAction = (
-  name,
-  email,
-  password,
-  password2
-) => async dispatch => {
+export const userRegisterAction = (name, email, password, password2) => async (
+  dispatch,
+  getState
+) => {
   try {
+    const {
+      cart: { cartItems },
+    } = getState();
+
     dispatch({
       type: USER_REGISTER_REQUEST,
     });
@@ -88,6 +91,57 @@ export const userRegisterAction = (
       { name, email, password, password2 },
       config
     );
+
+    if (cartItems.length !== 0) {
+      const noAuthCartItems = cartItems;
+      const { token } = data.user;
+      const newConfig = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const userCartItems = cartItems.map(cart => {
+        return {
+          product: cart.product,
+          qty: cart.qty,
+          subtotal: cart.qty * cart.price.num,
+        };
+      });
+
+      const initCartItems = await axios.post(
+        `/api/users/cart`,
+        { cartItems: userCartItems },
+        newConfig
+      );
+
+      const { cart } = initCartItems.data;
+
+      const transformCart = cart.items.map(item => {
+        return {
+          product: item.product._id,
+          price: item.product.price,
+          image: `/files/${item.image}`,
+          countInStock: item.product.countInStock,
+          subtotal: item.subtotal,
+          qty: item.qty,
+        };
+      });
+
+      dispatch({
+        type: CART_ADD_ITEM,
+        payload: {
+          cartItems: transformCart,
+        },
+      });
+
+      localStorage.setItem(
+        'cartItems',
+        JSON.stringify(getState().cart.cartItems)
+      );
+      localStorage.setItem('noAuthCartItems', JSON.stringify(noAuthCartItems));
+    }
 
     dispatch({
       type: USER_REGISTER_SUCCESS,
