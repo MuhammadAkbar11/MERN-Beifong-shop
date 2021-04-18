@@ -1,6 +1,6 @@
 /* eslint-disable */
 import axios from 'axios';
-import { CART_ADD_ITEM } from '../constants/cart.constants';
+import { CART_USER_LOAD } from '../constants/cart.constants';
 import {
   USER_DETAILS_FAIL,
   USER_DETAILS_REQUEST,
@@ -22,11 +22,18 @@ import {
   USER_CHANGE_PASSWORD_RESET,
 } from '../constants/user.constants';
 
-export const userLoginAction = (email, password) => async dispatch => {
+export const userLoginAction = (email, password) => async (
+  dispatch,
+  getState
+) => {
   try {
     dispatch({
       type: USER_LOGIN_REQUEST,
     });
+
+    const {
+      cart: { cartItems },
+    } = getState();
 
     const config = {
       headers: {
@@ -40,12 +47,63 @@ export const userLoginAction = (email, password) => async dispatch => {
       config
     );
 
+    const userCart = data.user.cart;
+    const userToken = data.user.token;
+    console.log(userCart);
+    if (userCart.items.length === 0) {
+      const userCartItems = cartItems.map(cart => {
+        return {
+          product: cart.product,
+          qty: cart.qty,
+          subtotal: cart.qty * cart.price.num,
+        };
+      });
+
+      const insertNewCartItems = await axios.post(
+        `/api/users/cart`,
+        { cartItems: userCartItems },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${userToken}`,
+          },
+        }
+      );
+
+      data.user.cart = insertNewCartItems.data.cart;
+    }
+
+    const updatedUserCart = data.user.cart;
+
+    const transformCart = updatedUserCart.items.map(item => {
+      return {
+        product: item.product._id,
+        name: item.product.name,
+        price: item.product.price,
+        image: `/files/${item.product.image}`,
+        countInStock: item.product.countInStock,
+        subtotal: item.subtotal,
+        qty: item.qty,
+      };
+    });
+
+    dispatch({
+      type: CART_USER_LOAD,
+      payload: {
+        cartItems: transformCart,
+      },
+    });
+
     dispatch({
       type: USER_LOGIN_SUCCESS,
       payload: data.user,
     });
 
     localStorage.setItem('userInfo', JSON.stringify(data.user));
+    localStorage.setItem(
+      'cartItems',
+      JSON.stringify(getState().cart.cartItems)
+    );
   } catch (error) {
     let errData = {
       message: error.message,
@@ -93,7 +151,6 @@ export const userRegisterAction = (name, email, password, password2) => async (
     );
 
     if (cartItems.length !== 0) {
-      const noAuthCartItems = cartItems;
       const { token } = data.user;
       const newConfig = {
         headers: {
@@ -122,7 +179,8 @@ export const userRegisterAction = (name, email, password, password2) => async (
         return {
           product: item.product._id,
           price: item.product.price,
-          image: `/files/${item.image}`,
+          name: item.product.name,
+          image: `/files/${item.product.image}`,
           countInStock: item.product.countInStock,
           subtotal: item.subtotal,
           qty: item.qty,
@@ -130,7 +188,7 @@ export const userRegisterAction = (name, email, password, password2) => async (
       });
 
       dispatch({
-        type: CART_ADD_ITEM,
+        type: CART_USER_LOAD,
         payload: {
           cartItems: transformCart,
         },
@@ -140,7 +198,6 @@ export const userRegisterAction = (name, email, password, password2) => async (
         'cartItems',
         JSON.stringify(getState().cart.cartItems)
       );
-      localStorage.setItem('noAuthCartItems', JSON.stringify(noAuthCartItems));
     }
 
     dispatch({
