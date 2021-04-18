@@ -24,6 +24,13 @@ const authUser = asyncHandler(async (req, res) => {
     if (user) {
       const doMatchPw = await user.matchPassword(password);
       if (doMatchPw) {
+        const userCart = await user
+          .populate({
+            path: "cart.items.product",
+            select: "name image countInStock price",
+          })
+          .execPopulate();
+
         return res.status(200).json({
           status: true,
           message: "Login success",
@@ -37,6 +44,7 @@ const authUser = asyncHandler(async (req, res) => {
             name: user.name,
             email: user.email,
             token: generateToken(user._id),
+            cart: userCart.cart,
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
           },
@@ -194,4 +202,82 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
-export { authUser, getUserProfile, registerUser, updateUserProfile };
+const userPostCart = asyncHandler(async (req, res, next) => {
+  const cartItems = req.body.cartItems;
+  const productId = req.query.product;
+  const qty = req.query.qty;
+
+  if (cartItems.length !== 0 && !productId) {
+    try {
+      // let products;
+      let userCart;
+
+      console.log(req.user.cart.items.length);
+      if (req.user.cart.items.length !== 0) {
+        const products = await ProductModel.find({
+          _id: {
+            $in: cartItems.map(x => x.product),
+          },
+        });
+        userCart = await req.user.updateCart(cartItems, products);
+      } else {
+        userCart = await req.user.insertUserCart(cartItems);
+      }
+
+      const updatedCart = await userCart
+        .populate({
+          path: "cart.items.product",
+          select: "name image countInStock price",
+        })
+        .execPopulate();
+
+      res.status(200).json({
+        status: true,
+        message: "success",
+        cart: updatedCart.cart,
+      });
+    } catch (error) {
+      console.log(error);
+      throw new ResponseError(error.statusCode, error.message, error.errors);
+    }
+
+    return;
+  } else {
+    if (!productId) {
+      throw new ResponseError(400, "Failed add to cart", null);
+    }
+    try {
+      const product = await ProductModel.findById(productId);
+
+      if (!product) {
+        throw new ResponseError(404, "Product not Found", null);
+      }
+
+      const userCart = await req.user.addToCart(product, qty);
+
+      const updatedCart = await userCart
+        .populate({
+          path: "cart.items.product",
+          select: "name image countInStock price",
+        })
+        .execPopulate();
+
+      res.status(200).json({
+        status: true,
+        message: "success",
+        cart: updatedCart.cart,
+      });
+    } catch (error) {
+      console.log(error);
+      throw new ResponseError(error.statusCode, error.message, error.errors);
+    }
+  }
+});
+
+export {
+  authUser,
+  getUserProfile,
+  registerUser,
+  updateUserProfile,
+  userPostCart,
+};

@@ -1,10 +1,10 @@
 import express from "express";
-import { getCart, postCart } from "../controllers/cart.controller.js";
 import {
   authUser,
   getUserProfile,
   registerUser,
   updateUserProfile,
+  userPostCart,
 } from "../controllers/user.controller.js";
 import { protect } from "../middleware/auth.middlerware.js";
 import loginValidation from "../middleware/validations/login.validation.js";
@@ -17,7 +17,6 @@ router.post("/login", [loginValidation], authUser);
 router.get("/profile", protect, getUserProfile);
 router.put("/profile", protect, updateUserProfile);
 
-router.get("/cart", protect, getCart);
-router.post("/cart", protect, postCart);
+router.post("/cart", protect, userPostCart);
 
 export default router;
