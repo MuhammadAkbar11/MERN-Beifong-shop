@@ -59,10 +59,11 @@ userSchema.pre("save", async function (next) {
   this.password = await bcrypt.hash(this.password, 12);
 });
 
-userSchema.methods.updateCart = async function (cartItems, products) {
+userSchema.methods.updateCart = async function (cartItems, products = null) {
   let newCartItems;
   const updatedCart = [...this.cart.items];
-  if (this.cart.items.length === 0) {
+
+  if (this.cart.items.length === 0 && products === null) {
     newCartItems = cartItems;
   } else {
     products.map(product => {
