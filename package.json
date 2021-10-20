@@ -1,6 +1,6 @@
 {
   "name": "proshop_mern",
-  "version": "1.0.0",
+  "version": "1.22.15",
   "description": "e-commerce shop using mern stack",
   "main": "server.js",
   "type": "module",
