@@ -71,14 +71,12 @@ const addOrderItems = asyncHandler(async (req, res) => {
 // @access  Private
 const getOrderById = asyncHandler(async (req, res) => {
   try {
-    console.log("hayy");
     const order = await OrderModel.findById(req.params.id).populate(
       "user",
       "name email"
     );
 
     if (order) {
-      console.log(order, "prderr");
       res.json(order);
     } else {
       res.status(400);
@@ -94,4 +92,40 @@ const getOrderById = asyncHandler(async (req, res) => {
   }
 });
 
-export { addOrderItems, getOrderById };
+// @desc c  Update order to paid
+// @route   GET /api/order/:id/pay
+// @access  Private
+const updateOrdertoPaid = asyncHandler(async (req, res) => {
+  try {
+    const order = await OrderModel.findById(req.params.id);
+
+    if (order) {
+      order.isPaid = true;
+      order.paidAt = Date.now();
+      order.paymentResult = {
+        id: req.body.id,
+        status: req.body.status,
+        update_time: req.body.update_time,
+        email_address: req.body.payer.email_address,
+      };
+
+      const updatedOrder = await order.save();
+      res.status(201).json({
+        message: "Payment successfully",
+        updatedOrder,
+      });
+    } else {
+      res.status(400);
+      throw new ResponseError(400, "Order no found");
+    }
+  } catch (error) {
+    res.status(error.statusCode || 500);
+    throw new ResponseError(
+      error.statusCode,
+      error.statusCode === 400 ? error.message : "Something went wrong",
+      error.errors
+    );
+  }
+});
+
+export { addOrderItems, getOrderById, updateOrdertoPaid };
