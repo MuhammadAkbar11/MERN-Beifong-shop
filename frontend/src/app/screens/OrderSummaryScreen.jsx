@@ -30,7 +30,7 @@ const OrderSummarycreen = ({ history }) => {
 
   cart.shippingPrice =
     cart.itemsPrice > 1000000 ? 25000 : cart.itemsPrice < 500000 ? 7000 : 15000;
-  cart.taxPrice = Number(0.05 * cart.itemsPrice);
+  cart.taxPrice = Number(0.01 * cart.itemsPrice);
   cart.totalPrice = +cart.itemsPrice + +cart.shippingPrice + +cart.taxPrice;
 
   const orderCreate = useSelector(state => state.orderCreate);

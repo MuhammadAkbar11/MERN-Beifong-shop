@@ -73,11 +73,12 @@ const getOrderById = asyncHandler(async (req, res) => {
   try {
     console.log("hayy");
     const order = await OrderModel.findById(req.params.id).populate(
-      "users",
+      "user",
       "name email"
     );
 
     if (order) {
+      console.log(order, "prderr");
       res.json(order);
     } else {
       res.status(400);

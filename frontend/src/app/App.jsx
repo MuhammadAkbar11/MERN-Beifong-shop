@@ -12,6 +12,7 @@ import UserProfileScreen from './screens/UserProfileScreen';
 import ShippingScreen from './screens/ShippingScreen';
 import PaymentScreen from './screens/PaymentScreen';
 import OrderSummarycreen from './screens/OrderSummaryScreen';
+import OrderScreen from './screens/OrderScreen';
 
 const App = () => {
   /* eslint-disable */
@@ -22,6 +23,12 @@ const App = () => {
       <main className='py-3 bg-light '>
         <Container>
           <Switch>
+            <Route
+              path='/order/:id'
+              render={props => {
+                return <OrderScreen {...props} />;
+              }}
+            />
             <Route
               path='/shipping'
               render={props => {
