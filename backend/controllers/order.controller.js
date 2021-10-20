@@ -55,7 +55,6 @@ const addOrderItems = asyncHandler(async (req, res) => {
       });
     }
   } catch (error) {
-    console.log(error);
     res.status(error.statusCode || 500);
     throw new ResponseError(
       error.statusCode,
@@ -67,4 +66,31 @@ const addOrderItems = asyncHandler(async (req, res) => {
   }
 });
 
-export { addOrderItems };
+// @desc c  Get order by Id
+// @route   GET /api/order/:id
+// @access  Private
+const getOrderById = asyncHandler(async (req, res) => {
+  try {
+    console.log("hayy");
+    const order = await OrderModel.findById(req.params.id).populate(
+      "users",
+      "name email"
+    );
+
+    if (order) {
+      res.json(order);
+    } else {
+      res.status(400);
+      throw new ResponseError(400, "Order no found");
+    }
+  } catch (error) {
+    res.status(error.statusCode || 500);
+    throw new ResponseError(
+      error.statusCode,
+      error.statusCode === 400 ? error.message : "Something went wrong",
+      error.errors
+    );
+  }
+});
+
+export { addOrderItems, getOrderById };
