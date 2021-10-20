@@ -73,7 +73,6 @@ const userDetailsReducer = (
         ...state,
         ...action.payload,
       };
-
     default:
       return state;
   }
@@ -94,8 +93,7 @@ const userUpdateProfileReducer = (state = {}, action) => {
     case USER_UPDATE_PROFILE_FAIL:
       return { ...state, ...action.payload };
     case USER_UPDATE_PROFILE_RESET:
-      return { ...state, ...action.payload };
-
+      return { ...action.payload };
     default:
       return state;
   }

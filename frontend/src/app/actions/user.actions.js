@@ -227,7 +227,6 @@ export const userRegisterAction = (name, email, password, password2) => async (
 
     localStorage.setItem('userInfo', JSON.stringify(data.user));
   } catch (error) {
-    console.log(error);
     let errData = {
       message: error.message,
     };
