@@ -16,6 +16,7 @@ import {
 import {
   orderCreateReducer,
   orderDetailsReducer,
+  orderPayReducer,
 } from './reducers/order.reducer';
 import { redirectReducer } from './reducers/redirect.reducer';
 
@@ -31,6 +32,7 @@ const reducer = combineReducers({
   userChangePassword: userChangePasswordReducer,
   orderCreate: orderCreateReducer,
   orderDetails: orderDetailsReducer,
+  orderPay: orderPayReducer,
 });
 
 const cartItemsFromStorage = localStorage.getItem('cartItems')

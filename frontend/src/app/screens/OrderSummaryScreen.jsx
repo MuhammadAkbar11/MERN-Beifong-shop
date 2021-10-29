@@ -65,7 +65,7 @@ const OrderSummarycreen = ({ history }) => {
             items={[
               { name: 'Home', href: '/' },
               { name: 'Checkout', isActive: true },
-              { name: 'summary', isActive: true },
+              { name: 'Summary', isActive: true },
             ]}
           />
         </Col>

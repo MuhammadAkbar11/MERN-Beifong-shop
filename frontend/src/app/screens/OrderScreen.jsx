@@ -1,37 +1,73 @@
 import React from 'react';
-import {
-  // Button,
-  Container,
-  Row,
-  Col,
-  ListGroup,
-  Image,
-  Card,
-  Form,
-} from 'react-bootstrap';
+import axios from 'axios';
+import { PayPalButton } from 'react-paypal-button-v2';
+import { Container, Row, Col, ListGroup, Image, Card } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import BreadcrumbContainer from '../components/BreadcrumbContainer';
 import CheckoutSteps from '../components/CheckoutSteps';
 import Message from '../components/Message';
 import FormatRupiah from '../components/FormatRupiah';
-import { addToCart } from '../actions/cart.actions';
-import { getOrderDetailsAction } from '../actions/order.actions';
+import {
+  getOrderDetailsAction,
+  payOrderAction,
+  payOrderResetAction,
+} from '../actions/order.actions';
 import Loader from '../components/Loader';
+import useConvertCurrency from '../hooks/useConvertCurrency';
 /* eslint-disable */
-const OrderScreen = ({ history, match }) => {
+const OrderScreen = ({ match }) => {
   const orderId = match.params.id;
+
+  const [sdkReady, setSdkReady] = React.useState(false);
 
   const dispatch = useDispatch();
 
   const orderDetails = useSelector(state => state.orderDetails);
   const { loading, order, error } = orderDetails;
 
-  React.useEffect(() => {
-    dispatch(getOrderDetailsAction(orderId));
-  }, []);
+  const orderPay = useSelector(state => state.orderPay);
+  const { loading: loadingPay, success: successPay } = orderPay;
 
-  console.log(order);
+  const orderTotalPrice = order?.totalPrice;
+
+  const [currencyValue, loadingCurr] = useConvertCurrency({
+    amount: orderTotalPrice?.num || 0,
+    fromCurrency: 'IDR',
+    toCurrency: 'USD',
+  });
+
+  React.useEffect(() => {
+    const addPayPalScript = async () => {
+      const {
+        data: { client_id },
+      } = await axios.get('/api/config/paypal');
+      const script = document.createElement('script');
+
+      script.type = 'text/javascript';
+      script.src = `https://www.paypal.com/sdk/js?client-id=${client_id}`;
+      script.async = true;
+      script.onload = () => {
+        setSdkReady(true);
+      };
+
+      document.body.appendChild(script);
+    };
+    if (!order || successPay) {
+      dispatch(payOrderResetAction());
+      dispatch(getOrderDetailsAction(orderId));
+    } else if (!order.isPaid) {
+      if (!window.paypal) {
+        addPayPalScript();
+      } else {
+        setSdkReady(true);
+      }
+    }
+  }, [dispatch, orderId, successPay, order]);
+
+  const successPaymentHandler = paymentResult => {
+    dispatch(payOrderAction(orderId, paymentResult));
+  };
 
   return (
     <Container className='px-1 px-sm-0 py-3 h-100'>
@@ -41,7 +77,7 @@ const OrderScreen = ({ history, match }) => {
             items={[
               { name: 'Home', href: '/' },
               { name: 'Checkout', isActive: true },
-              { name: 'summary', isActive: true },
+              { name: 'Summary', isActive: true },
             ]}
           />
         </Col>
@@ -83,7 +119,7 @@ const OrderScreen = ({ history, match }) => {
                   </p>
                   <p>
                     <span className='text-dark'>Delivered Status: </span>{' '}
-                    {order.isPaid ? (
+                    {order.isDelivered ? (
                       <span className='text-success'>
                         Delivered On {order?.deliveredAt}
                       </span>
@@ -158,7 +194,7 @@ const OrderScreen = ({ history, match }) => {
                                   </span>{' '}
                                   <FormatRupiah
                                     className='text-success'
-                                    value={+item.qty * +item.price.num}
+                                    value={Number(+item.qty * +item.price.num)}
                                   />
                                 </div>{' '}
                               </Col>
@@ -181,28 +217,44 @@ const OrderScreen = ({ history, match }) => {
                     <span>Subtotal</span>
                     <FormatRupiah
                       className='font-weight-bold text-dark '
-                      value={order.itemsPrice?.num}
+                      value={+order.itemsPrice?.num}
                     />
                   </ListGroup.Item>
                   <ListGroup.Item className='  d-flex flex-md-column flex-lg-row  justify-content-between bg-transparent px-0  '>
                     <span>Shipping Price</span>
                     <FormatRupiah
                       className='font-weight-bold text-dark '
-                      value={order.shippingPrice?.rupiah || 0}
+                      value={+order.shippingPrice?.num || 0}
                     />
                   </ListGroup.Item>
                   <ListGroup.Item className='   d-flex flex-md-column flex-lg-row  justify-content-between bg-transparent px-0 '>
                     <span>Tax</span>
                     <FormatRupiah
                       className='font-weight-bold text-dark '
-                      value={order.taxPrice?.rupiah || 0}
+                      value={+order.taxPrice?.num || 0}
                     />
                   </ListGroup.Item>
                   <ListGroup.Item className='  d-flex flex-md-column flex-lg-row  justify-content-between bg-transparent px-0 text-primary font-weight-bold  '>
                     <span>Total Price</span>
-                    <FormatRupiah value={order.totalPrice?.rupiah || 0} />
+                    <FormatRupiah value={+order.totalPrice?.num || 0} />
                   </ListGroup.Item>
-
+                  {!order?.isPaid && (
+                    <ListGroup.Item>
+                      {loadingPay && (
+                        <Loader height={20} width={20} className='my-2' />
+                      )}
+                      {!sdkReady ? (
+                        <Loader height={20} width={20} />
+                      ) : (
+                        !loadingCurr && (
+                          <PayPalButton
+                            amount={currencyValue}
+                            onSuccess={successPaymentHandler}
+                          />
+                        )
+                      )}
+                    </ListGroup.Item>
+                  )}
                   {/* {error ? (
                     <ListGroup.Item className=' border-bottom-0  d-flex  bg-transparent px-0 pb-0  '>
                       <div className='flex-grow-1 text-center'>

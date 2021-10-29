@@ -8,6 +8,10 @@ import {
   ORDER_DETAILS_SUCCESS,
   ORDER_DETAILS_REQUEST,
   ORDER_DETAILS_FAIL,
+  ORDER_PAY_REQUEST,
+  ORDER_PAY_SUCCESS,
+  ORDER_PAY_RESET,
+  ORDER_PAY_FAIL,
 } from '../constants/order.constants';
 
 export const createOrderAction = order => async (dispatch, getState) => {
@@ -82,7 +86,7 @@ export const getOrderDetailsAction = id => async (dispatch, getState) => {
     };
 
     const { data } = await axios.get(`/api/orders/${id}`, config);
-    console.log(data);
+
     dispatch({
       type: ORDER_DETAILS_SUCCESS,
       payload: {
@@ -90,7 +94,6 @@ export const getOrderDetailsAction = id => async (dispatch, getState) => {
       },
     });
   } catch (error) {
-    console.log(error);
     let errData = {
       message: error.message,
     };
@@ -111,4 +114,62 @@ export const getOrderDetailsAction = id => async (dispatch, getState) => {
       },
     });
   }
+};
+
+export const payOrderAction = (orderId, paymentResult) => async (
+  dispatch,
+  getState
+) => {
+  const {
+    userLogin: { userInfo },
+  } = getState();
+
+  try {
+    dispatch({
+      type: ORDER_PAY_REQUEST,
+    });
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.put(
+      `/api/orders/${orderId}/pay`,
+      paymentResult,
+      config
+    );
+
+    dispatch({
+      type: ORDER_PAY_SUCCESS,
+    });
+  } catch (error) {
+    let errData = {
+      message: error.message,
+    };
+
+    if (error.response && error.response.data.message) {
+      const errorData =
+        error.response.data.errors && error.response.data.errors;
+      errData = {
+        message: error.response.data.message,
+        ...errorData,
+      };
+    }
+
+    dispatch({
+      type: ORDER_PAY_FAIL,
+      payload: {
+        errors: errData,
+      },
+    });
+  }
+};
+
+export const payOrderResetAction = () => (dispatch, getState) => {
+  dispatch({
+    type: ORDER_PAY_RESET,
+  });
 };
