@@ -69,6 +69,14 @@ const OrderScreen = ({ match }) => {
     dispatch(payOrderAction(orderId, paymentResult));
   };
 
+  const payAtDateFormat = new Date(order?.paidAt).toLocaleDateString('en-US', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: 'numeric',
+  });
+
   return (
     <Container className='px-1 px-sm-0 py-3 h-100'>
       <Row className='mb-5'>
@@ -138,7 +146,7 @@ const OrderScreen = ({ match }) => {
                     <span className='text-dark'>Paid Status: </span>{' '}
                     {order.isPaid ? (
                       <span className='text-success'>
-                        Paid On {order?.paidAt}
+                        Paid On {payAtDateFormat}
                       </span>
                     ) : (
                       <span className='text-danger'>Not Paid</span>

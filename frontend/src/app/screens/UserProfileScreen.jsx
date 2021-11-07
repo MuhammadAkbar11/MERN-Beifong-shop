@@ -6,6 +6,8 @@ import { Route, Switch } from 'react-router-dom';
 import { getUserDetailsAction } from '../actions/user.actions';
 import BreadcrumbContainer from '../components/BreadcrumbContainer';
 import ProfileUpdate from '../components/ProfileUpdate';
+import { getListMyOrdersAction } from '../actions/order.actions';
+import ListMyOrders from '../components/ListMyOrders';
 
 /* eslint-disable */
 const UserProfileScreen = ({ match, history, location }) => {
@@ -26,11 +28,15 @@ const UserProfileScreen = ({ match, history, location }) => {
   const { userInfo } = userLogin;
   const { user } = userDetails;
 
+  const myOrders = useSelector(state => state.myOrders);
+  const { loading: loadingOrders, error: errorOrders, orders } = myOrders;
+
   React.useEffect(() => {
     if (!userInfo) {
       history.push('/login');
     } else if (!user.name) {
       dispatch(getUserDetailsAction('profile'));
+      dispatch(getListMyOrdersAction());
     } else {
       setProfile({
         name: user.name,
@@ -52,6 +58,8 @@ const UserProfileScreen = ({ match, history, location }) => {
 
     setBreadcrumbItems(newBrItems);
   }, [user]);
+
+  console.log(orders);
 
   const activeClass =
     'border-bottom font-weight-bold text-primary border-primary ';
@@ -105,7 +113,11 @@ const UserProfileScreen = ({ match, history, location }) => {
           <Container className='pt-5'>
             <Switch>
               <Route exact path={`${match.path}`}>
-                <h1>Orders</h1>
+                <ListMyOrders
+                  orders={orders}
+                  errors={errorOrders}
+                  loading={loadingOrders}
+                />
               </Route>
               <Route path={`${match.path}/update`}>
                 <ProfileUpdate user={profile} />

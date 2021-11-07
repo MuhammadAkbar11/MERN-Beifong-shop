@@ -13,11 +13,9 @@ const useConvertCurrency = ({ amount, fromCurrency, toCurrency }) => {
         const { data } = await axios.get(
           `/api/config/currency?amount=${amount}&fromCurr=${fromCurrency}&toCurr=${toCurrency}`
         );
-        console.log(data);
         setValue(data.result);
         setLoading(false);
       } catch (error) {
-        console.log(error);
         setErr(error);
         setLoading(false);
       }

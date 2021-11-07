@@ -111,7 +111,7 @@ const orderModel = mongoose.Schema(
     },
   },
   {
-    timestamp: true,
+    timestamps: true,
   }
 );
 

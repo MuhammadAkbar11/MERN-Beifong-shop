@@ -12,6 +12,9 @@ import {
   ORDER_PAY_SUCCESS,
   ORDER_PAY_RESET,
   ORDER_PAY_FAIL,
+  ORDER_USER_REQUEST,
+  ORDER_USER_SUCCESS,
+  ORDER_USER_FAIL,
 } from '../constants/order.constants';
 
 export const createOrderAction = order => async (dispatch, getState) => {
@@ -85,7 +88,7 @@ export const getOrderDetailsAction = id => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.get(`/api/orders/${id}`, config);
+    const { data } = await axios.get(`/api/orders/details/${id}`, config);
 
     dispatch({
       type: ORDER_DETAILS_SUCCESS,
@@ -161,6 +164,51 @@ export const payOrderAction = (orderId, paymentResult) => async (
 
     dispatch({
       type: ORDER_PAY_FAIL,
+      payload: {
+        errors: errData,
+      },
+    });
+  }
+};
+
+export const getListMyOrdersAction = () => async (dispatch, getState) => {
+  const {
+    userLogin: { userInfo },
+  } = getState();
+
+  try {
+    dispatch({
+      type: ORDER_USER_REQUEST,
+    });
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get(`/api/orders/myorders`, config);
+
+    dispatch({
+      type: ORDER_USER_SUCCESS,
+      payload: data.orders,
+    });
+  } catch (error) {
+    let errData = {
+      message: error.message,
+    };
+
+    if (error.response && error.response.data.message) {
+      const errorData =
+        error.response.data.errors && error.response.data.errors;
+      errData = {
+        message: error.response.data.message,
+        ...errorData,
+      };
+    }
+
+    dispatch({
+      type: ORDER_USER_FAIL,
       payload: {
         errors: errData,
       },
