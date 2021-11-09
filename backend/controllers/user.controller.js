@@ -299,6 +299,35 @@ const userRemoveCart = asyncHandler(async (req, res, next) => {
   }
 });
 
+// @desc get all users
+// @route POST /api/users
+// @access Private/Admin
+const getUsers = asyncHandler(async (req, res) => {
+  try {
+    const users = await UserModel.find({}).select("-__v -password");
+
+    // if (users) {
+    //   return res.status(200).json({
+    //     status: true,
+    //     message: "user is found",
+    //     user: user,
+    //   });
+    // } else {
+    //   res.status(404);
+    //   throw new ResponseError(404, "User not found");
+    // }
+
+    res.json({
+      status: true,
+      users,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(error.statusCode || 500);
+    throw new ResponseError(error.statusCode, error.message, error.errors);
+  }
+});
+
 export {
   authUser,
   getUserProfile,
@@ -306,4 +335,5 @@ export {
   updateUserProfile,
   userPostCart,
   userRemoveCart,
+  getUsers,
 };
