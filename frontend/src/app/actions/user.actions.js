@@ -1,6 +1,7 @@
 /* eslint-disable */
 import axios from 'axios';
 import { CART_RESET_ITEMS, CART_USER_LOAD } from '../constants/cart.constants';
+import { ORDER_USER_RESET } from '../constants/order.constants';
 import {
   USER_DETAILS_FAIL,
   USER_DETAILS_REQUEST,
@@ -20,6 +21,7 @@ import {
   USER_CHANGE_PASSWORD_SUCCESS,
   USER_CHANGE_PASSWORD_FAIL,
   USER_CHANGE_PASSWORD_RESET,
+  USER_DETAILS_RESET,
 } from '../constants/user.constants';
 
 export const userLoginAction = (email, password) => async (
@@ -248,12 +250,13 @@ export const userRegisterAction = (name, email, password, password2) => async (
 };
 
 export const userLogout = () => dispatch => {
-  console.log('logout sir');
   localStorage.removeItem('userInfo');
   localStorage.removeItem('cartItems');
 
   dispatch({ type: USER_LOGOUT, userInfo: null });
   dispatch({ type: CART_RESET_ITEMS });
+  dispatch({ type: ORDER_USER_RESET });
+  dispatch({ type: USER_DETAILS_RESET });
 };
 
 export const getUserDetailsAction = id => async (dispatch, getState) => {

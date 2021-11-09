@@ -17,6 +17,7 @@ import {
   USER_CHANGE_PASSWORD_SUCCESS,
   USER_CHANGE_PASSWORD_FAIL,
   USER_CHANGE_PASSWORD_RESET,
+  USER_DETAILS_RESET,
 } from '../constants/user.constants';
 
 const initState = {};
@@ -72,6 +73,10 @@ const userDetailsReducer = (
       return {
         ...state,
         ...action.payload,
+      };
+    case USER_DETAILS_RESET:
+      return {
+        user: {},
       };
     default:
       return state;
