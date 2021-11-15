@@ -3,6 +3,7 @@ import {
   authUser,
   getUserProfile,
   getUsers,
+  isAuthUser,
   registerUser,
   updateUserProfile,
   userPostCart,
@@ -17,6 +18,7 @@ const router = express.Router();
 router.get("/", protect, adminProtect, getUsers);
 router.post("/register", [registerValidation], registerUser);
 router.post("/login", [loginValidation], authUser);
+router.get("/is-auth", protect, isAuthUser);
 router.get("/profile", protect, getUserProfile);
 router.put("/profile", protect, updateUserProfile);
 

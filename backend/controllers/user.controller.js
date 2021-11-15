@@ -118,6 +118,23 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc is user auth
+// @route POST /api/users/is-auth
+// @access Private
+const isAuthUser = asyncHandler(async (req, res) => {
+  try {
+    res.json({
+      user: req.user,
+    });
+  } catch (error) {
+    throw new ResponseError(
+      error.statusCode,
+      error.message,
+      error?.errors || {}
+    );
+  }
+});
+
 // @desc Get user profile
 // @route POST /api/users/profile
 // @access Private
@@ -304,7 +321,7 @@ const userRemoveCart = asyncHandler(async (req, res, next) => {
 // @access Private/Admin
 const getUsers = asyncHandler(async (req, res) => {
   try {
-    const users = await UserModel.find({}).select("-__v -password");
+    const users = await UserModel.find({});
 
     // if (users) {
     //   return res.status(200).json({
@@ -332,6 +349,7 @@ export {
   authUser,
   getUserProfile,
   registerUser,
+  isAuthUser,
   updateUserProfile,
   userPostCart,
   userRemoveCart,
