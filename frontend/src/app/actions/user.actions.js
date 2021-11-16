@@ -26,6 +26,11 @@ import {
   USER_LIST_SUCCESS,
   USER_LIST_FAIL,
   USER_LIST_RESET,
+  USER_DELETE_REQUEST,
+  USER_DELETE_SUCCESS,
+  USER_DELETE_FAIL,
+  USER_LIST_ALERT_OPEN,
+  USER_LIST_ALERT_CLOSE,
 } from '../constants/user.constants';
 
 export const userLoginAction = (email, password) => async (
@@ -477,6 +482,10 @@ export const resetChangePasswordFeedBackAction = () => dispatch => {
 
 // Admin
 
+export const resetUserListAlertAction = () => async dispatch => {
+  dispatch({ type: USER_LIST_ALERT_CLOSE });
+};
+
 export const getUserListAction = () => async (dispatch, getState) => {
   const {
     userLogin: { userInfo },
@@ -522,6 +531,73 @@ export const getUserListAction = () => async (dispatch, getState) => {
       payload: {
         errors: errData,
         loading: false,
+      },
+    });
+  }
+};
+
+export const deleteUserAction = userId => async (dispatch, getState) => {
+  const {
+    userLogin: { userInfo },
+  } = getState();
+
+  try {
+    dispatch({
+      type: USER_DELETE_REQUEST,
+    });
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.delete(`/api/users/${userId}`, config);
+
+    // setTimeout(() => {
+    dispatch({
+      type: USER_DELETE_SUCCESS,
+    });
+
+    dispatch({
+      type: USER_LIST_ALERT_OPEN,
+      payload: {
+        open: true,
+        type: 'success',
+        message: data?.message,
+      },
+    });
+    // }, 2000);
+  } catch (error) {
+    let errData = {
+      message: error.message,
+    };
+
+    if (error.response && error.response.data.message) {
+      const errorData = error.response.data?.errors;
+      errData = {
+        message: error.response.data.message,
+        ...errorData,
+      };
+    }
+
+    dispatch({
+      type: USER_DELETE_FAIL,
+      payload: {
+        errors: errData,
+        loading: false,
+      },
+    });
+
+    dispatch({
+      type: USER_LIST_ALERT_OPEN,
+      payload: {
+        open: true,
+        type: 'success',
+        message:
+          errData?.message ||
+          errData?.errors?.message ||
+          'Failed to delete user',
       },
     });
   }

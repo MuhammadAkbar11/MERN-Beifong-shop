@@ -8,6 +8,7 @@ const ListMyOrders = ({ orders, errors, loading }) => {
   React.useEffect(() => {
     document.title = 'My Orders | Beifong Shop';
   }, []);
+
   return (
     <>
       <div>
@@ -33,8 +34,8 @@ const ListMyOrders = ({ orders, errors, loading }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {orders.length !== 0 ? (
-                    orders.map(order => {
+                  {orders && orders?.length !== 0 ? (
+                    orders?.map(order => {
                       return (
                         <tr key={order?._id}>
                           <td>{order?._id}</td>

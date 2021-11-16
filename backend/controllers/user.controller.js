@@ -323,23 +323,33 @@ const getUsers = asyncHandler(async (req, res) => {
   try {
     const users = await UserModel.find({});
 
-    // if (users) {
-    //   return res.status(200).json({
-    //     status: true,
-    //     message: "user is found",
-    //     user: user,
-    //   });
-    // } else {
-    //   res.status(404);
-    //   throw new ResponseError(404, "User not found");
-    // }
-
     res.json({
       status: true,
       users,
     });
   } catch (error) {
-    console.log(error);
+    res.status(error.statusCode || 500);
+    throw new ResponseError(error.statusCode, error.message, error.errors);
+  }
+});
+
+// @desc delete user
+// @route DELET /api/users
+// @access Private/Admin
+const deleteUser = asyncHandler(async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.params.id);
+
+    if (user) {
+      await user.remove();
+      return res.json({
+        status: true,
+        message: "User has been deleted",
+      });
+    } else {
+      throw new ResponseError(404, "User not Found", null);
+    }
+  } catch (error) {
     res.status(error.statusCode || 500);
     throw new ResponseError(error.statusCode, error.message, error.errors);
   }
@@ -354,4 +364,5 @@ export {
   userPostCart,
   userRemoveCart,
   getUsers,
+  deleteUser,
 };

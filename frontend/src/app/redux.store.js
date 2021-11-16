@@ -8,7 +8,9 @@ import {
 import { cartReducer } from './reducers/cart.reducer';
 import {
   userChangePasswordReducer,
+  userDeleteReducer,
   userDetailsReducer,
+  userListAlertReducer,
   userListReducer,
   userLoginReducer,
   userRegisterReducer,
@@ -34,6 +36,8 @@ const reducer = combineReducers({
   userUpdateProfile: userUpdateProfileReducer,
   userChangePassword: userChangePasswordReducer,
   userList: userListReducer,
+  userListAlert: userListAlertReducer,
+  userDelete: userDeleteReducer,
   orderCreate: orderCreateReducer,
   orderDetails: orderDetailsReducer,
   orderPay: orderPayReducer,

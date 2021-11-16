@@ -1,6 +1,7 @@
 import express from "express";
 import {
   authUser,
+  deleteUser,
   getUserProfile,
   getUsers,
   isAuthUser,
@@ -16,6 +17,7 @@ import registerValidation from "../middleware/validations/register.validation.js
 const router = express.Router();
 
 router.get("/", protect, adminProtect, getUsers);
+router.delete("/:id", protect, adminProtect, deleteUser);
 router.post("/register", [registerValidation], registerUser);
 router.post("/login", [loginValidation], authUser);
 router.get("/is-auth", protect, isAuthUser);

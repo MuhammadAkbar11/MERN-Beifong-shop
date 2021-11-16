@@ -22,6 +22,11 @@ import {
   USER_LIST_SUCCESS,
   USER_LIST_FAIL,
   USER_LIST_RESET,
+  USER_DELETE_REQUEST,
+  USER_DELETE_SUCCESS,
+  USER_DELETE_FAIL,
+  USER_LIST_ALERT_OPEN,
+  USER_LIST_ALERT_CLOSE,
 } from '../constants/user.constants';
 
 const initState = {};
@@ -142,6 +147,20 @@ const userChangePasswordReducer = (state = { loading: false }, action) => {
   }
 };
 
+const userListAlertReducer = (
+  state = { type: 'success', message: '', open: false },
+  action
+) => {
+  switch (action.type) {
+    case USER_LIST_ALERT_OPEN:
+      return { ...action.payload };
+    case USER_LIST_ALERT_CLOSE:
+      return { type: 'success', message: '', open: false };
+    default:
+      return state;
+  }
+};
+
 const userListReducer = (state = { users: [] }, action) => {
   switch (action.type) {
     case USER_LIST_REQUEST:
@@ -157,6 +176,19 @@ const userListReducer = (state = { users: [] }, action) => {
   }
 };
 
+const userDeleteReducer = (state = { users: [] }, action) => {
+  switch (action.type) {
+    case USER_DELETE_REQUEST:
+      return { loading: true };
+    case USER_DELETE_SUCCESS:
+      return { loading: false, success: true };
+    case USER_DELETE_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
 /* eslint-disable */
 
 export {
@@ -166,4 +198,6 @@ export {
   userUpdateProfileReducer,
   userChangePasswordReducer,
   userListReducer,
+  userListAlertReducer,
+  userDeleteReducer,
 };
