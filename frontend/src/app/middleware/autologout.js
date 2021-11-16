@@ -8,16 +8,29 @@ import {
   USER_LOGOUT,
 } from '../constants/user.constants';
 
-const userInfoFromStorage = localStorage.getItem('userInfo')
-  ? JSON.parse(localStorage.getItem('userInfo'))
-  : null;
-
 const autoLogout = store => next => action => {
-  const { dispatch } = store;
+  const { dispatch, getState } = store;
+  const { userInfo } = getState().userLogin;
 
-  if (userInfoFromStorage) {
-    // console.log(userInfoFromStorage, 'storage');
-    const { token: userToken } = userInfoFromStorage;
+  const handleLogout = () => {
+    localStorage.removeItem('userInfo');
+    localStorage.removeItem('cartItems');
+    dispatch({ type: USER_LOGOUT, userInfo: null });
+    dispatch({ type: CART_RESET_ITEMS });
+    dispatch({ type: ORDER_USER_RESET });
+    dispatch({ type: USER_DETAILS_RESET });
+    dispatch({ type: USER_LIST_RESET });
+
+    window.location.href = '/';
+  };
+
+  if (userInfo) {
+    const { token: userToken } = userInfo;
+    if (!userToken) {
+      handleLogout();
+      return;
+    }
+
     const config = {
       headers: {
         'Content-Type': 'application/json',
@@ -27,21 +40,17 @@ const autoLogout = store => next => action => {
 
     return axios
       .get(`/api/users/is-auth`, config)
-      .then(() => {
+      .then(res => {
         next(action);
       })
       .catch(err => {
-        const errData = err?.response?.data || null;
+        console.log('err');
+        const errData = err?.response?.data || {};
         const { errors } = errData;
         if (errors) {
           if (errors?.notAuth) {
-            localStorage.removeItem('userInfo');
-            localStorage.removeItem('cartItems');
-            dispatch({ type: USER_LOGOUT, userInfo: null });
-            dispatch({ type: CART_RESET_ITEMS });
-            dispatch({ type: ORDER_USER_RESET });
-            dispatch({ type: USER_DETAILS_RESET });
-            dispatch({ type: USER_LIST_RESET });
+            handleLogout();
+
             return;
           }
           next(action);

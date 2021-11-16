@@ -16,8 +16,17 @@ const protect = asyncHandler(async (req, res, next) => {
         "_id name email cart isAdmin createdAt updatedAt"
       );
 
-      req.user = user;
+      if (!user) {
+        const errorObj = new Error();
+        errorObj.statusCode = 401;
+        errorObj.message = "Not Authorized, no token failed";
+        errorObj.errors = {
+          notAuth: true,
+        };
+        throw errorObj;
+      }
 
+      req.user = user;
       return next();
     } catch (error) {
       const errorObj = new Error();
