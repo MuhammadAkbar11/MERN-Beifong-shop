@@ -10,7 +10,8 @@
     "client": "yarn --cwd ./frontend/ start",
     "dev": "concurrently \"yarn server\" \"yarn client\"",
     "data:import": "node backend/seeder.js",
-    "data:destroy": "node backend/seeder.js -d"
+    "data:destroy": "node backend/seeder.js -d",
+    "seed:gu": "node backend/seeds/generateUsers.js -d"
   },
   "repository": "git@github.com:MuhammadAkbar11/MERN-Beifong-shop.git",
   "author": "MuhammadAkbar11 <muhammadakbarletlet@gmail.com>",
