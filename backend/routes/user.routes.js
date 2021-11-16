@@ -2,10 +2,12 @@ import express from "express";
 import {
   authUser,
   deleteUser,
+  getUserById,
   getUserProfile,
   getUsers,
   isAuthUser,
   registerUser,
+  updateUser,
   updateUserProfile,
   userPostCart,
   userRemoveCart,
@@ -17,7 +19,9 @@ import registerValidation from "../middleware/validations/register.validation.js
 const router = express.Router();
 
 router.get("/", protect, adminProtect, getUsers);
+router.get("/:id", protect, adminProtect, getUserById);
 router.delete("/:id", protect, adminProtect, deleteUser);
+router.put("/:id", protect, adminProtect, updateUser);
 router.post("/register", [registerValidation], registerUser);
 router.post("/login", [loginValidation], authUser);
 router.get("/is-auth", protect, isAuthUser);

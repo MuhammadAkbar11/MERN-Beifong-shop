@@ -355,6 +355,75 @@ const deleteUser = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc get user by Id
+// @route GET /api/users/:id
+// @access Private/Admin
+const getUserById = asyncHandler(async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.params.id);
+
+    if (user) {
+      return res.json({
+        status: true,
+        user,
+      });
+    } else {
+      throw new ResponseError(404, "User not Found", null);
+    }
+  } catch (error) {
+    res.status(error.statusCode || 500);
+    throw new ResponseError(error.statusCode, error.message, error.errors);
+  }
+});
+
+// @desc Update user
+// @route PUT /api/users/:id
+// @access Private/Admin
+const updateUser = asyncHandler(async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.params.id);
+    const oldEmail = user.email;
+    if (user) {
+      user.name = req.body.name || user.name;
+      user.isAdmin = req.body.isAdmin;
+      if (req.body.email && req.body.email !== oldEmail) {
+        const getUser = await UserModel.findOne({ email: req.body.email });
+        if (getUser) {
+          res.status(400);
+          throw new ResponseError(400, "Email already exits");
+        }
+        user.email = req.body.email;
+      } else {
+        user.email = oldEmail;
+      }
+
+      const setUpdatedUser = await user.save();
+
+      const updatedUser = {
+        isAdmin: setUpdatedUser.isAdmin,
+        _id: setUpdatedUser._id,
+        name: setUpdatedUser.name,
+        email: setUpdatedUser.email,
+        createdAt: setUpdatedUser.createdAt,
+        updatedAt: setUpdatedUser.updatedAt,
+      };
+
+      return res.status(200).json({
+        status: true,
+        message: "Updated user success",
+        user: updatedUser,
+      });
+    } else {
+      res.status(400);
+      throw new ResponseError(400, "Failed to update users");
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(error.statusCode || 500);
+    throw new ResponseError(error.statusCode, error.message, error.errors);
+  }
+});
+
 export {
   authUser,
   getUserProfile,
@@ -364,5 +433,7 @@ export {
   userPostCart,
   userRemoveCart,
   getUsers,
+  getUserById,
+  updateUser,
   deleteUser,
 };
