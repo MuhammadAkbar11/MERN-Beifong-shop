@@ -2,7 +2,11 @@
 import axios from 'axios';
 import { CART_RESET_ITEMS } from '../constants/cart.constants';
 import { ORDER_USER_RESET } from '../constants/order.constants';
-import { USER_DETAILS_RESET, USER_LOGOUT } from '../constants/user.constants';
+import {
+  USER_DETAILS_RESET,
+  USER_LIST_RESET,
+  USER_LOGOUT,
+} from '../constants/user.constants';
 
 const userInfoFromStorage = localStorage.getItem('userInfo')
   ? JSON.parse(localStorage.getItem('userInfo'))
@@ -23,7 +27,7 @@ const autoLogout = store => next => action => {
 
     return axios
       .get(`/api/users/is-auth`, config)
-      .then(result => {
+      .then(() => {
         next(action);
       })
       .catch(err => {
@@ -37,6 +41,7 @@ const autoLogout = store => next => action => {
             dispatch({ type: CART_RESET_ITEMS });
             dispatch({ type: ORDER_USER_RESET });
             dispatch({ type: USER_DETAILS_RESET });
+            dispatch({ type: USER_LIST_RESET });
             return;
           }
           next(action);

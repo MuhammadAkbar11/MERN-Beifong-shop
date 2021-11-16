@@ -25,6 +25,7 @@ import {
   USER_LIST_REQUEST,
   USER_LIST_SUCCESS,
   USER_LIST_FAIL,
+  USER_LIST_RESET,
 } from '../constants/user.constants';
 
 export const userLoginAction = (email, password) => async (
@@ -261,6 +262,7 @@ export const userLogout = () => dispatch => {
   dispatch({ type: CART_RESET_ITEMS });
   dispatch({ type: ORDER_USER_RESET });
   dispatch({ type: USER_DETAILS_RESET });
+  dispatch({ type: USER_LIST_RESET });
 };
 
 export const getUserDetailsAction = id => async (dispatch, getState) => {

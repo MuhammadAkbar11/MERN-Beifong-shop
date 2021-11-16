@@ -8,15 +8,22 @@ import { getUserListAction } from '../actions/user.actions';
 
 /* eslint-disable */
 
-const UserListScreen = () => {
+const UserListScreen = ({ history }) => {
   const dispacth = useDispatch();
 
   const userList = useSelector(state => state.userList);
   const { loading, error, users } = userList;
 
+  const userLogin = useSelector(state => state.userLogin);
+  const { userInfo } = userList;
+
   React.useEffect(() => {
-    dispacth(getUserListAction());
-  }, [dispacth]);
+    if (userInfo && userInfo.isAdmin) {
+      dispacth(getUserListAction());
+    } else {
+      history.push('/');
+    }
+  }, [dispacth, userInfo, history]);
 
   const deleteHandler = userId => {
     console.log(userId);
@@ -28,7 +35,9 @@ const UserListScreen = () => {
       {loading ? (
         <Loader />
       ) : error ? (
-        <Message variant='danger'>Failed get users</Message>
+        <Message variant='danger'>
+          {error?.message || error?.errors?.message || 'Something went wrong'}
+        </Message>
       ) : (
         <Table striped bordered hover size='sm'>
           <thead>
