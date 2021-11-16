@@ -22,6 +22,9 @@ import {
   USER_CHANGE_PASSWORD_FAIL,
   USER_CHANGE_PASSWORD_RESET,
   USER_DETAILS_RESET,
+  USER_LIST_REQUEST,
+  USER_LIST_SUCCESS,
+  USER_LIST_FAIL,
 } from '../constants/user.constants';
 
 export const userLoginAction = (email, password) => async (
@@ -61,18 +64,19 @@ export const userLoginAction = (email, password) => async (
     });
 
     if (userCart.items.length === 0) {
-      const insertNewCartItems = await axios.post(
-        `/api/users/cart`,
-        { cartItems: userCartItems },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${userToken}`,
-          },
-        }
-      );
-
-      data.user.cart = insertNewCartItems.data.cart;
+      if (cartItems.length !== 0) {
+        const insertNewCartItems = await axios.post(
+          `/api/users/cart`,
+          { cartItems: userCartItems },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${userToken}`,
+            },
+          }
+        );
+        data.user.cart = insertNewCartItems.data.cart;
+      }
     } else {
       if (cartItems.length !== 0) {
         const updateCartItems = await axios.post(
@@ -373,7 +377,6 @@ export const updateUserProfileAction = ({ ...user }) => async (
 
     localStorage.setItem('userInfo', JSON.stringify(newUserData));
   } catch (error) {
-    console.log(error);
     let errData = {
       message: error.message,
     };
@@ -468,4 +471,56 @@ export const resetChangePasswordFeedBackAction = () => dispatch => {
   dispatch({
     type: USER_CHANGE_PASSWORD_RESET,
   });
+};
+
+// Admin
+
+export const getUserListAction = () => async (dispatch, getState) => {
+  const {
+    userLogin: { userInfo },
+  } = getState();
+
+  try {
+    dispatch({
+      type: USER_LIST_REQUEST,
+      payload: {
+        success: null,
+        loading: true,
+      },
+    });
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get(`/api/users`, config);
+
+    dispatch({
+      type: USER_LIST_SUCCESS,
+      payload: data.users,
+    });
+  } catch (error) {
+    let errData = {
+      message: error.message,
+    };
+
+    if (error.response && error.response.data.message) {
+      const errorData =
+        error.response.data.errors && error.response.data.errors;
+      errData = {
+        message: error.response.data.message,
+        ...errorData,
+      };
+    }
+
+    dispatch({
+      type: USER_LIST_FAIL,
+      payload: {
+        errors: errData,
+        loading: false,
+      },
+    });
+  }
 };

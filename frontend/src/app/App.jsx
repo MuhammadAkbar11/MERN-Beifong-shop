@@ -13,6 +13,7 @@ import ShippingScreen from './screens/ShippingScreen';
 import PaymentScreen from './screens/PaymentScreen';
 import OrderSummarycreen from './screens/OrderSummaryScreen';
 import OrderScreen from './screens/OrderScreen';
+import UserListScreen from './screens/UserListScreen';
 
 const App = () => {
   /* eslint-disable */
@@ -78,6 +79,7 @@ const App = () => {
                 return <CartScreen {...props} />;
               }}
             />
+            <Route path='/admin/userlist' component={UserListScreen} />
             <Route path='/' exact component={Home} />
           </Switch>
         </Container>

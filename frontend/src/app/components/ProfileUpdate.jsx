@@ -77,7 +77,7 @@ const ProfileUpdate = props => {
   });
 
   React.useEffect(() => {
-    document.title = 'Profile Update | Beifong Shop';
+    document.title = 'Profile | Beifong Shop';
     if (success) {
       userPasswordFormik.resetForm({
         oldPassword: '',
@@ -99,7 +99,7 @@ const ProfileUpdate = props => {
   return (
     <>
       <div>
-        <h4 className='text-left'>Update Profile</h4>
+        <h4 className='text-left'>Profile</h4>
       </div>
 
       <Row>

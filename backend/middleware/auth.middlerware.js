@@ -13,7 +13,7 @@ const protect = asyncHandler(async (req, res, next) => {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
       const user = await UserModel.findById(decoded.id).select(
-        "_id name email cart createdAt updatedAt"
+        "_id name email cart isAdmin createdAt updatedAt"
       );
 
       req.user = user;
@@ -23,7 +23,9 @@ const protect = asyncHandler(async (req, res, next) => {
       const errorObj = new Error();
       errorObj.statusCode = 401;
       errorObj.message = "Not Authorized, no token failed";
-
+      errorObj.errors = {
+        notAuth: true,
+      };
       throw errorObj;
     }
   }
@@ -33,6 +35,9 @@ const protect = asyncHandler(async (req, res, next) => {
     const errorObj = new Error();
     errorObj.statusCode = 401;
     errorObj.message = "Not Authorized, no token";
+    errorObj.errors = {
+      notAuth: true,
+    };
     throw errorObj;
   }
 
@@ -47,6 +52,7 @@ const adminProtect = (req, res, next) => {
     const errorObj = new Error();
     errorObj.statusCode = 401;
     errorObj.message = "Not authorized as admin";
+    errorObj.errors = {};
     throw errorObj;
   }
 };

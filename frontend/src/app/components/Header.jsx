@@ -78,6 +78,38 @@ const Header = () => {
                   </Nav.Link>
                 </LinkContainer>
               )}
+
+              {userInfo && userInfo.isAdmin && (
+                <NavDropdown
+                  title={
+                    <>
+                      <i className='fas fa-fw fa-tachometer-alt ' />{' '}
+                      Administrator
+                    </>
+                  }
+                  alignRight
+                  id='adminmenu'
+                >
+                  <LinkContainer to='/admin/userlist'>
+                    <NavDropdown.Item>
+                      <i className='fa fa-users  fa-fw mr-2' />
+                      Users
+                    </NavDropdown.Item>
+                  </LinkContainer>
+                  <LinkContainer to='/admin/productList'>
+                    <NavDropdown.Item>
+                      <i className='fas fa-layer-group mr-2 fa-fw' />
+                      Products
+                    </NavDropdown.Item>
+                  </LinkContainer>
+                  <LinkContainer to='/admin/orderlist'>
+                    <NavDropdown.Item>
+                      <i className='fas fa-shopping-bag mr-2 fa-fw' />
+                      Orders
+                    </NavDropdown.Item>
+                  </LinkContainer>
+                </NavDropdown>
+              )}
             </Nav>
           </Navbar.Collapse>
         </Container>

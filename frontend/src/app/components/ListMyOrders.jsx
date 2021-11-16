@@ -5,6 +5,9 @@ import Loader from './Loader';
 
 /* eslint-disable */
 const ListMyOrders = ({ orders, errors, loading }) => {
+  React.useEffect(() => {
+    document.title = 'My Orders | Beifong Shop';
+  }, []);
   return (
     <>
       <div>

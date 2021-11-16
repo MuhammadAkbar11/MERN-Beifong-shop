@@ -107,7 +107,7 @@ const UserProfileScreen = ({ match, history, location }) => {
                   : ' text-primary-light'
               } mx-2`}
             >
-              <Nav.Link>Update</Nav.Link>
+              <Nav.Link>Profile</Nav.Link>
             </LinkContainer>
           </Nav>
           <Container className='pt-5'>

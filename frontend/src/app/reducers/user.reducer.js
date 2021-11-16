@@ -18,6 +18,9 @@ import {
   USER_CHANGE_PASSWORD_FAIL,
   USER_CHANGE_PASSWORD_RESET,
   USER_DETAILS_RESET,
+  USER_LIST_REQUEST,
+  USER_LIST_SUCCESS,
+  USER_LIST_FAIL,
 } from '../constants/user.constants';
 
 const initState = {};
@@ -138,6 +141,19 @@ const userChangePasswordReducer = (state = { loading: false }, action) => {
   }
 };
 
+const userListReducer = (state = { users: [] }, action) => {
+  switch (action.type) {
+    case USER_LIST_REQUEST:
+      return { loading: true };
+    case USER_LIST_SUCCESS:
+      return { loading: false, users: action.payload };
+    case USER_LIST_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
 /* eslint-disable */
 
 export {
@@ -146,4 +162,5 @@ export {
   userDetailsReducer,
   userUpdateProfileReducer,
   userChangePasswordReducer,
+  userListReducer,
 };

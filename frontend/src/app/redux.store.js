@@ -9,6 +9,7 @@ import { cartReducer } from './reducers/cart.reducer';
 import {
   userChangePasswordReducer,
   userDetailsReducer,
+  userListReducer,
   userLoginReducer,
   userRegisterReducer,
   userUpdateProfileReducer,
@@ -20,6 +21,7 @@ import {
   orderPayReducer,
 } from './reducers/order.reducer';
 import { redirectReducer } from './reducers/redirect.reducer';
+import autoLogout from './middleware/autologout';
 
 const reducer = combineReducers({
   redirect: redirectReducer,
@@ -31,6 +33,7 @@ const reducer = combineReducers({
   userDetails: userDetailsReducer,
   userUpdateProfile: userUpdateProfileReducer,
   userChangePassword: userChangePasswordReducer,
+  userList: userListReducer,
   orderCreate: orderCreateReducer,
   orderDetails: orderDetailsReducer,
   orderPay: orderPayReducer,
@@ -64,7 +67,7 @@ const initialState = {
   },
 };
 
-const middleware = [thunk];
+const middleware = [thunk, autoLogout];
 
 const store = createStore(
   reducer,
