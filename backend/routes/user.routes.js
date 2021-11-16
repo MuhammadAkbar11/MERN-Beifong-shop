@@ -18,17 +18,21 @@ import registerValidation from "../middleware/validations/register.validation.js
 
 const router = express.Router();
 
-router.get("/", protect, adminProtect, getUsers);
-router.get("/:id", protect, adminProtect, getUserById);
-router.delete("/:id", protect, adminProtect, deleteUser);
-router.put("/:id", protect, adminProtect, updateUser);
-router.post("/register", [registerValidation], registerUser);
-router.post("/login", [loginValidation], authUser);
-router.get("/is-auth", protect, isAuthUser);
-router.get("/profile", protect, getUserProfile);
-router.put("/profile", protect, updateUserProfile);
-
-router.post("/cart", protect, userPostCart);
-router.post("/cart/delete", protect, userRemoveCart);
+router.route("/").get(protect, adminProtect, getUsers);
+router.route("/register").post([registerValidation], registerUser);
+router.route("/login").post([loginValidation], authUser);
+router.route("/is-auth").get(protect, isAuthUser);
+router.post("/login", authUser);
+router
+  .route("/profile")
+  .get(protect, getUserProfile)
+  .put(protect, updateUserProfile);
+router.route("/cart").post(protect, userPostCart);
+router.route("/cart/delete").post(protect, userRemoveCart);
+router
+  .route("/:id")
+  .delete(protect, adminProtect, deleteUser)
+  .get(protect, adminProtect, getUserById)
+  .put(protect, adminProtect, updateUser);
 
 export default router;

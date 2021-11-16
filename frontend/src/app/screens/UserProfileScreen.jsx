@@ -59,8 +59,6 @@ const UserProfileScreen = ({ match, history, location }) => {
     setBreadcrumbItems(newBrItems);
   }, [user]);
 
-  console.log(orders);
-
   const activeClass =
     'border-bottom font-weight-bold text-primary border-primary ';
   return (

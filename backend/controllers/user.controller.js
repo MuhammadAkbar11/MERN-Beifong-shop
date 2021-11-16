@@ -371,6 +371,7 @@ const getUserById = asyncHandler(async (req, res) => {
       throw new ResponseError(404, "User not Found", null);
     }
   } catch (error) {
+    console.log(error);
     res.status(error.statusCode || 500);
     throw new ResponseError(error.statusCode, error.message, error.errors);
   }

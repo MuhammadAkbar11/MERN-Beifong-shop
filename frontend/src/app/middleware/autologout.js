@@ -10,7 +10,7 @@ import {
 
 const autoLogout = store => next => action => {
   const { dispatch, getState } = store;
-  const { userInfo } = getState().userLogin;
+  const { userInfo, loading } = getState().userLogin;
 
   const handleLogout = () => {
     localStorage.removeItem('userInfo');
@@ -33,7 +33,6 @@ const autoLogout = store => next => action => {
 
     const config = {
       headers: {
-        'Content-Type': 'application/json',
         Authorization: `Bearer ${userToken}`,
       },
     };
@@ -44,7 +43,6 @@ const autoLogout = store => next => action => {
         next(action);
       })
       .catch(err => {
-        console.log('err');
         const errData = err?.response?.data || {};
         const { errors } = errData;
         if (errors) {

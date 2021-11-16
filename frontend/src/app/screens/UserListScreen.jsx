@@ -1,6 +1,6 @@
 import React from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
-import { Table, Button, Badge, Modal, Alert } from 'react-bootstrap';
+import { Container, Table, Button, Badge, Modal, Alert } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
@@ -9,10 +9,16 @@ import {
   getUserListAction,
   resetUserListAlertAction,
 } from '../actions/user.actions';
+import BreadcrumbContainer from '../components/BreadcrumbContainer';
 
 /* eslint-disable */
 
 const UserListScreen = ({ history }) => {
+  const breadcrumbItems = [
+    { name: 'Administrator', href: '/admin' },
+    { name: 'Users', isActive: true },
+  ];
+
   const [confirmDelete, setConfirmDelete] = React.useState(false);
   const [selectedUser, setSelectedUser] = React.useState(null);
 
@@ -60,9 +66,9 @@ const UserListScreen = ({ history }) => {
   };
 
   return (
-    <>
+    <Container fluid className='px-0  py-3 h-100 '>
+      <BreadcrumbContainer parentClass='ml-n3' items={breadcrumbItems} />
       <h1>Users</h1>
-
       {userListAlert && userListAlert.open && (
         <div className='py-3'>
           <Alert variant={userListAlert.type}>{userListAlert.message}</Alert>
@@ -187,7 +193,7 @@ const UserListScreen = ({ history }) => {
           )}
         </Modal.Body>
       </Modal>
-    </>
+    </Container>
   );
 };
 

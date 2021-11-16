@@ -15,7 +15,7 @@ const protect = asyncHandler(async (req, res, next) => {
       const user = await UserModel.findById(decoded.id).select(
         "_id name email cart isAdmin createdAt updatedAt"
       );
-
+      console.log(user);
       if (!user) {
         const errorObj = new Error();
         errorObj.statusCode = 401;
