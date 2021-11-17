@@ -15,6 +15,7 @@ import {
 import { adminProtect, protect } from "../middleware/auth.middlerware.js";
 import loginValidation from "../middleware/validations/login.validation.js";
 import registerValidation from "../middleware/validations/register.validation.js";
+import userUpdateValidation from "../middleware/validations/user.validation.js";
 
 const router = express.Router();
 
@@ -33,6 +34,6 @@ router
   .route("/:id")
   .delete(protect, adminProtect, deleteUser)
   .get(protect, adminProtect, getUserById)
-  .put(protect, adminProtect, updateUser);
+  .put(protect, adminProtect, [userUpdateValidation], updateUser);
 
 export default router;

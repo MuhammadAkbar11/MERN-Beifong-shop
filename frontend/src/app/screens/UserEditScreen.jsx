@@ -1,21 +1,23 @@
 /* eslint-disable */
 import React from 'react';
-import { Form, Button, Container, Row, Col } from 'react-bootstrap';
+import { Form, Button, Container, Row, Col, Alert } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import {
   getUserDetailsAction,
-  userRegisterAction,
+  updateUserAction,
 } from '../actions/user.actions';
 import FormContainer from '../components/FormContainer';
 import BreadcrumbContainer from '../components/BreadcrumbContainer';
+import { USER_UPDATE_RESET } from '../constants/user.constants';
 
 const UserEditScreen = ({ match, location, history }) => {
   const userId = match.params.id;
 
   const [disabledSubmit, setDisabledSubmit] = React.useState(false);
+  const [errorAlert, setErrorAlert] = React.useState(null);
   const [name, setName] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [isAdmin, setIsAdmin] = React.useState(false);
@@ -26,6 +28,13 @@ const UserEditScreen = ({ match, location, history }) => {
 
   const userDetails = useSelector(state => state.userDetails);
   const { loading, error, user } = userDetails;
+
+  const userUpdate = useSelector(state => state.userUpdate);
+  const {
+    loading: loadingUpdate,
+    error: errorUpdate,
+    success: successUpdate,
+  } = userUpdate;
 
   // const redirect = location.search ? location.search.split('=')[1] : '/';
 
@@ -48,8 +57,28 @@ const UserEditScreen = ({ match, location, history }) => {
     };
   }, [dispatch, userInfo, history, user, userId]);
 
+  React.useEffect(() => {
+    if (loadingUpdate) {
+      setDisabledSubmit(true);
+    }
+
+    if (errorUpdate && errorUpdate.validation) {
+      setDisabledSubmit(true);
+    }
+  }, [loadingUpdate, errorUpdate]);
+
   const submitHandler = e => {
     e.preventDefault();
+    dispatch(updateUserAction({ _id: userId, name, email, isAdmin }))
+      .then(() => {
+        dispatch({
+          type: USER_UPDATE_RESET,
+        });
+        history.push('/admin/userlist');
+      })
+      .catch(err => {
+        setErrorAlert(err);
+      });
   };
 
   return (
@@ -58,10 +87,10 @@ const UserEditScreen = ({ match, location, history }) => {
         items={[
           { name: 'Administrator', href: '/admin' },
           { name: 'Users', href: '/admin/userlist' },
-          { name: name, isActive: true },
+          { name: user?.name, isActive: true },
           { name: 'Edit', isActive: true },
         ]}
-        parentClass='ml-n4'
+        parentClass='ml-n3'
       />
       <br />
       <Row>
@@ -69,8 +98,14 @@ const UserEditScreen = ({ match, location, history }) => {
           <FormContainer>
             <h3 className='text-primary'>Edit User</h3>
 
-            {error && !error.validation && (
-              <Message variant='danger'>{error.message}</Message>
+            {errorAlert && !errorAlert.validation && (
+              <Alert
+                onClose={() => setErrorAlert(null)}
+                dismissible
+                variant='danger'
+              >
+                {errorAlert?.message}
+              </Alert>
             )}
 
             {loading ? (
@@ -91,12 +126,13 @@ const UserEditScreen = ({ match, location, history }) => {
                       setName(e.target.value);
                       setDisabledSubmit(false);
                     }}
-                    isInvalid={!!error?.validation?.name}
+                    readOnly={loadingUpdate}
+                    isInvalid={!!errorUpdate?.validation?.name}
                   />
 
-                  {error?.validation?.name ? (
+                  {errorUpdate?.validation?.name ? (
                     <Form.Control.Feedback type='invalid'>
-                      {error.validation.name.message[0]}
+                      {errorUpdate.validation.name.message[0]}
                     </Form.Control.Feedback>
                   ) : null}
                 </Form.Group>
@@ -110,12 +146,13 @@ const UserEditScreen = ({ match, location, history }) => {
                       setEmail(e.target.value);
                       setDisabledSubmit(false);
                     }}
-                    isInvalid={!!error?.validation?.email}
+                    readOnly={loadingUpdate}
+                    isInvalid={!!errorUpdate?.validation?.email}
                   />
 
-                  {error?.validation?.email ? (
+                  {errorUpdate?.validation?.email ? (
                     <Form.Control.Feedback type='invalid'>
-                      {error.validation.email.message[0]}
+                      {errorUpdate.validation.email.message[0]}
                     </Form.Control.Feedback>
                   ) : null}
                 </Form.Group>
@@ -126,15 +163,16 @@ const UserEditScreen = ({ match, location, history }) => {
                     label='Is Admin'
                     // value={isAdmin}
                     checked={isAdmin}
+                    readOnly={loadingUpdate}
                     onChange={e => {
                       setIsAdmin(e.target.checked);
                       setDisabledSubmit(false);
                     }}
-                    isInvalid={!!error?.validation?.isAdmin}
+                    isInvalid={!!errorUpdate?.validation?.isAdmin}
                   />
-                  {error?.validation?.isAdmin ? (
+                  {errorUpdate?.validation?.isAdmin ? (
                     <Form.Control.Feedback type='invalid'>
-                      {error.validation.isAdmin.message[0]}
+                      {errorUpdate.validation.isAdmin.message[0]}
                     </Form.Control.Feedback>
                   ) : null}
                 </Form.Group>

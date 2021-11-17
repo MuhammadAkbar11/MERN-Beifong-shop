@@ -381,6 +381,14 @@ const getUserById = asyncHandler(async (req, res) => {
 // @route PUT /api/users/:id
 // @access Private/Admin
 const updateUser = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+  const errorMsg = errMessageValidation(errors.array());
+
+  if (!errors.isEmpty()) {
+    res.statusCode = 400;
+    throw new ResponseError(400, "Validation failed", { validation: errorMsg });
+  }
+
   try {
     const user = await UserModel.findById(req.params.id);
     const oldEmail = user.email;
@@ -411,7 +419,7 @@ const updateUser = asyncHandler(async (req, res) => {
 
       return res.status(200).json({
         status: true,
-        message: "Updated user success",
+        message: "Successfully updated user",
         user: updatedUser,
       });
     } else {

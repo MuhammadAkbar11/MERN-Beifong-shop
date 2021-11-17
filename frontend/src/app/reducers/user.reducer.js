@@ -27,6 +27,10 @@ import {
   USER_DELETE_FAIL,
   USER_LIST_ALERT_OPEN,
   USER_LIST_ALERT_CLOSE,
+  USER_UPDATE_RESET,
+  USER_UPDATE_FAIL,
+  USER_UPDATE_SUCCESS,
+  USER_UPDATE_REQUEST,
 } from '../constants/user.constants';
 
 const initState = {};
@@ -189,6 +193,21 @@ const userDeleteReducer = (state = { users: [] }, action) => {
   }
 };
 
+const userUpdateReducer = (state = { user: {} }, action) => {
+  switch (action.type) {
+    case USER_UPDATE_REQUEST:
+      return { loading: true };
+    case USER_UPDATE_SUCCESS:
+      return { loading: false };
+    case USER_UPDATE_FAIL:
+      return { loading: false, error: action.payload };
+    case USER_UPDATE_RESET:
+      return { user: {} };
+    default:
+      return state;
+  }
+};
+
 /* eslint-disable */
 
 export {
@@ -200,4 +219,5 @@ export {
   userListReducer,
   userListAlertReducer,
   userDeleteReducer,
+  userUpdateReducer,
 };

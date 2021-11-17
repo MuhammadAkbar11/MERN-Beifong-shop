@@ -31,6 +31,9 @@ import {
   USER_DELETE_FAIL,
   USER_LIST_ALERT_OPEN,
   USER_LIST_ALERT_CLOSE,
+  USER_UPDATE_REQUEST,
+  USER_UPDATE_SUCCESS,
+  USER_UPDATE_FAIL,
 } from '../constants/user.constants';
 
 export const userLoginAction = (email, password) => async (
@@ -600,5 +603,66 @@ export const deleteUserAction = userId => async (dispatch, getState) => {
           'Failed to delete user',
       },
     });
+  }
+};
+
+export const updateUserAction = user => async (dispatch, getState) => {
+  const {
+    userLogin: { userInfo },
+  } = getState();
+
+  try {
+    dispatch({
+      type: USER_UPDATE_REQUEST,
+    });
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.put(`/api/users/${user._id}`, user, config);
+
+    // setTimeout(() => {
+    dispatch({
+      type: USER_UPDATE_SUCCESS,
+    });
+
+    dispatch({
+      type: USER_DETAILS_SUCCESS,
+      payload: { user: data?.user },
+    });
+
+    dispatch({
+      type: USER_LIST_ALERT_OPEN,
+      payload: {
+        open: true,
+        type: 'success',
+        message: data?.message,
+      },
+    });
+    // }, 2000);
+    return { redirect: true };
+  } catch (error) {
+    let errData = {
+      message: error.message,
+    };
+
+    if (error.response && error.response.data.message) {
+      const errorData = error.response.data?.errors;
+      errData = {
+        message: error.response.data.message,
+        ...errorData,
+      };
+    }
+
+    dispatch({
+      type: USER_UPDATE_FAIL,
+      payload: errData,
+    });
+    throw errData;
+    //
   }
 };
