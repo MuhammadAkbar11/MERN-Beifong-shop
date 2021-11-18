@@ -96,7 +96,7 @@ const Header = () => {
                       Users
                     </NavDropdown.Item>
                   </LinkContainer>
-                  <LinkContainer to='/admin/productList'>
+                  <LinkContainer to='/admin/productlist'>
                     <NavDropdown.Item>
                       <i className='fas fa-layer-group mr-2 fa-fw' />
                       Products
