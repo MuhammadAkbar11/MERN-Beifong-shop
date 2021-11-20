@@ -19,7 +19,11 @@ import {
   getUserListAction,
   resetUserListAlertAction,
 } from '../actions/user.actions';
-import { listProducts } from '../actions/product.actions';
+import {
+  deleteProductAction,
+  listProducts,
+  resetProductListAlertAction,
+} from '../actions/product.actions';
 import BreadcrumbContainer from '../components/BreadcrumbContainer';
 
 /* eslint-disable */
@@ -31,16 +35,16 @@ const ProductListScreen = ({ history, match }) => {
   ];
 
   const [confirmDelete, setConfirmDelete] = React.useState(false);
-  const [selectedUser, setSelectedUser] = React.useState(null);
+  const [selectedProduct, setSelectedProduct] = React.useState(null);
 
   const dispacth = useDispatch();
 
   const productList = useSelector(state => state.productList);
   const { loading, error, products } = productList;
 
-  // const userListAlert = useSelector(state => state.userListAlert);
-  const loadingDelete = false;
-  // const { loading: loadingDelete } = useSelector(state => state.userDelete);
+  const productAlert = useSelector(state => state.productsAlert);
+
+  const { loading: loadingDelete } = useSelector(state => state.productDelete);
 
   const userLogin = useSelector(state => state.userLogin);
   const { userInfo } = userLogin;
@@ -53,31 +57,31 @@ const ProductListScreen = ({ history, match }) => {
     }
   }, [dispacth, userInfo, history]);
 
-  // React.useEffect(() => {
-  //   if (userListAlert && userListAlert.open) {
-  //     setTimeout(() => {
-  //       dispacth(resetUserListAlertAction());
-  //     }, 6000);
-  //   }
+  React.useEffect(() => {
+    if (productAlert && productAlert.open) {
+      setTimeout(() => {
+        dispacth(resetProductListAlertAction());
+      }, 6000);
+    }
 
-  //   return () => {
-  //     setSelectedUser(null);
-  //   };
-  // }, [userListAlert]);
+    return () => {
+      setSelectedProduct(null);
+    };
+  }, [productAlert]);
 
   const createProductHandler = () => {};
 
-  // const deleteHandler = () => {
-  //   // console.log(userId);
-  //   if (selectedUser) {
-  //     return dispacth(deleteUserAction(selectedUser._id)).then(() => {
-  //       setConfirmDelete(false);
-  //       setSelectedUser(null);
-  //       dispacth(getUserListAction());
-  //     });
-  //   }
-  //   setConfirmDelete(false);
-  // };
+  const deleteHandler = () => {
+    // console.log(userId);
+    if (selectedProduct) {
+      return dispacth(deleteProductAction(selectedProduct._id)).then(() => {
+        setConfirmDelete(false);
+        setSelectedProduct(null);
+        dispacth(listProducts());
+      });
+    }
+    setConfirmDelete(false);
+  };
 
   return (
     <Container fluid className='px-0  py-3 h-100 '>
@@ -95,11 +99,11 @@ const ProductListScreen = ({ history, match }) => {
         </Col>
       </Row>
 
-      {/* {userListAlert && userListAlert.open && (
+      {productAlert && productAlert.open && (
         <div className='py-3'>
-          <Alert variant={userListAlert.type}>{userListAlert.message}</Alert>
+          <Alert variant={productAlert.type}>{productAlert.message}</Alert>
         </div>
-      )} */}
+      )}
 
       {loading ? (
         <Loader />
@@ -151,8 +155,8 @@ const ProductListScreen = ({ history, match }) => {
                           variant='danger'
                           size='sm'
                           onClick={() => {
-                            // setConfirmDelete(true);
-                            // setSelectedUser(user);
+                            setConfirmDelete(true);
+                            setSelectedProduct(prod);
                           }}
                         >
                           <i className='fas fa-trash '></i>
@@ -195,7 +199,8 @@ const ProductListScreen = ({ history, match }) => {
                 }}
                 className='text-spacing-0 font-weight-normal '
               >
-                Are you sure want to delete {selectedUser?.name} user?
+                Are you sure want to delete{' '}
+                <span className='text-danger'>{selectedProduct?.name}</span> ?
               </h4>
               <div className='d-flex justify-content-end mt-4 '>
                 <Button

@@ -2,7 +2,9 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import {
+  productDeleteReducer,
   productDetailsReducer,
+  productListAlertReducer,
   productListReducer,
 } from './reducers/product.reducer';
 import { cartReducer } from './reducers/cart.reducer';
@@ -28,8 +30,10 @@ import autoLogout from './middleware/autologout';
 
 const reducer = combineReducers({
   redirect: redirectReducer,
+  productsAlert: productListAlertReducer,
   productList: productListReducer,
   productDetails: productDetailsReducer,
+  productDelete: productDeleteReducer,
   cart: cartReducer,
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
