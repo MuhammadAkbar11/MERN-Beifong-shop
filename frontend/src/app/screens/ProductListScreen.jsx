@@ -120,6 +120,7 @@ const ProductListScreen = ({ history, match }) => {
               <th>PRICE</th>
               <th>CATEGORY</th>
               <th>BRAND</th>
+              <th>STOCK</th>
               <th></th>
             </tr>
           </thead>
@@ -134,6 +135,7 @@ const ProductListScreen = ({ history, match }) => {
                     <td>{prod?.price?.rupiah}</td>
                     <td>{prod?.category}</td>
                     <td className='text-capitalize'>{prod?.brand}</td>
+                    <td>{prod?.countInStock}</td>
                     <td>
                       <div
                         style={{
