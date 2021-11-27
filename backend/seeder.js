@@ -29,6 +29,7 @@ const importData = async () => {
         ...product,
         user: adminUser,
         image: `/uploads${product.image}`,
+        category: mongoose.Types.ObjectId("61a0ced2f2ee1f9e7bae2db4"),
         price: {
           num: product.price,
           rupiah: convertRupiah(product.price),

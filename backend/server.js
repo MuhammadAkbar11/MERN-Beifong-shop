@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import colors from "colors";
 import express from "express";
 import connectDB from "./configs/db.js";
+import categoryRoutes from "./routes/category.routes.js";
 import productRoutes from "./routes/product.routes.js";
 import userRoutes from "./routes/user.routes.js";
 import orderRoutes from "./routes/order.routes.js";
@@ -38,6 +39,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/products", productRoutes);
+app.use("/api/categories", categoryRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/orders", orderRoutes);
 app.get("/api/config/paypal", (req, res) =>
