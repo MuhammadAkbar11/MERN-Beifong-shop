@@ -5,7 +5,6 @@ import {
   Container,
   Table,
   Button,
-  Badge,
   Row,
   Col,
   Modal,
@@ -14,11 +13,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
-import {
-  deleteUserAction,
-  getUserListAction,
-  resetUserListAlertAction,
-} from '../actions/user.actions';
+
 import {
   deleteProductAction,
   listProducts,
@@ -28,7 +23,7 @@ import BreadcrumbContainer from '../components/BreadcrumbContainer';
 
 /* eslint-disable */
 
-const ProductListScreen = ({ history, match }) => {
+const ProductListScreen = ({ history }) => {
   const breadcrumbItems = [
     { name: 'Administrator', href: '/admin' },
     { name: 'Products', isActive: true },
@@ -133,7 +128,7 @@ const ProductListScreen = ({ history, match }) => {
                     <td>{prod._id}</td>
                     <td>{prod?.name}</td>
                     <td>{prod?.price?.rupiah}</td>
-                    <td>{prod?.category}</td>
+                    <td>{prod?.category?.name}</td>
                     <td className='text-capitalize'>{prod?.brand}</td>
                     <td>{prod?.countInStock}</td>
                     <td>
