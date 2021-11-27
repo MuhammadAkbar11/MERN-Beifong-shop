@@ -85,4 +85,12 @@ const products = [
   },
 ];
 
+export const sampleGenerateProduct = {
+  name: "Sample Product",
+  image: "/images/sample-box.jpg",
+  description: "This is description of sample cretead product",
+  brand: "sample",
+  price: 1900000,
+};
+
 export default products;
