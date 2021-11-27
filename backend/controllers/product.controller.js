@@ -120,7 +120,7 @@ const createProduct = asyncHandler(async (req, res) => {
     res.status(201).json({
       status: true,
       product: createdProduct,
-      message: "successfully create product",
+      message: "Successfully create product",
     });
   } catch (err) {
     const errorObj = {
@@ -167,14 +167,13 @@ const updateProduct = asyncHandler(async (req, res) => {
       res.status(201).json({
         status: true,
         product: updateProduct,
-        message: "successfully update product",
+        message: "Successfully update product",
       });
     } else {
       res.status(404);
       throw new ResponseError(400, "Product not found");
     }
   } catch (err) {
-    console.log(err);
     const errorObj = {
       statusCode: err?.statusCode || 500,
       message: "Something went wrong",

@@ -4,15 +4,20 @@ import { Container, Button, Form } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
-import { listProductDetails } from '../actions/product.actions';
+import {
+  listProductDetails,
+  updateProductAction,
+} from '../actions/product.actions';
 import BreadcrumbContainer from '../components/BreadcrumbContainer';
 import FormContainer from '../components/FormContainer';
 import { listCategoriesAction } from '../actions/category.actions';
 import { Link } from 'react-router-dom';
+import { PRODUCT_UPDATE_RESET } from '../constants/product.constants';
 
 const ProductEditScreen = ({ match, history }) => {
   const productID = match.params.id;
 
+  const [disabledBtn, setDisabledBtn] = React.useState(false);
   const [inputsValue, setInputsValue] = React.useState({
     name: '',
     price: 0,
@@ -31,10 +36,9 @@ const ProductEditScreen = ({ match, history }) => {
 
   const { categories } = useSelector(state => state.categoryList);
 
-  // const { error: errorUpdate, loading: loadingUpdate } = {};
-  // useSelector(
-  //   state => state.productUpdate
-  // );
+  const { error: errorUpdate, loading: loadingUpdate } = useSelector(
+    state => state.productUpdate
+  );
 
   // userInfo
   const userLogin = useSelector(state => state.userLogin);
@@ -55,34 +59,51 @@ const ProductEditScreen = ({ match, history }) => {
         dispatch(listProductDetails(productID));
         dispatch(listCategoriesAction());
       } else {
-        if (product) {
-          setInputsValue({
-            name: product.name,
-            price: product.price?.num,
-            image: product.image,
-            brand: product.brand,
-            category: product.category._id,
-            countInStock: product.countInStock,
-            description: product.description,
-          });
-        }
+        setInputsValue({
+          name: product.name,
+          price: product.price?.num,
+          image: product.image,
+          brand: product.brand,
+          category: product.category._id,
+          countInStock: product.countInStock,
+          description: product.description,
+        });
       }
     }
   }, [dispatch, userInfo, product, productID, history]);
 
+  React.useEffect(() => {
+    if (errorUpdate || loadingUpdate) {
+      setDisabledBtn(true);
+    } else {
+    }
+
+    return () => {
+      setDisabledBtn(false);
+    };
+  }, [errorUpdate, loadingUpdate]);
+
   const handleChange = e => {
     const { id: inputId, value } = e.target;
-
+    setDisabledBtn(false);
     setInputsValue(prevState => ({
       ...prevState,
       [inputId]: value,
     }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = e => {
     e.preventDefault();
+
+    dispatch(updateProductAction({ _id: product._id, ...inputsValue })).then(
+      () => {
+        setDisabledBtn(false);
+        dispatch({ type: PRODUCT_UPDATE_RESET });
+        history.push('/admin/productlist');
+      }
+    );
   };
-  console.log(error);
+
   return (
     <>
       <Container fluid className='px-0  py-3 h-100 '>
@@ -92,10 +113,21 @@ const ProductEditScreen = ({ match, history }) => {
         ) : (
           <FormContainer>
             {error ? (
-              <Message variant='danger'>{error?.message}</Message>
+              <div className='mb-3'>
+                <Message variant='danger'>{error?.message}</Message>
+              </div>
             ) : (
               <>
                 <h3 className='text-primary'>Edit Product</h3>
+
+                {errorUpdate && !errorUpdate.validation && (
+                  <div className='mb-3'>
+                    <Message variant='danger'>
+                      {error?.message || 'Failed to Update'}
+                    </Message>
+                  </div>
+                )}
+
                 <Form onSubmit={handleSubmit}>
                   <Form.Group controlId='name'>
                     <Form.Label>Name</Form.Label>
@@ -104,14 +136,14 @@ const ProductEditScreen = ({ match, history }) => {
                       placeholder='Enter product name'
                       value={inputsValue.name}
                       onChange={handleChange}
-                      // isInvalid={!!error?.validation?.email}
+                      isInvalid={!!errorUpdate?.validation?.name}
                     />
 
-                    {/* {error?.validation?.email ? (
-      <Form.Control.Feedback type='invalid'>
-        {error.validation.email.message[0]}
-      </Form.Control.Feedback>
-    ) : null} */}
+                    {errorUpdate?.validation?.name && (
+                      <Form.Control.Feedback type='invalid'>
+                        {errorUpdate.validation.name.message[0]}
+                      </Form.Control.Feedback>
+                    )}
                   </Form.Group>
                   <Form.Group controlId='price'>
                     <Form.Label>Price</Form.Label>
@@ -120,7 +152,14 @@ const ProductEditScreen = ({ match, history }) => {
                       placeholder='Enter product price'
                       value={inputsValue.price}
                       onChange={handleChange}
+                      isInvalid={!!errorUpdate?.validation?.price}
                     />
+
+                    {errorUpdate?.validation?.price && (
+                      <Form.Control.Feedback type='invalid'>
+                        {errorUpdate.validation.price.message[0]}
+                      </Form.Control.Feedback>
+                    )}
                   </Form.Group>
                   <Form.Group controlId='brand'>
                     <Form.Label>Brand</Form.Label>
@@ -129,7 +168,14 @@ const ProductEditScreen = ({ match, history }) => {
                       placeholder='Enter product brand'
                       value={inputsValue.brand}
                       onChange={handleChange}
+                      isInvalid={!!errorUpdate?.validation?.brand}
                     />
+
+                    {errorUpdate?.validation?.brand && (
+                      <Form.Control.Feedback type='invalid'>
+                        {errorUpdate.validation.brand.message[0]}
+                      </Form.Control.Feedback>
+                    )}
                   </Form.Group>
                   <Form.Group controlId='category'>
                     <Form.Label>Category</Form.Label>
@@ -149,13 +195,20 @@ const ProductEditScreen = ({ match, history }) => {
                     </Form.Control>
                   </Form.Group>
                   <Form.Group controlId='countInStock'>
-                    <Form.Label>count In Stock</Form.Label>
+                    <Form.Label>Count In Stock</Form.Label>
                     <Form.Control
                       type='number'
                       placeholder='Enter product count in stock'
                       value={inputsValue.countInStock}
                       onChange={handleChange}
+                      isInvalid={!!errorUpdate?.validation?.countInStock}
                     />
+
+                    {errorUpdate?.validation?.countInStock && (
+                      <Form.Control.Feedback type='invalid'>
+                        {errorUpdate.validation.countInStock.message[0]}
+                      </Form.Control.Feedback>
+                    )}
                   </Form.Group>
                   <Form.Group controlId='description'>
                     <Form.Label>Description</Form.Label>
@@ -164,7 +217,14 @@ const ProductEditScreen = ({ match, history }) => {
                       rows={6}
                       onChange={handleChange}
                       value={inputsValue.description}
+                      isInvalid={!!errorUpdate?.validation?.description}
                     />
+
+                    {errorUpdate?.validation?.description && (
+                      <Form.Control.Feedback type='invalid'>
+                        {errorUpdate.validation.description.message[0]}
+                      </Form.Control.Feedback>
+                    )}
                   </Form.Group>
                   <Form.Group className='pt-3'>
                     <Link
@@ -173,8 +233,12 @@ const ProductEditScreen = ({ match, history }) => {
                     >
                       Cancel
                     </Link>
-                    <Button type='submit' className='ml-3 btn btn-primary '>
-                      Save Changes
+                    <Button
+                      disabled={disabledBtn}
+                      type='submit'
+                      className='ml-3 btn btn-primary '
+                    >
+                      {loadingUpdate ? 'Saving...' : '  Save Changes'}
                     </Button>
                   </Form.Group>
                 </Form>

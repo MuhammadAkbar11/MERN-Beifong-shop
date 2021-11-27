@@ -14,6 +14,9 @@ import {
   PRODUCT_LIST_FAIL,
   PRODUCT_LIST_REQ,
   PRODUCT_LIST_SUCCESS,
+  PRODUCT_UPDATE_FAIL,
+  PRODUCT_UPDATE_REQ,
+  PRODUCT_UPDATE_SUCCESS,
 } from '../constants/product.constants';
 
 /* eslint-disable */
@@ -182,10 +185,64 @@ export const createProductAction = () => async (dispatch, getState) => {
 
     dispatch({
       type: PRODUCT_CREATE_FAIL,
-      payload: {
-        errors: errData,
-        loading: false,
+      payload: errData,
+    });
+
+    throw errData;
+  }
+};
+
+export const updateProductAction = product => async (dispatch, getState) => {
+  const {
+    userLogin: { userInfo },
+  } = getState();
+
+  try {
+    dispatch({
+      type: PRODUCT_UPDATE_REQ,
+    });
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
       },
+    };
+
+    const { data } = await axios.put(
+      `/api/products/${product._id}`,
+      product,
+      config
+    );
+
+    dispatch({
+      type: PRODUCT_UPDATE_SUCCESS,
+      payload: data.product,
+    });
+    dispatch({
+      type: PRODUCT_ADMIN_ALERT,
+      payload: {
+        open: true,
+        type: 'success',
+        message: data?.message,
+      },
+    });
+    return data.product;
+  } catch (error) {
+    let errData = {
+      message: error.message,
+    };
+
+    if (error.response && error.response.data.message) {
+      const errorData = error.response.data?.errors;
+      errData = {
+        message: error.response.data.message,
+        ...errorData,
+      };
+    }
+
+    dispatch({
+      type: PRODUCT_UPDATE_FAIL,
+      payload: errData,
     });
 
     throw errData;
