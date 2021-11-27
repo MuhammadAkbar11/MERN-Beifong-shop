@@ -32,7 +32,7 @@ const MODE = process.env.NODE_ENV;
 
 app.use(express.json());
 
-const staticFile = express.static(path.join(__dirname, "/backend/uploads"));
+const staticFile = express.static(path.join(__dirname, "/uploads"));
 app.use("/files/uploads", staticFile);
 
 app.get("/", (req, res) => {

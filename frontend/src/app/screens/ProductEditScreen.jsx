@@ -13,6 +13,7 @@ import FormContainer from '../components/FormContainer';
 import { listCategoriesAction } from '../actions/category.actions';
 import { Link } from 'react-router-dom';
 import { PRODUCT_UPDATE_RESET } from '../constants/product.constants';
+import axios from 'axios';
 
 const ProductEditScreen = ({ match, history }) => {
   const productID = match.params.id;
@@ -27,6 +28,8 @@ const ProductEditScreen = ({ match, history }) => {
     countInStock: 0,
     description: '',
   });
+  const [uploading, setUploading] = React.useState(false);
+  const [uploadingStatus, setUploadingStatus] = React.useState(null);
 
   const dispatch = useDispatch();
 
@@ -104,6 +107,35 @@ const ProductEditScreen = ({ match, history }) => {
     );
   };
 
+  const uploadFileHandler = async e => {
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append('image', file);
+    setUploading(true);
+    try {
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+      const { data } = await axios.post('/api/upload', formData, config);
+      console.log(data);
+      setInputsValue(prevState => ({
+        ...prevState,
+        image: data,
+      }));
+      setUploading(false);
+    } catch (error) {
+      console.log(error.response);
+      setUploadingStatus({
+        type: 'error',
+        message: 'Upload failed',
+      });
+      setUploading(false);
+    }
+  };
+
   return (
     <>
       <Container fluid className='px-0  py-3 h-100 '>
@@ -161,6 +193,36 @@ const ProductEditScreen = ({ match, history }) => {
                     {errorUpdate?.validation?.price && (
                       <Form.Control.Feedback type='invalid'>
                         {errorUpdate.validation.price.message[0]}
+                      </Form.Control.Feedback>
+                    )}
+                  </Form.Group>
+                  <Form.Group controlId='image'>
+                    <Form.Label>Image</Form.Label>
+                    <Form.Control
+                      type='text'
+                      placeholder='Enter product image url'
+                      value={inputsValue.image}
+                      onChange={handleChange}
+                      // readOnly
+                      isInvalid={!!errorUpdate?.validation?.image}
+                    />
+                    <div className='d-flex align-items-center justify-content-between mt-3'>
+                      <Form.File
+                        id='image-file'
+                        label='Chooose File'
+                        disabled={uploading}
+                        custom
+                        onChange={uploadFileHandler}
+                      />
+                      {uploading && (
+                        <div className='ml-4 my-auto'>
+                          <Loader height={18} width={18} />
+                        </div>
+                      )}
+                    </div>
+                    {errorUpdate?.validation?.image && (
+                      <Form.Control.Feedback type='invalid'>
+                        {errorUpdate.validation.image.message[0]}
                       </Form.Control.Feedback>
                     )}
                   </Form.Group>
