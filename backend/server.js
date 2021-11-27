@@ -7,6 +7,7 @@ import categoryRoutes from "./routes/category.routes.js";
 import productRoutes from "./routes/product.routes.js";
 import userRoutes from "./routes/user.routes.js";
 import orderRoutes from "./routes/order.routes.js";
+import uploadRoutes from "./routes/uploads.routes.js";
 import { errorHandler, notFound } from "./middleware/error.middleware.js";
 import convertCurrency from "./utils/convertCurrency.js";
 import { getConvertCurrency } from "./controllers/config.controller.js";
@@ -42,6 +43,8 @@ app.use("/api/products", productRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/upload", uploadRoutes);
+
 app.get("/api/config/paypal", (req, res) =>
   res.json({
     client_id: process.env.PAYPAL_CLIENT_ID,
