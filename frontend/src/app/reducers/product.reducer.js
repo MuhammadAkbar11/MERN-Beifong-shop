@@ -10,6 +10,10 @@ import {
   PRODUCT_DELETE_FAIL,
   PRODUCT_DELETE_REQ,
   PRODUCT_DELETE_SUCCESS,
+  PRODUCT_CREATE_REQ,
+  PRODUCT_CREATE_SUCCESS,
+  PRODUCT_CREATE_FAIL,
+  PRODUCT_CREATE_RESET,
 } from '../constants/product.constants';
 
 const initState = {
@@ -79,6 +83,21 @@ const productDeleteReducer = (state = { users: [] }, action) => {
   }
 };
 
+const productCreateReducer = (state = {}, action) => {
+  switch (action.type) {
+    case PRODUCT_CREATE_REQ:
+      return { loading: true };
+    case PRODUCT_CREATE_SUCCESS:
+      return { loading: false, success: true, product: action.payload };
+    case PRODUCT_CREATE_FAIL:
+      return { loading: false, error: action.payload };
+    case PRODUCT_CREATE_RESET:
+      return { loading: false };
+    default:
+      return state;
+  }
+};
+
 const productListAlertReducer = (
   state = { type: 'success', message: '', open: false },
   action
@@ -100,4 +119,5 @@ export {
   productListReducer,
   productDetailsReducer,
   productDeleteReducer,
+  productCreateReducer,
 };

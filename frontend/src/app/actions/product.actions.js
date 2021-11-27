@@ -2,6 +2,9 @@ import axios from 'axios';
 import {
   PRODUCT_ADMIN_ALERT,
   PRODUCT_ADMIN_ALERT_CLOSE,
+  PRODUCT_CREATE_FAIL,
+  PRODUCT_CREATE_REQ,
+  PRODUCT_CREATE_SUCCESS,
   PRODUCT_DELETE_FAIL,
   PRODUCT_DELETE_REQ,
   PRODUCT_DELETE_SUCCESS,
@@ -135,5 +138,56 @@ export const deleteProductAction = productID => async (dispatch, getState) => {
           'Failed to delete category',
       },
     });
+
+    throw errData;
+  }
+};
+
+export const createProductAction = () => async (dispatch, getState) => {
+  const {
+    userLogin: { userInfo },
+  } = getState();
+
+  try {
+    dispatch({
+      type: PRODUCT_CREATE_REQ,
+    });
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.post(`/api/products`, {}, config);
+
+    dispatch({
+      type: PRODUCT_CREATE_SUCCESS,
+      payload: data.product,
+    });
+
+    return data.product;
+  } catch (error) {
+    let errData = {
+      message: error.message,
+    };
+
+    if (error.response && error.response.data.message) {
+      const errorData = error.response.data?.errors;
+      errData = {
+        message: error.response.data.message,
+        ...errorData,
+      };
+    }
+
+    dispatch({
+      type: PRODUCT_CREATE_FAIL,
+      payload: {
+        errors: errData,
+        loading: false,
+      },
+    });
+
+    throw errData;
   }
 };

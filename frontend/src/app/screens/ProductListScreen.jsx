@@ -15,11 +15,13 @@ import Message from '../components/Message';
 import Loader from '../components/Loader';
 
 import {
+  createProductAction,
   deleteProductAction,
   listProducts,
   resetProductListAlertAction,
 } from '../actions/product.actions';
 import BreadcrumbContainer from '../components/BreadcrumbContainer';
+import { PRODUCT_CREATE_RESET } from '../constants/product.constants';
 
 /* eslint-disable */
 
@@ -41,14 +43,21 @@ const ProductListScreen = ({ history }) => {
 
   const { loading: loadingDelete } = useSelector(state => state.productDelete);
 
+  const {
+    loading: loadingCreate,
+    error: errorCreate,
+    product: createdProduct,
+  } = useSelector(state => state.productCreate);
+
   const userLogin = useSelector(state => state.userLogin);
   const { userInfo } = userLogin;
 
   React.useEffect(() => {
-    if (userInfo && userInfo.isAdmin) {
-      dispacth(listProducts());
-    } else {
+    dispacth({ type: PRODUCT_CREATE_RESET });
+    if (!userInfo.isAdmin) {
       history.push('/');
+    } else {
+      dispacth(listProducts());
     }
   }, [dispacth, userInfo, history]);
 
@@ -58,13 +67,13 @@ const ProductListScreen = ({ history }) => {
         dispacth(resetProductListAlertAction());
       }, 6000);
     }
-
-    return () => {
-      setSelectedProduct(null);
-    };
   }, [productAlert]);
 
-  const createProductHandler = () => {};
+  const createProductHandler = () => {
+    dispacth(createProductAction()).then(product => {
+      history.push(`/admin/product/${product?._id}/edit`);
+    });
+  };
 
   const deleteHandler = () => {
     // console.log(userId);
@@ -87,9 +96,13 @@ const ProductListScreen = ({ history }) => {
           <h1>Products</h1>
         </Col>
         <Col xs={12} sm={6} className='text-sm-right'>
-          <Button onClick={createProductHandler}>
-            {/* <div> */}
-            <i className='fas fa-plus fa-fw mr-2'></i> Create Product
+          <Button disabled={loadingCreate} onClick={createProductHandler}>
+            {loadingCreate ? (
+              <Loader size={18} />
+            ) : (
+              <i className='fas fa-plus fa-fw mr-2'></i>
+            )}
+            Create Product
           </Button>
         </Col>
       </Row>
