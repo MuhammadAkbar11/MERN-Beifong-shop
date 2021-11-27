@@ -1,3 +1,7 @@
+import { validationResult } from "express-validator";
+import errMessageValidation from "../utils/errMessagesValidation.js";
+import ResponseError from "../utils/responseError.js";
+
 const notFound = (req, res, next) => {
   const error = new Error(`Not Found = ${req.originalUrl}`);
   res.status(400);
@@ -27,4 +31,15 @@ const errorHandler = (err, req, res, next) => {
   res.status(statusCode).json(resErrorData);
 };
 
-export { notFound, errorHandler };
+const isBadValidation = (req, res, next) => {
+  const errors = validationResult(req);
+  const errorMsg = errMessageValidation(errors.array());
+
+  if (!errors.isEmpty()) {
+    res.statusCode = 400;
+    throw new ResponseError(400, "Bad validation", { validation: errorMsg });
+  }
+  next();
+};
+
+export { notFound, errorHandler, isBadValidation };

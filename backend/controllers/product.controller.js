@@ -9,7 +9,10 @@ import ResponseError from "../utils/responseError.js";
 // @route GET /api/products
 // @access Public
 const getProducts = asyncHandler(async (req, res) => {
-  const products = await ProductModel.find({});
+  const products = await ProductModel.find({}).populate(
+    "category",
+    "name slug icon"
+  );
   return res.json({
     status: true,
     products,
@@ -22,7 +25,10 @@ const getProducts = asyncHandler(async (req, res) => {
 const getProductById = asyncHandler(async (req, res) => {
   try {
     const id = req.params.id;
-    const product = await ProductModel.findById(id);
+    const product = await ProductModel.findById(id).populate(
+      "category",
+      "name slug icon"
+    );
     if (product) {
       res.json({
         status: true,
