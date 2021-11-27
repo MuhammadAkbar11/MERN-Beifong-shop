@@ -164,6 +164,7 @@ const ProductListScreen = ({ history }) => {
                         <Button
                           variant='danger'
                           size='sm'
+                          disabled={loadingDelete}
                           onClick={() => {
                             setConfirmDelete(true);
                             setSelectedProduct(prod);
