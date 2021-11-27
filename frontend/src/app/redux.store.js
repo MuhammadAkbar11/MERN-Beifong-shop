@@ -43,6 +43,7 @@ const reducer = combineReducers({
   productDetails: productDetailsReducer,
   productDelete: productDeleteReducer,
   productCreate: productCreateReducer,
+  // productUpdate:
   categoryList: categorytListReducer,
   categoryAlert: categoryListAlertReducer,
   categoryDelete: categoryDeleteReducer,

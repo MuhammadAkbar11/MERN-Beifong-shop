@@ -71,7 +71,7 @@ export const listProductDetails = id => async dispatch => {
 
     dispatch({
       type: PRODUCT_DETAILS_FAIL,
-      payload: errData.message,
+      payload: errData,
     });
   }
 };
