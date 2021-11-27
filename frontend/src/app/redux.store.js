@@ -27,6 +27,13 @@ import {
 } from './reducers/order.reducer';
 import { redirectReducer } from './reducers/redirect.reducer';
 import autoLogout from './middleware/autologout';
+import {
+  categoryCreateReducer,
+  categoryDeleteReducer,
+  categoryListAlertReducer,
+  categorytListReducer,
+  categoryUpdateReducer,
+} from './reducers/category.reducer';
 
 const reducer = combineReducers({
   redirect: redirectReducer,
@@ -34,6 +41,11 @@ const reducer = combineReducers({
   productList: productListReducer,
   productDetails: productDetailsReducer,
   productDelete: productDeleteReducer,
+  categoryList: categorytListReducer,
+  categoryAlert: categoryListAlertReducer,
+  categoryDelete: categoryDeleteReducer,
+  categoryCreate: categoryCreateReducer,
+  categoryUpdate: categoryUpdateReducer,
   cart: cartReducer,
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,

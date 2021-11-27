@@ -132,7 +132,7 @@ export const deleteProductAction = productID => async (dispatch, getState) => {
         message:
           errData?.message ||
           errData?.errors?.message ||
-          'Failed to delete user',
+          'Failed to delete category',
       },
     });
   }
