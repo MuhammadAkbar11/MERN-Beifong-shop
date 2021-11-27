@@ -1,5 +1,7 @@
 import asyncHandler from "express-async-handler";
 import { validationResult } from "express-validator";
+import { sampleGenerateProduct } from "../data/products.js";
+import CategoryModel from "../models/categoryModel.js";
 import ProductModel from "../models/productModel.js";
 import convertRupiah from "../utils/convertRupiah.js";
 import errMessageValidation from "../utils/errMessagesValidation.js";
@@ -90,15 +92,12 @@ const deleteProduct = asyncHandler(async (req, res) => {
 // @route POST /api/products
 // @access Private/Admin
 const createProduct = asyncHandler(async (req, res) => {
-  const { name, price, brand, category, description } = req.body;
+  const { name, price, brand, description } = sampleGenerateProduct;
 
-  const errors = validationResult(req);
-  const errorMsg = errMessageValidation(errors.array());
+  const categoriesCount = await CategoryModel.countDocuments();
 
-  if (!errors.isEmpty()) {
-    res.statusCode = 400;
-    throw new ResponseError(400, "Bad validation", { validation: errorMsg });
-  }
+  const random = Math.floor(Math.random() * categoriesCount);
+  const category = await CategoryModel.findOne().skip(random).exec();
 
   try {
     const product = new ProductModel({
@@ -110,7 +109,7 @@ const createProduct = asyncHandler(async (req, res) => {
       user: req.user._id,
       image: "/uploads/images/sample-box.jpg",
       brand,
-      category,
+      category: category._id,
       rating: 0,
       numReviews: 9,
       countInStock: 0,

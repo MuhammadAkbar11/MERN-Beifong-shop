@@ -11,10 +11,7 @@ import productsValidation from "../middleware/validations/products.validation.js
 
 const router = express.Router();
 
-router
-  .route("/")
-  .get(getProducts)
-  .post(protect, adminProtect, [productsValidation], createProduct);
+router.route("/").get(getProducts).post(protect, adminProtect, createProduct);
 router
   .route("/:id")
   .get(getProductById)
