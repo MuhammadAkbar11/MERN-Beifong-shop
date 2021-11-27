@@ -107,7 +107,10 @@ const ProductEditScreen = ({ match, history }) => {
   return (
     <>
       <Container fluid className='px-0  py-3 h-100 '>
-        <BreadcrumbContainer parentClass='ml-n3 mb-5' items={breadcrumbItems} />
+        <BreadcrumbContainer parentClass='ml-n3 mb-1' items={breadcrumbItems} />
+        <Link to='/admin/productlist' className='mb-4 btn btn-light '>
+          Back
+        </Link>
         {loading ? (
           <Loader size={40} />
         ) : (
@@ -118,7 +121,7 @@ const ProductEditScreen = ({ match, history }) => {
               </div>
             ) : (
               <>
-                <h3 className='text-primary'>Edit Product</h3>
+                <h3 className='text-primary mb-3'>Edit Product</h3>
 
                 {errorUpdate && !errorUpdate.validation && (
                   <div className='mb-3'>
@@ -227,16 +230,10 @@ const ProductEditScreen = ({ match, history }) => {
                     )}
                   </Form.Group>
                   <Form.Group className='pt-3'>
-                    <Link
-                      to='/admin/productlist'
-                      className='btn btn-outline-primary '
-                    >
-                      Cancel
-                    </Link>
                     <Button
                       disabled={disabledBtn}
                       type='submit'
-                      className='ml-3 btn btn-primary '
+                      className=' btn btn-primary '
                     >
                       {loadingUpdate ? 'Saving...' : '  Save Changes'}
                     </Button>
