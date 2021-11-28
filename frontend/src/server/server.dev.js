@@ -44,9 +44,9 @@ const proxyMiddleware = httpProxy.createProxyMiddleware('/api', {
   headers: proxyHeader,
 });
 
-const assetsMiddleware = httpProxy.createProxyMiddleware('/files', {
+const assetsMiddleware = httpProxy.createProxyMiddleware('/uploads', {
   target: 'http://localhost:8080',
-  pathRewrite: { '^/files': '/files' },
+  pathRewrite: { '^/uploads': '/uploads' },
   changeOrigin: true,
   onError(err, req, res) {
     res.writeHead(500, {
@@ -62,7 +62,7 @@ const assetsMiddleware = httpProxy.createProxyMiddleware('/files', {
 app.use(webpackDevMiddleware);
 app.use(webpackHotMiddleware);
 app.use('/api', proxyMiddleware);
-app.use('/files', assetsMiddleware);
+app.use('/uploads', assetsMiddleware);
 
 const staticFile = path.join(__dirname, '../', '../', 'build-dev');
 
