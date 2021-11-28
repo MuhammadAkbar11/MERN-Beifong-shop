@@ -666,3 +666,89 @@ export const updateUserAction = user => async (dispatch, getState) => {
     //
   }
 };
+
+export const userUploadPictureAction = values => async (dispatch, getState) => {
+  const {
+    userLogin: { userInfo },
+  } = getState();
+
+  try {
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const file = values.uploading?.file;
+    const formData = new FormData();
+    formData.append('filename', 'user-' + values._id);
+    formData.append('image', file);
+
+    const { data: uploadedPhoto } = await axios.post(
+      '/api/upload',
+      formData,
+      config
+    );
+
+    const configUserUpload = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.post(
+      `/api/users/upload-photo/${values._id}`,
+      { image: uploadedPhoto, oldImage: values.oldImage },
+      configUserUpload
+    );
+
+    const newUserData = {
+      token: userInfo.token,
+      ...data.user,
+    };
+
+    dispatch({
+      type: USER_UPDATE_PROFILE_SUCCESS,
+      payload: {
+        userInfo: data.user,
+        success: {
+          message: data.message,
+        },
+        loading: false,
+      },
+    });
+
+    dispatch({
+      type: USER_LOGIN_SUCCESS,
+      payload: newUserData,
+    });
+
+    dispatch({
+      type: USER_DETAILS_SUCCESS,
+      payload: {
+        user: data.user,
+      },
+    });
+    console.log(data);
+    localStorage.setItem('userInfo', JSON.stringify(newUserData));
+
+    return { message: data.message };
+  } catch (error) {
+    let errData = {
+      message: error.message,
+    };
+
+    if (error.response && error.response.data.message) {
+      const errorData =
+        error.response.data.errors && error.response.data.errors;
+      errData = {
+        message: error.response.data.message,
+        ...errorData,
+      };
+    }
+
+    throw errData;
+  }
+};
