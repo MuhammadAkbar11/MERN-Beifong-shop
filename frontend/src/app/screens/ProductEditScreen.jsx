@@ -13,7 +13,7 @@ import FormContainer from '../components/FormContainer';
 import { listCategoriesAction } from '../actions/category.actions';
 import { Link } from 'react-router-dom';
 import { PRODUCT_UPDATE_RESET } from '../constants/product.constants';
-import axios from 'axios';
+import useSingleImageUploader from '../hooks/useSingleImageUploader';
 
 const ProductEditScreen = ({ match, history }) => {
   const productID = match.params.id;
@@ -28,10 +28,9 @@ const ProductEditScreen = ({ match, history }) => {
     countInStock: 0,
     description: '',
   });
-  const [uploading, setUploading] = React.useState(false);
-  const [uploadingStatus, setUploadingStatus] = React.useState(null);
 
   const dispatch = useDispatch();
+  const imageUploader = useSingleImageUploader({ defaultImage: null });
 
   const { product, error, loading } = useSelector(
     state => state.productDetails
@@ -98,42 +97,18 @@ const ProductEditScreen = ({ match, history }) => {
   const handleSubmit = e => {
     e.preventDefault();
 
-    dispatch(updateProductAction({ _id: product._id, ...inputsValue })).then(
-      () => {
-        setDisabledBtn(false);
-        dispatch({ type: PRODUCT_UPDATE_RESET });
-        history.push('/admin/productlist');
-      }
-    );
-  };
-
-  const uploadFileHandler = async e => {
-    const file = e.target.files[0];
-    const formData = new FormData();
-    formData.append('image', file);
-    setUploading(true);
-    try {
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${userInfo.token}`,
-        },
-      };
-      const { data } = await axios.post('/api/upload', formData, config);
-      console.log(data);
-      setInputsValue(prevState => ({
-        ...prevState,
-        image: data,
-      }));
-      setUploading(false);
-    } catch (error) {
-      console.log(error.response);
-      setUploadingStatus({
-        type: 'error',
-        message: 'Upload failed',
-      });
-      setUploading(false);
-    }
+    dispatch(
+      updateProductAction({
+        _id: product._id,
+        uploading: imageUploader?.image,
+        oldImage: product.image,
+        ...inputsValue,
+      })
+    ).then(() => {
+      setDisabledBtn(false);
+      dispatch({ type: PRODUCT_UPDATE_RESET });
+      history.push('/admin/productlist');
+    });
   };
 
   return (
@@ -196,36 +171,7 @@ const ProductEditScreen = ({ match, history }) => {
                       </Form.Control.Feedback>
                     )}
                   </Form.Group>
-                  <Form.Group controlId='image'>
-                    <Form.Label>Image</Form.Label>
-                    <Form.Control
-                      type='text'
-                      placeholder='Enter product image url'
-                      value={inputsValue.image}
-                      onChange={handleChange}
-                      // readOnly
-                      isInvalid={!!errorUpdate?.validation?.image}
-                    />
-                    <div className='d-flex align-items-center justify-content-between mt-3'>
-                      <Form.File
-                        id='image-file'
-                        label='Chooose File'
-                        disabled={uploading}
-                        custom
-                        onChange={uploadFileHandler}
-                      />
-                      {uploading && (
-                        <div className='ml-4 my-auto'>
-                          <Loader height={18} width={18} />
-                        </div>
-                      )}
-                    </div>
-                    {errorUpdate?.validation?.image && (
-                      <Form.Control.Feedback type='invalid'>
-                        {errorUpdate.validation.image.message[0]}
-                      </Form.Control.Feedback>
-                    )}
-                  </Form.Group>
+
                   <Form.Group controlId='brand'>
                     <Form.Label>Brand</Form.Label>
                     <Form.Control
@@ -288,6 +234,42 @@ const ProductEditScreen = ({ match, history }) => {
                     {errorUpdate?.validation?.description && (
                       <Form.Control.Feedback type='invalid'>
                         {errorUpdate.validation.description.message[0]}
+                      </Form.Control.Feedback>
+                    )}
+                  </Form.Group>
+                  <Form.Group controlId='image'>
+                    <Form.Label>Image</Form.Label>
+                    <Form.Control
+                      type='text'
+                      placeholder='Enter product image url'
+                      value={inputsValue.image}
+                      onChange={handleChange}
+                      disabled={imageUploader.image}
+                      // readOnly
+                      isInvalid={!!errorUpdate?.validation?.image}
+                    />
+                    <Form.File
+                      id='image-file'
+                      label='Chooose File'
+                      // disabled={uploading}
+                      custom
+                      // defaultValue={}
+                      className='mt-3'
+                      onChange={e => imageUploader.handleFile(e.target.files)}
+                    />
+                    <div>
+                      {imageUploader.image ? (
+                        <img
+                          width={250}
+                          src={imageUploader.image?.url}
+                          alt='Product Upload'
+                          className=' mt-3'
+                        />
+                      ) : null}
+                    </div>
+                    {errorUpdate?.validation?.image && (
+                      <Form.Control.Feedback type='invalid'>
+                        {errorUpdate.validation.image.message[0]}
                       </Form.Control.Feedback>
                     )}
                   </Form.Group>
