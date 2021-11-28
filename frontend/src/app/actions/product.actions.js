@@ -229,6 +229,7 @@ export const updateProductAction = product => async (dispatch, getState) => {
       };
       const file = product.uploading?.file;
       const formData = new FormData();
+      formData.append('filename', 'product-' + product._id);
       formData.append('image', file);
       const { data: uploadedImage } = await axios.post(
         '/api/upload',

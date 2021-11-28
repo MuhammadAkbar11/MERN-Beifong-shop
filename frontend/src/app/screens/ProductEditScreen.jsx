@@ -107,6 +107,8 @@ const ProductEditScreen = ({ match, history }) => {
     ).then(() => {
       setDisabledBtn(false);
       dispatch({ type: PRODUCT_UPDATE_RESET });
+      dispatch(listProductDetails(productID));
+      imageUploader.handleReset();
       history.push('/admin/productlist');
     });
   };
