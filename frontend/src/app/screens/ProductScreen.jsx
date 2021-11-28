@@ -61,7 +61,7 @@ const ProductScreen = ({ history, match }) => {
                 <Loader height={200} width={200} />
               </div>
             ) : (
-              <Image fluid src={`/files${product.image}`} alt={product.name} />
+              <Image fluid src={`${product.image}`} alt={product.name} />
             )}
           </Col>
           {!loading ? (
