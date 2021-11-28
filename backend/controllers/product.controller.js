@@ -5,6 +5,7 @@ import CategoryModel from "../models/categoryModel.js";
 import ProductModel from "../models/productModel.js";
 import convertRupiah from "../utils/convertRupiah.js";
 import errMessageValidation from "../utils/errMessagesValidation.js";
+import { deleteFile } from "../utils/file.js";
 import ResponseError from "../utils/responseError.js";
 
 // @desc Fetch All Products
@@ -137,8 +138,17 @@ const createProduct = asyncHandler(async (req, res) => {
 // @route PUT /api/products/:id
 // @access Private/Admin
 const updateProduct = asyncHandler(async (req, res) => {
-  const { name, price, brand, category, description, countInStock, image } =
-    req.body;
+  const {
+    uploading,
+    oldImage,
+    name,
+    price,
+    brand,
+    category,
+    description,
+    countInStock,
+    image,
+  } = req.body;
 
   const errors = validationResult(req);
   const errorMsg = errMessageValidation(errors.array());
@@ -164,6 +174,19 @@ const updateProduct = asyncHandler(async (req, res) => {
       product.image = image || product.image;
 
       const updateProduct = await product.save();
+
+      const isOldImageLocal = oldImage.includes("product");
+
+      if (isOldImageLocal) {
+        if (uploading) {
+          deleteFile(oldImage);
+        } else {
+          if (image !== oldImage) {
+            deleteFile(oldImage);
+          }
+        }
+      }
+
       res.status(201).json({
         status: true,
         product: updateProduct,
