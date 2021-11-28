@@ -13,11 +13,11 @@ import ShippingScreen from './screens/ShippingScreen';
 import PaymentScreen from './screens/PaymentScreen';
 import OrderSummarycreen from './screens/OrderSummaryScreen';
 import OrderScreen from './screens/OrderScreen';
-import UserListScreen from './screens/UserListScreen';
-import UserEditScreen from './screens/UserEditScreen';
-import ProductListScreen from './screens/ProductListScreen';
-import CategoryListScreen from './screens/CategoryListScreen';
-import ProductEditScreen from './screens/ProductEditScreen';
+import AdminUserListScreen from './screens/AdminUserListScreen';
+import AdminUserEditScreen from './screens/AdminUserEditScreen';
+import AdminProductListScreen from './screens/AdminProductListScreen';
+import AdminCategoryListScreen from './screens/AdminCategoryListScreen';
+import AdminProductEditScreen from './screens/AdminProductEditScreen';
 
 const App = () => {
   /* eslint-disable */
@@ -83,14 +83,23 @@ const App = () => {
                 return <CartScreen {...props} />;
               }}
             />
-            <Route path='/admin/userlist' component={UserListScreen} />
-            <Route path='/admin/productlist' component={ProductListScreen} />
+            <Route path='/admin/userlist' component={AdminUserListScreen} />
+            <Route
+              path='/admin/productlist'
+              component={AdminProductListScreen}
+            />
             <Route
               path='/admin/product/:id/edit'
-              component={ProductEditScreen}
+              component={AdminProductEditScreen}
             />
-            <Route path='/admin/categorylist' component={CategoryListScreen} />
-            <Route path='/admin/user/:id/edit' component={UserEditScreen} />
+            <Route
+              path='/admin/categorylist'
+              component={AdminCategoryListScreen}
+            />
+            <Route
+              path='/admin/user/:id/edit'
+              component={AdminUserEditScreen}
+            />
             <Route path='/' exact component={Home} />
           </Switch>
         </Container>

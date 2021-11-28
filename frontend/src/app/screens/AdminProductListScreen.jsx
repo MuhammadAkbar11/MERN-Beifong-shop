@@ -1,65 +1,87 @@
+/* eslint-disable */
 import React from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
-import { Container, Table, Button, Badge, Modal, Alert } from 'react-bootstrap';
+import {
+  Container,
+  Table,
+  Button,
+  Row,
+  Col,
+  Modal,
+  Alert,
+} from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
+
 import {
-  deleteUserAction,
-  getUserListAction,
-  resetUserListAlertAction,
-} from '../actions/user.actions';
+  createProductAction,
+  deleteProductAction,
+  listProducts,
+  resetProductListAlertAction,
+} from '../actions/product.actions';
 import BreadcrumbContainer from '../components/BreadcrumbContainer';
+import { PRODUCT_CREATE_RESET } from '../constants/product.constants';
 
 /* eslint-disable */
 
-const UserListScreen = ({ history }) => {
+const AdminProductListScreen = ({ history }) => {
   const breadcrumbItems = [
     { name: 'Administrator', href: '/admin' },
-    { name: 'Users', isActive: true },
+    { name: 'Products', isActive: true },
   ];
 
   const [confirmDelete, setConfirmDelete] = React.useState(false);
-  const [selectedUser, setSelectedUser] = React.useState(null);
+  const [selectedProduct, setSelectedProduct] = React.useState(null);
 
   const dispacth = useDispatch();
 
-  const userList = useSelector(state => state.userList);
-  const { loading, error, users } = userList;
-  const userListAlert = useSelector(state => state.userListAlert);
+  const productList = useSelector(state => state.productList);
+  const { loading, error, products } = productList;
 
-  const { loading: loadingDelete } = useSelector(state => state.userDelete);
+  const productAlert = useSelector(state => state.productsAlert);
+
+  const { loading: loadingDelete } = useSelector(state => state.productDelete);
+
+  const {
+    loading: loadingCreate,
+    error: errorCreate,
+    product: createdProduct,
+  } = useSelector(state => state.productCreate);
 
   const userLogin = useSelector(state => state.userLogin);
   const { userInfo } = userLogin;
 
   React.useEffect(() => {
-    if (userInfo && userInfo.isAdmin) {
-      dispacth(getUserListAction());
-    } else {
+    dispacth({ type: PRODUCT_CREATE_RESET });
+    if (!userInfo.isAdmin) {
       history.push('/');
+    } else {
+      dispacth(listProducts());
     }
   }, [dispacth, userInfo, history]);
 
   React.useEffect(() => {
-    if (userListAlert && userListAlert.open) {
+    if (productAlert && productAlert.open) {
       setTimeout(() => {
-        dispacth(resetUserListAlertAction());
+        dispacth(resetProductListAlertAction());
       }, 6000);
     }
+  }, [productAlert]);
 
-    return () => {
-      setSelectedUser(null);
-    };
-  }, [userListAlert]);
+  const createProductHandler = () => {
+    dispacth(createProductAction()).then(product => {
+      history.push(`/admin/product/${product?._id}/edit`);
+    });
+  };
 
   const deleteHandler = () => {
     // console.log(userId);
-    if (selectedUser) {
-      return dispacth(deleteUserAction(selectedUser._id)).then(() => {
+    if (selectedProduct) {
+      return dispacth(deleteProductAction(selectedProduct._id)).then(() => {
         setConfirmDelete(false);
-        setSelectedUser(null);
-        dispacth(getUserListAction());
+        setSelectedProduct(null);
+        dispacth(listProducts());
       });
     }
     setConfirmDelete(false);
@@ -68,10 +90,26 @@ const UserListScreen = ({ history }) => {
   return (
     <Container fluid className='px-0  py-3 h-100 '>
       <BreadcrumbContainer parentClass='ml-n3' items={breadcrumbItems} />
-      <h1>Users</h1>
-      {userListAlert && userListAlert.open && (
+
+      <Row className='align-items-center my-3'>
+        <Col xs={12} sm={6} className='mb-2'>
+          <h1>Products</h1>
+        </Col>
+        <Col xs={12} sm={6} className='text-sm-right'>
+          <Button disabled={loadingCreate} onClick={createProductHandler}>
+            {loadingCreate ? (
+              <Loader size={18} />
+            ) : (
+              <i className='fas fa-plus fa-fw mr-2'></i>
+            )}
+            Create Product
+          </Button>
+        </Col>
+      </Row>
+
+      {productAlert && productAlert.open && (
         <div className='py-3'>
-          <Alert variant={userListAlert.type}>{userListAlert.message}</Alert>
+          <Alert variant={productAlert.type}>{productAlert.message}</Alert>
         </div>
       )}
 
@@ -87,31 +125,25 @@ const UserListScreen = ({ history }) => {
             <tr>
               <th>ID</th>
               <th>NAME</th>
-              <th>EMAIL</th>
-              <th>ADMIN</th>
+              <th>PRICE</th>
+              <th>CATEGORY</th>
+              <th>BRAND</th>
+              <th>STOCK</th>
               <th></th>
             </tr>
           </thead>
           <tbody></tbody>
           <tbody>
-            {users.length !== 0 ? (
-              users.map(user => {
+            {products.length !== 0 ? (
+              products.map(prod => {
                 return (
-                  <tr key={user._id}>
-                    <td>{user._id}</td>
-                    <td>{user?.name}</td>
-                    <td>{user?.email}</td>
-                    <td>
-                      {user?.isAdmin ? (
-                        <Badge variant='success'>
-                          <i className='fas fa-check'></i>
-                        </Badge>
-                      ) : (
-                        <Badge variant='danger'>
-                          <i className='fas fa-times'></i>
-                        </Badge>
-                      )}
-                    </td>
+                  <tr key={prod._id}>
+                    <td>{prod._id}</td>
+                    <td>{prod?.name}</td>
+                    <td>{prod?.price?.rupiah}</td>
+                    <td>{prod?.category?.name}</td>
+                    <td className='text-capitalize'>{prod?.brand}</td>
+                    <td>{prod?.countInStock}</td>
                     <td>
                       <div
                         style={{
@@ -119,7 +151,12 @@ const UserListScreen = ({ history }) => {
                         }}
                         className=' d-flex  '
                       >
-                        <LinkContainer to={`user/${user._id}/edit`}>
+                        <LinkContainer to={`/admin/product/${prod._id}`}>
+                          <Button variant='light' size='sm'>
+                            <i className='fas fa-info-circle '></i>
+                          </Button>
+                        </LinkContainer>
+                        <LinkContainer to={`/admin/product/${prod._id}/edit`}>
                           <Button variant='dark' size='sm'>
                             <i className='fas fa-edit '></i>
                           </Button>
@@ -127,9 +164,10 @@ const UserListScreen = ({ history }) => {
                         <Button
                           variant='danger'
                           size='sm'
+                          disabled={loadingDelete}
                           onClick={() => {
                             setConfirmDelete(true);
-                            setSelectedUser(user);
+                            setSelectedProduct(prod);
                           }}
                         >
                           <i className='fas fa-trash '></i>
@@ -142,7 +180,7 @@ const UserListScreen = ({ history }) => {
             ) : (
               <tr>
                 <td colSpan={5}>
-                  <Message>Users is empty</Message>
+                  <Message>Products is empty</Message>
                 </td>
               </tr>
             )}
@@ -172,7 +210,8 @@ const UserListScreen = ({ history }) => {
                 }}
                 className='text-spacing-0 font-weight-normal '
               >
-                Are you sure want to delete {selectedUser?.name} user?
+                Are you sure want to delete{' '}
+                <span className='text-danger'>{selectedProduct?.name}</span> ?
               </h4>
               <div className='d-flex justify-content-end mt-4 '>
                 <Button
@@ -197,4 +236,4 @@ const UserListScreen = ({ history }) => {
   );
 };
 
-export default UserListScreen;
+export default AdminProductListScreen;

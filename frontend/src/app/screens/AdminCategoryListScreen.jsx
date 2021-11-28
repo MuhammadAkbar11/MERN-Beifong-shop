@@ -26,7 +26,7 @@ import ModalCategoryForm from '../components/ModalCategoryForm';
 
 /* eslint-disable */
 
-const CategoryListScreen = ({ history }) => {
+const AdminCategoryListScreen = ({ history }) => {
   const breadcrumbItems = [
     { name: 'Administrator', href: '/admin' },
     { name: 'Catgories', isActive: true },
@@ -286,4 +286,4 @@ const CategoryListScreen = ({ history }) => {
   );
 };
 
-export default CategoryListScreen;
+export default AdminCategoryListScreen;

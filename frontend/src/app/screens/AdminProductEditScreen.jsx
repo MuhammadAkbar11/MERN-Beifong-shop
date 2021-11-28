@@ -15,7 +15,7 @@ import { Link } from 'react-router-dom';
 import { PRODUCT_UPDATE_RESET } from '../constants/product.constants';
 import useSingleImageUploader from '../hooks/useSingleImageUploader';
 
-const ProductEditScreen = ({ match, history }) => {
+const AdminProductEditScreen = ({ match, history }) => {
   const productID = match.params.id;
 
   const [disabledBtn, setDisabledBtn] = React.useState(false);
@@ -294,4 +294,4 @@ const ProductEditScreen = ({ match, history }) => {
   );
 };
 
-export default ProductEditScreen;
+export default AdminProductEditScreen;

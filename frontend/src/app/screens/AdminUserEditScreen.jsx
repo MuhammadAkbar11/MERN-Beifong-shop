@@ -13,7 +13,7 @@ import FormContainer from '../components/FormContainer';
 import BreadcrumbContainer from '../components/BreadcrumbContainer';
 import { USER_UPDATE_RESET } from '../constants/user.constants';
 
-const UserEditScreen = ({ match, location, history }) => {
+const AdminUserEditScreen = ({ match, location, history }) => {
   const userId = match.params.id;
 
   const [disabledSubmit, setDisabledSubmit] = React.useState(false);
@@ -203,4 +203,4 @@ const UserEditScreen = ({ match, location, history }) => {
   );
 };
 
-export default UserEditScreen;
+export default AdminUserEditScreen;

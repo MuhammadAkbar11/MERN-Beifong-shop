@@ -25,7 +25,7 @@ const Product = props => {
       >
         <Card.Img
           className='bei-card-img'
-          src={`files${product.image}`}
+          src={`${product.image}`}
           variant='top'
         />
       </LinkContainer>
