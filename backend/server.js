@@ -33,7 +33,7 @@ const MODE = process.env.NODE_ENV;
 app.use(express.json());
 
 const staticFile = express.static(path.join(__dirname, "/uploads"));
-app.use("/files/uploads", staticFile);
+app.use("/uploads", staticFile);
 
 app.get("/", (req, res) => {
   res.send("API is Running dude!! ");
