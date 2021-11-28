@@ -95,14 +95,15 @@ const AdminProductListScreen = ({ history }) => {
         <Col xs={12} sm={6} className='mb-2'>
           <h1>Products</h1>
         </Col>
-        <Col xs={12} sm={6} className='text-sm-right'>
-          <Button disabled={loadingCreate} onClick={createProductHandler}>
-            {loadingCreate ? (
-              <Loader size={18} />
-            ) : (
-              <i className='fas fa-plus fa-fw mr-2'></i>
-            )}
-            Create Product
+        <Col xs={12} sm={6} className='d-flex justify-content-end'>
+          <Button
+            disabled={loadingCreate}
+            className='d-flex align-items-center '
+            onClick={createProductHandler}
+          >
+            <i className='fas fa-plus fa-fw mr-2'></i>
+            <span className='mr-2'> Create Product</span>
+            {loadingCreate && <Loader width={18} height={18} />}
           </Button>
         </Col>
       </Row>
