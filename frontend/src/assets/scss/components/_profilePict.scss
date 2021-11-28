@@ -1,7 +1,14 @@
 .profile-picture-col {
-  // .profile-picture-img {
-  //   border: 1px solid $danger;
-  // }
+  .profile-picture-img {
+    height: 150px;
+    max-width: 150px;
+    width: auto;
+    display: flex;
+    img {
+      width: 100%;
+    }
+  }
+
   .profile-pricture-overlay {
     position: absolute;
     bottom: 5%;

@@ -130,16 +130,21 @@ const UserProfileScreen = ({ match, history, location }) => {
             <p className='mt-2 mb-4 text-dark'>Profile Picture</p>
             <Row>
               <Col
-                xs={4}
+                xs={12}
+                sm={4}
                 md={12}
-                className='position-relative profile-picture-img d-flex flex-column align-items-center justify-content-center'
+                className='position-relative  d-flex flex-column align-items-center justify-content-center'
               >
-                <img
-                  className='rounded-circle w-100'
-                  src={profile?.image}
-                  alt=''
-                  onClick={() => btnPopoverRef.current.click()}
-                />
+                <div className='profile-picture-img'>
+                  <img
+                    className=' d-inline-block rounded-circle '
+                    src={profile?.image}
+                    style={{
+                      objectFit: 'cover',
+                    }}
+                    onClick={() => btnPopoverRef.current.click()}
+                  />
+                </div>
                 <div className='profile-pricture-overlay'>
                   <OverlayTrigger
                     trigger='click'
@@ -180,7 +185,7 @@ const UserProfileScreen = ({ match, history, location }) => {
                   </OverlayTrigger>
                 </div>
               </Col>
-              <Col xs={8} md={12} className='pt-3 text-md-center'>
+              <Col xs={12} sm={8} md={12} className='pt-3 text-md-center'>
                 <h4 className='text-dark mb-0'>{profile.name}</h4>
                 <small className='text-primary-dark'>{profile.email}</small>
               </Col>
