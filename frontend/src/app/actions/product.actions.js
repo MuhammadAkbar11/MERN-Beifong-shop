@@ -209,15 +209,46 @@ export const updateProductAction = product => async (dispatch, getState) => {
       },
     };
 
+    const postData = {
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      oldImage: product.oldImage,
+      brand: product.brand,
+      category: product.category,
+      countInStock: product.countInStock,
+      description: product.description,
+    };
+
+    if (product.uploading) {
+      const uploadConfig = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+      const file = product.uploading?.file;
+      const formData = new FormData();
+      formData.append('image', file);
+      const { data: uploadedImage } = await axios.post(
+        '/api/upload',
+        formData,
+        uploadConfig
+      );
+
+      postData.image = uploadedImage;
+      postData.uploading = true;
+    }
+
     const { data } = await axios.put(
       `/api/products/${product._id}`,
-      product,
+      postData,
       config
     );
 
     dispatch({
       type: PRODUCT_UPDATE_SUCCESS,
-      payload: data.product,
+      payload: {},
     });
     dispatch({
       type: PRODUCT_ADMIN_ALERT,
