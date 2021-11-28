@@ -9,6 +9,7 @@ import {
   registerUser,
   updateUser,
   updateUserProfile,
+  uploadPhotoUser,
   userPostCart,
   userRemoveCart,
 } from "../controllers/user.controller.js";
@@ -24,6 +25,7 @@ router.route("/register").post([registerValidation], registerUser);
 router.route("/login").post([loginValidation], authUser);
 router.route("/is-auth").get(protect, isAuthUser);
 router.post("/login", authUser);
+router.route("/upload-photo/:id").post(protect, uploadPhotoUser);
 router
   .route("/profile")
   .get(protect, getUserProfile)

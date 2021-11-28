@@ -5,6 +5,7 @@ import ProductModel from "../models/productModel.js";
 import errMessageValidation from "../utils/errMessagesValidation.js";
 import generateToken from "../utils/generateToken.js";
 import ResponseError from "../utils/responseError.js";
+import { deleteFile } from "../utils/file.js";
 
 // @desc Auth user & get token
 // @route POST /api/users/login
@@ -46,6 +47,7 @@ const authUser = asyncHandler(async (req, res) => {
             email: user.email,
             token: generateToken(user._id),
             cart: userCart.cart,
+            image: "/uploads/images/sample-user.jpeg",
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
           },
@@ -433,12 +435,48 @@ const updateUser = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc Upload photo
+// @route PUT /api/users/upload-photo/:id
+// @access Public
+const uploadPhotoUser = asyncHandler(async (req, res) => {
+  const { image, oldImage } = req.body;
+  try {
+    const user = await UserModel.findById(req.params.id);
+
+    if (user) {
+      user.image = image;
+
+      const updatedUser = await user.save();
+
+      if (
+        image !== oldImage &&
+        oldImage !== "/uploads/images/sample-user.jpeg"
+      ) {
+        deleteFile(oldImage);
+      }
+
+      return res.status(200).json({
+        status: true,
+        message: "Successfully upload photo",
+        user: updatedUser,
+      });
+    } else {
+      res.status(400);
+      throw new ResponseError(400, "Failed to upload photo");
+    }
+  } catch (error) {
+    res.status(error.statusCode || 500);
+    throw new ResponseError(error.statusCode, error.message, error.errors);
+  }
+});
+
 export {
   authUser,
   getUserProfile,
   registerUser,
   isAuthUser,
   updateUserProfile,
+  uploadPhotoUser,
   userPostCart,
   userRemoveCart,
   getUsers,
