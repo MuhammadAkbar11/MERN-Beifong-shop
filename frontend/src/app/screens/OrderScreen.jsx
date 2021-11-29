@@ -24,6 +24,7 @@ const OrderScreen = ({ match }) => {
 
   const dispatch = useDispatch();
 
+  const { userInfo } = useSelector(state => state.userLogin);
   const orderDetails = useSelector(state => state.orderDetails);
   const { loading, order, error } = orderDetails;
 
@@ -58,13 +59,15 @@ const OrderScreen = ({ match }) => {
       dispatch(payOrderResetAction());
       dispatch(getOrderDetailsAction(orderId));
     } else if (!order.isPaid) {
-      if (!window.paypal) {
-        addPayPalScript();
-      } else {
-        setSdkReady(true);
+      if (userInfo?._id === order?._id) {
+        if (!window.paypal) {
+          addPayPalScript();
+        } else {
+          setSdkReady(true);
+        }
       }
     }
-  }, [dispatch, orderId, successPay, order]);
+  }, [dispatch, orderId, successPay, order, userInfo]);
 
   const successPaymentHandler = paymentResult => {
     dispatch(payOrderAction(orderId, paymentResult));
@@ -72,6 +75,7 @@ const OrderScreen = ({ match }) => {
 
   const payAtDateFormat = localeStringDate(order?.paidAt);
   const deliveredAtDateFormat = localeStringDate(order?.deliveredAt);
+  const isUserOrdering = userInfo?._id === order?._id;
 
   return (
     <Container fluid className='px-0 py-3 h-100'>
@@ -244,7 +248,8 @@ const OrderScreen = ({ match }) => {
                     <span>Total Price</span>
                     <FormatRupiah value={+order.totalPrice?.num || 0} />
                   </ListGroup.Item>
-                  {!order?.isPaid && (
+                  {/* {isUserOrdering} */}
+                  {isUserOrdering && !order?.isPaid && (
                     <ListGroup.Item>
                       {loadingPay && (
                         <Loader height={20} width={20} className='my-2' />
