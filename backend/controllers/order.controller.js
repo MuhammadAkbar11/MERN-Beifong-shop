@@ -177,4 +177,30 @@ const getMyOrders = asyncHandler(async (req, res) => {
   }
 });
 
-export { addOrderItems, getOrderById, updateOrdertoPaid, getMyOrders };
+// @desc  Get  orders
+// @route   GET /api/orders
+// @access  Private/Admin
+const getOrders = asyncHandler(async (req, res) => {
+  try {
+    const orders = await OrderModel.find({});
+    res.json({
+      status: true,
+      orders,
+    });
+  } catch (error) {
+    res.status(error.statusCode || 500);
+    throw new ResponseError(
+      error.statusCode,
+      error.statusCode === 400 ? error.message : "Something went wrong",
+      error.errors
+    );
+  }
+});
+
+export {
+  addOrderItems,
+  getOrderById,
+  updateOrdertoPaid,
+  getMyOrders,
+  getOrders,
+};
