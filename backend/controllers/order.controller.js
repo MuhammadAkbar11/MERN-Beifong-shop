@@ -92,32 +92,6 @@ const getOrderById = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc  Get order by Id
-// @route   GET /api/orders
-// @access  Private
-const getOrders = asyncHandler(async (req, res) => {
-  try {
-    const order = await OrderModel.findById(req.params.id).populate(
-      "user",
-      "name email"
-    );
-
-    if (order) {
-      res.json(order);
-    } else {
-      res.status(400);
-      throw new ResponseError(400, "Order no found");
-    }
-  } catch (error) {
-    res.status(error.statusCode || 500);
-    throw new ResponseError(
-      error.statusCode,
-      error.statusCode === 400 ? error.message : "Something went wrong",
-      error.errors
-    );
-  }
-});
-
 // @desc  Update order to paid
 // @route   GET /api/order/:id/pay
 // @access  Private
@@ -182,7 +156,7 @@ const getMyOrders = asyncHandler(async (req, res) => {
 // @access  Private/Admin
 const getOrders = asyncHandler(async (req, res) => {
   try {
-    const orders = await OrderModel.find({});
+    const orders = await OrderModel.find({}).populate("user", "name email");
     res.json({
       status: true,
       orders,
