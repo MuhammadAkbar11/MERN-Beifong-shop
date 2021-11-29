@@ -128,6 +128,36 @@ const updateOrdertoPaid = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc  Update order to delivered
+// @route PUT /api/order/:id/deliver
+// @access Private/Admin
+const updateOrdertoDelivered = asyncHandler(async (req, res) => {
+  try {
+    const order = await OrderModel.findById(req.params.id);
+
+    if (order) {
+      order.isDelivered = true;
+      order.deliveredAt = Date.now();
+
+      const updatedOrder = await order.save();
+      res.status(201).json({
+        message: "Update successfully",
+        order: updatedOrder,
+      });
+    } else {
+      res.status(400);
+      throw new ResponseError(400, "Order no found");
+    }
+  } catch (error) {
+    res.status(error.statusCode || 500);
+    throw new ResponseError(
+      error.statusCode,
+      error.statusCode === 400 ? error.message : "Something went wrong",
+      error.errors
+    );
+  }
+});
+
 // @desc  Get logged in user orders
 // @route   GET /api/ordeer/myorders
 // @access  Private
@@ -175,6 +205,7 @@ export {
   addOrderItems,
   getOrderById,
   updateOrdertoPaid,
+  updateOrdertoDelivered,
   getMyOrders,
   getOrders,
 };

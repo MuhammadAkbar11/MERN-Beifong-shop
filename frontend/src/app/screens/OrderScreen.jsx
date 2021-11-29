@@ -15,6 +15,7 @@ import {
 } from '../actions/order.actions';
 import Loader from '../components/Loader';
 import useConvertCurrency from '../hooks/useConvertCurrency';
+import localeStringDate from '../utils/localeStringDate';
 /* eslint-disable */
 const OrderScreen = ({ match }) => {
   const orderId = match.params.id;
@@ -69,18 +70,13 @@ const OrderScreen = ({ match }) => {
     dispatch(payOrderAction(orderId, paymentResult));
   };
 
-  const payAtDateFormat = new Date(order?.paidAt).toLocaleDateString('en-US', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: 'numeric',
-  });
+  const payAtDateFormat = localeStringDate(order?.paidAt);
+  const deliveredAtDateFormat = localeStringDate(order?.deliveredAt);
 
   return (
-    <Container className='px-1 px-sm-0 py-3 h-100'>
-      <Row className='mb-5'>
-        <Col md={5}>
+    <Container fluid className='px-0 py-3 h-100'>
+      <Row className='mb-5 px-0'>
+        <Col md={5} className='pl-0'>
           <BreadcrumbContainer
             items={[
               { name: 'Home', href: '/' },
@@ -90,7 +86,9 @@ const OrderScreen = ({ match }) => {
           />
         </Col>
         <Col md={7}>
+          {/* {!order?.isDelivered && !order?.isPaid && ( */}
           <CheckoutSteps step1 step2 step3 step4 currentStep='step4' />
+          {/* )} */}
         </Col>
       </Row>
       {loading ? (
@@ -99,8 +97,8 @@ const OrderScreen = ({ match }) => {
         <Message variant='danger'>{error?.message}</Message>
       ) : (
         <>
-          <Row>
-            <Col md={8}>
+          <Row className=' px-0'>
+            <Col md={8} className='px-0'>
               <ListGroup variant='flush'>
                 <ListGroup.Item className='border-0 py-1 '>
                   <h6 className='text-primary'>Order ID</h6>
@@ -129,7 +127,7 @@ const OrderScreen = ({ match }) => {
                     <span className='text-dark'>Delivered Status: </span>{' '}
                     {order.isDelivered ? (
                       <span className='text-success'>
-                        Delivered On {order?.deliveredAt}
+                        Delivered On {deliveredAtDateFormat}
                       </span>
                     ) : (
                       <span className='text-danger'>Not Delivered</span>

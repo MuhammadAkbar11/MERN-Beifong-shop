@@ -1,12 +1,12 @@
 import React from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
-import { Container, Table, Button, Badge, Modal, Alert } from 'react-bootstrap';
+import { Container, Table, Button, Modal, Alert } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
-import { deleteUserAction, getUserListAction } from '../actions/user.actions';
 import BreadcrumbContainer from '../components/BreadcrumbContainer';
 import {
+  confirmOrderDeliverAction,
   getListOrderAction,
   orderListAlertResetAction,
 } from '../actions/order.actions';
@@ -28,8 +28,10 @@ const AdminOrderListScreen = ({ history }) => {
   const { loading, error, orders } = orderList;
   const orderListAlert = useSelector(state => state.orderListAlert);
 
-  // const { loading: loadingDelete } = useSelector(state => state.userDelete);
-  const loadingDelete = false;
+  const { loading: loadingConfirmDeliver } = useSelector(
+    state => state.orderConfirmDeliver
+  );
+  // const loadingConfirmDeliver = false;
   const userLogin = useSelector(state => state.userLogin);
   const { userInfo } = userLogin;
 
@@ -55,11 +57,12 @@ const AdminOrderListScreen = ({ history }) => {
 
   const confirmDeliveredHandler = () => {
     // console.log(userId);
-    if (selectedOrder) {
-      return dispacth(deleteUserAction(selectedOrder._id)).then(() => {
+    if (selectedOrder && !selectedOrder.isDelivered) {
+      // console.log('okkkk');
+      return dispacth(confirmOrderDeliverAction(selectedOrder._id)).then(() => {
         setConfirmDelivered(false);
         setSelecteOrder(null);
-        dispacth(getUserListAction());
+        dispacth(getListOrderAction());
       });
     }
     setConfirmDelivered(false);
@@ -131,18 +134,26 @@ const AdminOrderListScreen = ({ history }) => {
                         style={{
                           gap: '.5rem',
                         }}
-                        className=' d-flex  '
+                        className=' d-flex align-items-center '
                       >
-                        <Button
-                          variant='success'
-                          size='sm'
-                          onClick={() => {
-                            setConfirmDelivered(true);
-                            setSelecteOrder(order);
-                          }}
-                        >
-                          <i className='fas fa-check-square '></i>
-                        </Button>
+                        <LinkContainer to={`/order/${order._id}`}>
+                          <Button variant='light' size='sm'>
+                            <i className='fas fa-info '></i>
+                          </Button>
+                        </LinkContainer>
+                        {!order.isDelivered && (
+                          <Button
+                            variant='primary'
+                            size='sm'
+                            className='text-nowrap'
+                            onClick={() => {
+                              setConfirmDelivered(true);
+                              setSelecteOrder(order);
+                            }}
+                          >
+                            Mark As Delivered
+                          </Button>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -166,38 +177,36 @@ const AdminOrderListScreen = ({ history }) => {
         show={confirmDelivered}
         onHide={() => setConfirmDelivered(false)}
       >
-        <Modal.Header closeButton>
-          <Modal.Title>Confirm Delivered order </Modal.Title>
+        <Modal.Header closeButton className='border-0'>
+          <Modal.Title className='d-none'>Are you sure? </Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          {loadingDelete ? (
+        <Modal.Body className='px-3 '>
+          {loadingConfirmDeliver ? (
             <div className='py-3'>
               <Loader />
             </div>
           ) : (
             <>
-              <h4
-                style={{
-                  letterSpacing: 0,
-                  textTransform: 'none',
-                }}
-                className='text-spacing-0 font-weight-normal '
-              >
-                Are you sure want to confirm order as delivered?
+              <h4 className='text-spacing-0 font-weight-normal text-center'>
+                Are you sure?
               </h4>
-              <div className='d-flex justify-content-end mt-4 '>
+              <p className='text-spacing-0 font-weight-normal text-center text-primary-light '>
+                You will confirmation this order as delivered
+              </p>
+
+              <div className='d-flex justify-content-center mt-4 '>
                 <Button
                   variant='secondary'
                   onClick={() => setConfirmDelivered(false)}
                 >
-                  Close
+                  Cancel
                 </Button>
                 <Button
-                  variant='danger'
+                  variant='primary'
                   className='ml-2'
                   onClick={() => confirmDeliveredHandler()}
                 >
-                  Save Changes
+                  Yes
                 </Button>
               </div>
             </>

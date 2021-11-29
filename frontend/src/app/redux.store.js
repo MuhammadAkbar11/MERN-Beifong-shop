@@ -23,6 +23,7 @@ import {
 } from './reducers/user.reducer';
 import {
   myOrderReducer,
+  orderConfirmDeliverReducer,
   orderCreateReducer,
   orderDetailsReducer,
   orderListAlertReducer,
@@ -68,6 +69,7 @@ const reducer = combineReducers({
   myOrders: myOrderReducer,
   orderListAlert: orderListAlertReducer,
   orderList: orderListReducer,
+  orderConfirmDeliver: orderConfirmDeliverReducer,
 });
 
 const cartItemsFromStorage = localStorage.getItem('cartItems')
