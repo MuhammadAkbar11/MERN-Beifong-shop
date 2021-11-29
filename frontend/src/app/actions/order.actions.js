@@ -15,6 +15,12 @@ import {
   ORDER_USER_REQUEST,
   ORDER_USER_SUCCESS,
   ORDER_USER_FAIL,
+  ORDER_LIST_REQUEST,
+  ORDER_LIST_SUCCESS,
+  ORDER_LIST_RESET,
+  ORDER_LIST_FAIL,
+  ORDER_LIST_ALERT,
+  ORDER_LIST_ALERT_RESET,
 } from '../constants/order.constants';
 
 export const createOrderAction = order => async (dispatch, getState) => {
@@ -220,4 +226,53 @@ export const payOrderResetAction = () => (dispatch, getState) => {
   dispatch({
     type: ORDER_PAY_RESET,
   });
+};
+
+export const orderListAlertResetAction = () => (dispatch, getState) => {
+  dispatch({
+    type: ORDER_LIST_ALERT_RESET,
+  });
+};
+
+export const getListOrderAction = () => async (dispatch, getState) => {
+  const {
+    userLogin: { userInfo },
+  } = getState();
+
+  try {
+    dispatch({
+      type: ORDER_LIST_REQUEST,
+    });
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get(`/api/orders`, config);
+
+    dispatch({
+      type: ORDER_LIST_SUCCESS,
+      payload: data.orders,
+    });
+  } catch (error) {
+    let errData = {
+      message: error.message,
+    };
+
+    if (error.response && error.response.data.message) {
+      const errorData =
+        error.response.data.errors && error.response.data.errors;
+      errData = {
+        message: error.response.data.message,
+        ...errorData,
+      };
+    }
+
+    dispatch({
+      type: ORDER_LIST_FAIL,
+      payload: errData,
+    });
+  }
 };

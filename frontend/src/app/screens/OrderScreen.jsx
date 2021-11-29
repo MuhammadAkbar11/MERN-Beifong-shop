@@ -157,7 +157,7 @@ const OrderScreen = ({ match }) => {
                   <h6 className='text-primary font-weight-bold'>
                     Orders{' '}
                     <span className='text-black-50'>
-                      ({order.totalCartItems} Items)
+                      ({order.orderItems.length} Items)
                     </span>
                   </h6>
                   {order.orderItems.length === 0 ? (

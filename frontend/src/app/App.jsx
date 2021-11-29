@@ -18,6 +18,7 @@ import AdminUserEditScreen from './screens/AdminUserEditScreen';
 import AdminProductListScreen from './screens/AdminProductListScreen';
 import AdminCategoryListScreen from './screens/AdminCategoryListScreen';
 import AdminProductEditScreen from './screens/AdminProductEditScreen';
+import AdminOrderListScreen from './screens/AdminOrderListScreen';
 
 const App = () => {
   /* eslint-disable */
@@ -100,6 +101,7 @@ const App = () => {
               path='/admin/user/:id/edit'
               component={AdminUserEditScreen}
             />
+            <Route path='/admin/orderlist' component={AdminOrderListScreen} />
             <Route path='/' exact component={Home} />
           </Switch>
         </Container>
