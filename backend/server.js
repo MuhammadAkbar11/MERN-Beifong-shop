@@ -2,6 +2,7 @@ import path from "path";
 import dotenv from "dotenv";
 import colors from "colors";
 import express from "express";
+import morgan from "morgan";
 import connectDB from "./configs/db.js";
 import categoryRoutes from "./routes/category.routes.js";
 import productRoutes from "./routes/product.routes.js";
@@ -31,6 +32,10 @@ const PORT = process.env.PORT || 8080;
 const MODE = process.env.NODE_ENV;
 
 app.use(express.json());
+
+if (MODE === "development") {
+  app.use(morgan("dev"));
+}
 
 const staticFile = express.static(path.join(__dirname, "/uploads"));
 app.use("/uploads", staticFile);

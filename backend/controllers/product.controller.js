@@ -207,10 +207,71 @@ const updateProduct = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc Create new Review
+// @route PUT /api/products/:id/reviews
+// @access Private/
+const createProductReview = asyncHandler(async (req, res) => {
+  const { rating, comment } = req.body;
+
+  try {
+    const product = await ProductModel.findById(req.params.id);
+    const user = req.user;
+    if (product) {
+      const productReviews = product.reviews;
+
+      const alreadyReviewed = productReviews.find(
+        r => r.user.toString() === user._id.toString()
+      );
+
+      const review = {
+        name: user.name,
+        rating: Number(rating),
+        comment,
+        user: user._id,
+      };
+
+      if (alreadyReviewed) {
+        const reviewIndex = productReviews.findIndex(x => {
+          return x.user.toString() === user._id.toString();
+        });
+        productReviews[reviewIndex] = review;
+        product.numReviews = productReviews.length;
+        product.rating =
+          productReviews.reduce((acc, item) => item.rating + acc, 0) /
+          productReviews.length;
+        await product.save();
+        return res.status(201).json({
+          status: true,
+          message: "Review updated!",
+        });
+      }
+
+      productReviews.push(review);
+      product.numReviews = productReviews.length;
+      product.rating =
+        productReviews.reduce((acc, item) => item.rating + acc, 0) /
+        productReviews.length;
+
+      await product.save();
+      res.status(201).json({
+        status: true,
+        message: "Review added!",
+      });
+    } else {
+      res.status(404);
+      throw new ResponseError(400, "Product not found");
+    }
+  } catch (error) {
+    res.status(error.statusCode || 500);
+    throw new ResponseError(error.statusCode, error.message, error.errors);
+  }
+});
+
 export {
   getProducts,
   getProductById,
   deleteProduct,
   createProduct,
   updateProduct,
+  createProductReview,
 };
