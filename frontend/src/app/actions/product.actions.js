@@ -4,6 +4,9 @@ import {
   PRODUCT_ADMIN_ALERT_CLOSE,
   PRODUCT_CREATE_FAIL,
   PRODUCT_CREATE_REQ,
+  PRODUCT_CREATE_REVIEW_FAIL,
+  PRODUCT_CREATE_REVIEW_REQ,
+  PRODUCT_CREATE_REVIEW_SUCCESS,
   PRODUCT_CREATE_SUCCESS,
   PRODUCT_DELETE_FAIL,
   PRODUCT_DELETE_REQ,
@@ -275,6 +278,58 @@ export const updateProductAction = product => async (dispatch, getState) => {
 
     dispatch({
       type: PRODUCT_UPDATE_FAIL,
+      payload: errData,
+    });
+
+    throw errData;
+  }
+};
+
+export const createProductReviewAction = product => async (
+  dispatch,
+  getState
+) => {
+  const {
+    userLogin: { userInfo },
+  } = getState();
+
+  try {
+    dispatch({
+      type: PRODUCT_CREATE_REVIEW_REQ,
+    });
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.post(
+      `/api/products/${product._id}/reviews`,
+      { ...product },
+      config
+    );
+
+    dispatch({
+      type: PRODUCT_CREATE_REVIEW_SUCCESS,
+    });
+
+    return data;
+  } catch (error) {
+    let errData = {
+      message: error.message,
+    };
+
+    if (error.response && error.response.data.message) {
+      const errorData = error.response.data?.errors;
+      errData = {
+        message: error.response.data.message,
+        ...errorData,
+      };
+    }
+
+    dispatch({
+      type: PRODUCT_CREATE_REVIEW_FAIL,
       payload: errData,
     });
 

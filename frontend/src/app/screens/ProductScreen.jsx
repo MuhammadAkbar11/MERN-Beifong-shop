@@ -10,6 +10,7 @@ import {
   Button,
   Container,
   Form,
+  Alert,
 } from 'react-bootstrap';
 import Rating from '@components/Rating';
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,17 +18,18 @@ import { listProductDetails } from '../actions/product.actions';
 import Loader from '../components/Loader';
 import { addToCart } from '../actions/cart.actions';
 
+import ProductListReview from '../components/ProductListReview';
+
 const ProductScreen = ({ history, match }) => {
   const [qty, setQty] = React.useState(1);
 
   const dispatch = useDispatch();
   const { product, loading } = useSelector(state => state.productDetails);
+
   const pageRedirect = useSelector(state => state.redirect);
   const cart = useSelector(state => state.cart);
-
   let cartAddItemLoading = cart.loading;
 
-  // console.log();
   const isProductInCart = cart.cartItems.find(item => {
     return match.params.id === item.product;
   });
@@ -188,6 +190,7 @@ const ProductScreen = ({ history, match }) => {
             </Col>
           )}
         </Row>
+        <ProductListReview product={product} />
       </Container>
     </>
   );
