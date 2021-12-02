@@ -12,7 +12,21 @@ import ResponseError from "../utils/responseError.js";
 // @route GET /api/products
 // @access Public
 const getProducts = asyncHandler(async (req, res) => {
-  const products = await ProductModel.find({}).populate(
+  const { keyword } = req.query;
+
+  const rgx = pattern => new RegExp(`.*${pattern}.*`);
+  const searchRgx = rgx(keyword);
+
+  const filter = req.query.keyword
+    ? {
+        $or: [
+          { name: { $regex: searchRgx, $options: "i" } },
+          { description: { $regex: searchRgx, $options: "i" } },
+        ],
+      }
+    : {};
+
+  const products = await ProductModel.find({ ...filter }).populate(
     "category",
     "name slug icon"
   );

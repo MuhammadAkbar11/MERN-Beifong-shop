@@ -5,17 +5,11 @@ import PropTypes from 'prop-types';
 import { LinkContainer } from 'react-router-bootstrap';
 import Rating from './Rating';
 
-const defaultProps = {
-  product: {},
-};
-
-const proptypes = {
-  product: PropTypes.objectOf(PropTypes.object),
-};
+/* eslint-disable  */
 
 const Product = props => {
   const { product } = props;
-  /* eslint-disable  */
+
   return (
     <Card className='my-3 p-3 rounded h-100 overflow-hidden bei-card  '>
       {/* eslint-disable */}
@@ -50,9 +44,5 @@ const Product = props => {
     </Card>
   );
 };
-
-Product.defaultProps = defaultProps;
-
-Product.propTypes = proptypes;
 
 export default Product;

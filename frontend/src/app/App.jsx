@@ -19,6 +19,7 @@ import AdminProductListScreen from './screens/AdminProductListScreen';
 import AdminCategoryListScreen from './screens/AdminCategoryListScreen';
 import AdminProductEditScreen from './screens/AdminProductEditScreen';
 import AdminOrderListScreen from './screens/AdminOrderListScreen';
+import SearchScreen from './screens/SearchScreen';
 
 const App = () => {
   /* eslint-disable */
@@ -102,6 +103,7 @@ const App = () => {
               component={AdminUserEditScreen}
             />
             <Route path='/admin/orderlist' component={AdminOrderListScreen} />
+            <Route path='/search/:keyword' component={SearchScreen} />
             <Route path='/' exact component={Home} />
           </Switch>
         </Container>
