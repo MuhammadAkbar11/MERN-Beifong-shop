@@ -288,9 +288,28 @@ const createProductReview = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc Get Top Reted Products
+// @route GET /api/product/top
+// @access Public
+const getTopProducts = asyncHandler(async (req, res) => {
+  const limit = req.query.limit || 3;
+  try {
+    const getTopProducts = await ProductModel.findById({})
+      .populate("category", "name slug icon")
+      .sort({ rating: -1 })
+      .limit(limit);
+
+    res.json({ products: getTopProducts });
+  } catch (err) {
+    res.status(error.statusCode || 500);
+    throw new ResponseError(error.statusCode, error.message, error.errors);
+  }
+});
+
 export {
   getProducts,
   getProductById,
+  getTopProducts,
   deleteProduct,
   createProduct,
   updateProduct,
