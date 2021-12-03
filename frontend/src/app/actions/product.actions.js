@@ -23,14 +23,33 @@ import {
 } from '../constants/product.constants';
 
 /* eslint-disable */
-export const listProducts = (keyword = '') => async dispatch => {
+export const listProducts = ({
+  keyword = '',
+  pageNumber = '',
+  result = 5,
+}) => async dispatch => {
   try {
     dispatch({ type: PRODUCT_LIST_REQ });
-    const { data } = await axios.get(`/api/products?keyword=${keyword}`);
+
+    const queries = {
+      keyword: keyword,
+      pageNumber: pageNumber,
+      result: result,
+    };
+
+    const queriesToString = Object.keys(queries)
+      .map(key => `${key}=${queries[key]}`)
+      .join('&');
+
+    const { data } = await axios.get(`/api/products?${queriesToString}`);
 
     dispatch({
       type: PRODUCT_LIST_SUCCESS,
-      payload: data.products,
+      payload: {
+        products: data.products,
+        page: data?.page || null,
+        pages: data?.pages || null,
+      },
     });
   } catch (error) {
     console.log(error);

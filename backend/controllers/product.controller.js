@@ -12,12 +12,14 @@ import ResponseError from "../utils/responseError.js";
 // @route GET /api/products
 // @access Public
 const getProducts = asyncHandler(async (req, res) => {
-  const { keyword } = req.query;
-
+  const { keyword, pageNumber, result } = req.query;
+  // console.log(keyword);
   const rgx = pattern => new RegExp(`.*${pattern}.*`);
   const searchRgx = rgx(keyword);
 
-  const filter = req.query.keyword
+  const pageSize = Number(result) || 2;
+  const page = Number(pageNumber) || 1;
+  const query = keyword
     ? {
         $or: [
           { name: { $regex: searchRgx, $options: "i" } },
@@ -26,12 +28,17 @@ const getProducts = asyncHandler(async (req, res) => {
       }
     : {};
 
-  const products = await ProductModel.find({ ...filter }).populate(
-    "category",
-    "name slug icon"
-  );
+  const count = await ProductModel.countDocuments({ ...query });
+
+  const products = await ProductModel.find({ ...query })
+    .populate("category", "name slug icon")
+    .limit(pageSize)
+    .skip(pageSize * (page - 1));
+
   return res.json({
     status: true,
+    page,
+    pages: Math.ceil(count / pageSize),
     products,
   });
 });

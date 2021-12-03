@@ -14,7 +14,7 @@ const Home = () => {
 
   React.useEffect(() => {
     /* eslint-disable */
-    dispatch(listProducts());
+    dispatch(listProducts({ result: 8 }));
     return () => {};
   }, [dispatch]);
 

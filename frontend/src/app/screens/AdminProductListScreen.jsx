@@ -22,22 +22,27 @@ import {
 } from '../actions/product.actions';
 import BreadcrumbContainer from '../components/BreadcrumbContainer';
 import { PRODUCT_CREATE_RESET } from '../constants/product.constants';
+import Paginate from '../components/Paginate';
 
 /* eslint-disable */
 
-const AdminProductListScreen = ({ history }) => {
+const AdminProductListScreen = ({ history, match }) => {
+  // const pageNumber = match.params.pageNumber || 1;
+
   const breadcrumbItems = [
     { name: 'Administrator', href: '/admin' },
     { name: 'Products', isActive: true },
   ];
 
+  const [pageNumber, setPageNumber] = React.useState(1);
+  const [result, setResult] = React.useState(10);
   const [confirmDelete, setConfirmDelete] = React.useState(false);
   const [selectedProduct, setSelectedProduct] = React.useState(null);
 
   const dispacth = useDispatch();
 
   const productList = useSelector(state => state.productList);
-  const { loading, error, products } = productList;
+  const { loading, error, products, page, pages } = productList;
 
   const productAlert = useSelector(state => state.productsAlert);
 
@@ -45,8 +50,8 @@ const AdminProductListScreen = ({ history }) => {
 
   const {
     loading: loadingCreate,
-    error: errorCreate,
-    product: createdProduct,
+    // error: errorCreate,
+    // product: createdProduct,
   } = useSelector(state => state.productCreate);
 
   const userLogin = useSelector(state => state.userLogin);
@@ -57,9 +62,9 @@ const AdminProductListScreen = ({ history }) => {
     if (!userInfo.isAdmin) {
       history.push('/');
     } else {
-      dispacth(listProducts());
+      dispacth(listProducts({ pageNumber, result }));
     }
-  }, [dispacth, userInfo, history]);
+  }, [dispacth, userInfo, history, pageNumber]);
 
   React.useEffect(() => {
     if (productAlert && productAlert.open) {
@@ -85,6 +90,10 @@ const AdminProductListScreen = ({ history }) => {
       });
     }
     setConfirmDelete(false);
+  };
+
+  const handleChangePagination = value => {
+    setPageNumber(value);
   };
 
   return (
@@ -121,72 +130,84 @@ const AdminProductListScreen = ({ history }) => {
           {error?.message || error?.errors?.message || 'Something went wrong'}
         </Message>
       ) : (
-        <Table responsive striped bordered hover size='sm'>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>NAME</th>
-              <th>PRICE</th>
-              <th>CATEGORY</th>
-              <th>BRAND</th>
-              <th>STOCK</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-          <tbody>
-            {products.length !== 0 ? (
-              products.map(prod => {
-                return (
-                  <tr key={prod._id}>
-                    <td>{prod._id}</td>
-                    <td>{prod?.name}</td>
-                    <td>{prod?.price?.rupiah}</td>
-                    <td>{prod?.category?.name}</td>
-                    <td className='text-capitalize'>{prod?.brand}</td>
-                    <td>{prod?.countInStock}</td>
-                    <td>
-                      <div
-                        style={{
-                          gap: '.5rem',
-                        }}
-                        className=' d-flex  '
-                      >
-                        <LinkContainer to={`/admin/product/${prod._id}`}>
-                          <Button variant='light' size='sm'>
-                            <i className='fas fa-info-circle '></i>
-                          </Button>
-                        </LinkContainer>
-                        <LinkContainer to={`/admin/product/${prod._id}/edit`}>
-                          <Button variant='dark' size='sm'>
-                            <i className='fas fa-edit '></i>
-                          </Button>
-                        </LinkContainer>
-                        <Button
-                          variant='danger'
-                          size='sm'
-                          disabled={loadingDelete}
-                          onClick={() => {
-                            setConfirmDelete(true);
-                            setSelectedProduct(prod);
-                          }}
-                        >
-                          <i className='fas fa-trash '></i>
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })
-            ) : (
+        <>
+          <Table responsive striped bordered hover size='sm'>
+            <thead>
               <tr>
-                <td colSpan={5}>
-                  <Message>Products is empty</Message>
-                </td>
+                <th>ID</th>
+                <th>NAME</th>
+                <th>PRICE</th>
+                <th>CATEGORY</th>
+                <th>BRAND</th>
+                <th>STOCK</th>
+                <th></th>
               </tr>
-            )}
-          </tbody>
-        </Table>
+            </thead>
+            <tbody></tbody>
+            <tbody>
+              {products.length !== 0 ? (
+                products.map(prod => {
+                  return (
+                    <tr key={prod._id}>
+                      <td>{prod._id}</td>
+                      <td>{prod?.name}</td>
+                      <td>{prod?.price?.rupiah}</td>
+                      <td>{prod?.category?.name}</td>
+                      <td className='text-capitalize'>{prod?.brand}</td>
+                      <td>{prod?.countInStock}</td>
+                      <td>
+                        <div
+                          style={{
+                            gap: '.5rem',
+                          }}
+                          className=' d-flex  '
+                        >
+                          <LinkContainer to={`/admin/product/${prod._id}`}>
+                            <Button variant='light' size='sm'>
+                              <i className='fas fa-info-circle '></i>
+                            </Button>
+                          </LinkContainer>
+                          <LinkContainer to={`/admin/product/${prod._id}/edit`}>
+                            <Button variant='dark' size='sm'>
+                              <i className='fas fa-edit '></i>
+                            </Button>
+                          </LinkContainer>
+                          <Button
+                            variant='danger'
+                            size='sm'
+                            disabled={loadingDelete}
+                            onClick={() => {
+                              setConfirmDelete(true);
+                              setSelectedProduct(prod);
+                            }}
+                          >
+                            <i className='fas fa-trash '></i>
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr>
+                  <td colSpan={5}>
+                    <Message>Products is empty</Message>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </Table>
+          {products.length !== 0 && (
+            <section className='d-flex justify-content-center mt-4'>
+              <Paginate
+                isAdmin
+                page={page}
+                pages={pages}
+                onClickItem={handleChangePagination}
+              />
+            </section>
+          )}
+        </>
       )}
 
       <Modal

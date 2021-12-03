@@ -40,7 +40,7 @@ const productListReducer = (state = initState, action) => {
     case PRODUCT_LIST_SUCCESS:
       return {
         loading: false,
-        products: action.payload,
+        ...action.payload,
       };
 
     case PRODUCT_LIST_FAIL:
