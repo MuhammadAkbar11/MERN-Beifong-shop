@@ -22,6 +22,9 @@ import {
   PRODUCT_CREATE_REVIEW_SUCCESS,
   PRODUCT_CREATE_REVIEW_FAIL,
   PRODUCT_CREATE_REVIEW_RESET,
+  PRODUCT_TOP_REQ,
+  PRODUCT_TOP_SUCCESS,
+  PRODUCT_TOP_FAIL,
 } from '../constants/product.constants';
 
 const initState = {
@@ -150,6 +153,20 @@ const productReviewCreateReducer = (state = {}, action) => {
   }
 };
 
+const productTopListReducer = (state = { products: [] }, action) => {
+  switch (action.type) {
+    case PRODUCT_TOP_REQ:
+      return { loading: true };
+    case PRODUCT_TOP_SUCCESS:
+      return { loading: false, products: action.payload };
+    case PRODUCT_TOP_FAIL:
+      return { loading: false, error: action.payload };
+
+    default:
+      return state;
+  }
+};
+
 /* eslint-disable */
 
 export {
@@ -160,4 +177,5 @@ export {
   productCreateReducer,
   productUpdateReducer,
   productReviewCreateReducer,
+  productTopListReducer,
 };

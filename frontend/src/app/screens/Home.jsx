@@ -5,6 +5,7 @@ import Product from '@components/Product';
 import { listProducts } from '../actions/product.actions';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
+import ProductCarousel from '../components/ProductCarousel';
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -21,6 +22,9 @@ const Home = () => {
   return (
     <>
       {' '}
+      <section className='mb-3'>
+        <ProductCarousel />
+      </section>
       <br />
       <br />
       <h1>Latets Products</h1>

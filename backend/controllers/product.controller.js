@@ -294,13 +294,13 @@ const createProductReview = asyncHandler(async (req, res) => {
 const getTopProducts = asyncHandler(async (req, res) => {
   const limit = req.query.limit || 3;
   try {
-    const getTopProducts = await ProductModel.findById({})
+    const getTopProducts = await ProductModel.find({})
       .populate("category", "name slug icon")
       .sort({ rating: -1 })
-      .limit(limit);
+      .limit(Number(limit));
 
     res.json({ products: getTopProducts });
-  } catch (err) {
+  } catch (error) {
     res.status(error.statusCode || 500);
     throw new ResponseError(error.statusCode, error.message, error.errors);
   }

@@ -17,6 +17,9 @@ import {
   PRODUCT_LIST_FAIL,
   PRODUCT_LIST_REQ,
   PRODUCT_LIST_SUCCESS,
+  PRODUCT_TOP_FAIL,
+  PRODUCT_TOP_REQ,
+  PRODUCT_TOP_SUCCESS,
   PRODUCT_UPDATE_FAIL,
   PRODUCT_UPDATE_REQ,
   PRODUCT_UPDATE_SUCCESS,
@@ -354,5 +357,33 @@ export const createProductReviewAction = product => async (
     });
 
     throw errData;
+  }
+};
+
+export const topListProductAction = ({ limit }) => async dispatch => {
+  dispatch({ type: PRODUCT_TOP_REQ });
+
+  try {
+    const { data } = await axios.get(`/api/products/top?limit=${limit}`);
+
+    dispatch({
+      type: PRODUCT_TOP_SUCCESS,
+      payload: data.products,
+    });
+  } catch (error) {
+    let errData = {
+      message: error.message,
+    };
+
+    if (error.response && error.response.data.message) {
+      errData = {
+        message: error.response.data.message,
+      };
+    }
+
+    dispatch({
+      type: PRODUCT_TOP_FAIL,
+      payload: errData,
+    });
   }
 };
