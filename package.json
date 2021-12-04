@@ -21,12 +21,13 @@
   "scripts": {
     "server": "nodemon backend/server.js --dev",
     "start": "node backend/server.js",
+    "build" : "yarn --cwd frontend/ build",
     "client": "yarn --cwd ./frontend/ start",
     "dev": "concurrently \"yarn server\" \"yarn client\"",
     "data:import": "node backend/seeder.js",
     "data:destroy": "node backend/seeder.js -d",
     "seed:gu": "node backend/seeds/generateUsers.js -d",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false yarn install --prefix frontend && yarn build --prefix frontend"
+    "heroku-postbuild": "yarn run install --prefix frontend/ && yarn run build --prefix frontend/"
   },
   "repository": "git@github.com:MuhammadAkbar11/MERN-Beifong-shop.git",
   "author": "MuhammadAkbar11 <muhammadakbarletlet@gmail.com>",
