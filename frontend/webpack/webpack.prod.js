@@ -14,13 +14,6 @@ module.exports = {
     chunkFilename: 'js/chunk-[name].[contenthash].js',
     publicPath: './',
   },
-
-  watch: true,
-  watchOptions: {
-    ignored: '/node_modules/',
-    aggregateTimeout: 200,
-    poll: 1000,
-  },
   optimization: {
     minimizer: [
       new OptimizeCssAssetsPlugin(),
