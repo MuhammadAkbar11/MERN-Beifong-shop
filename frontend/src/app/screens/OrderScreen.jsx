@@ -5,17 +5,17 @@ import { Container, Row, Col, ListGroup, Image, Card } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import localeStringDate from '@utils/localeStringDate';
-import BreadcrumbContainer from '../components/BreadcrumbContainer';
-import CheckoutSteps from '../components/CheckoutSteps';
-import Message from '../components/Message';
-import FormatRupiah from '../components/FormatRupiah';
 import {
   getOrderDetailsAction,
   payOrderAction,
   payOrderResetAction,
-} from '../actions/order.actions';
-import Loader from '../components/Loader';
-import useConvertCurrency from '../hooks/useConvertCurrency';
+} from '@actions/order.actions';
+import BreadcrumbContainer from '@components/BreadcrumbContainer';
+import CheckoutSteps from '@components/CheckoutSteps';
+import Message from '@components/Message';
+import FormatRupiah from '@components/FormatRupiah';
+import Loader from '@components/Loader';
+import useConvertCurrency from '@hooks/useConvertCurrency';
 /* eslint-disable */
 const OrderScreen = ({ match }) => {
   const orderId = match.params.id;

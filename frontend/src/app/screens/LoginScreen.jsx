@@ -2,11 +2,11 @@ import React from 'react';
 import { Form, Button, Row, Col, Container } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import Message from '../components/Message';
-import Loader from '../components/Loader';
-import { userLoginAction } from '../actions/user.actions';
-import FormContainer from '../components/FormContainer';
-import BreadcrumbContainer from '../components/BreadcrumbContainer';
+import { userLoginAction } from '@actions/user.actions';
+import Message from '@components/Message';
+import Loader from '@components/Loader';
+import FormContainer from '@components/FormContainer';
+import BreadcrumbContainer from '@components/BreadcrumbContainer';
 
 /* eslint-disable */
 const LoginScreen = ({ location, history }) => {

@@ -9,7 +9,7 @@ import {
   resetUpdateProfileFeedBackAction,
   updateUserProfileAction,
   userChangePasswordAction,
-} from '../actions/user.actions';
+} from '@actions/user.actions';
 import Loader from './Loader';
 import Message from './Message';
 

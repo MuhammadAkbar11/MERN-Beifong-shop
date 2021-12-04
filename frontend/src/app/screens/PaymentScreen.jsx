@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { Button, Container, Form, Row, Col } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import isObjectEmpty from '@utils/isObjectEmpty';
-import FormContainer from '../components/FormContainer';
-import { savePaymentMethod } from '../actions/cart.actions';
-import CheckoutSteps from '../components/CheckoutSteps';
-import BreadcrumbContainer from '../components/BreadcrumbContainer';
+import { savePaymentMethod } from '@actions/cart.actions';
+import FormContainer from '@components/FormContainer';
+import CheckoutSteps from '@components/CheckoutSteps';
+import BreadcrumbContainer from '@components/BreadcrumbContainer';
 
 /* eslint-disable */
 const PaymentScreen = ({ history }) => {

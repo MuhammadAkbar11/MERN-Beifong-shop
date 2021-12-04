@@ -2,7 +2,7 @@ import React from 'react';
 import { Alert, Carousel, Col, Image, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { topListProductAction } from '../actions/product.actions';
+import { topListProductAction } from '@actions/product.actions';
 import Loader from './Loader';
 /* eslint-disable */
 const ProductCarousel = () => {

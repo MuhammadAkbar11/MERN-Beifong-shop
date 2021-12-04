@@ -13,7 +13,7 @@ import { PRODUCT_CREATE_REVIEW_RESET } from '@constants/product.constants';
 import {
   createProductReviewAction,
   listProductDetails,
-} from '../actions/product.actions';
+} from '@actions/product.actions';
 import Rating from './Rating';
 
 /* eslint-disable */

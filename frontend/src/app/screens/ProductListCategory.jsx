@@ -3,10 +3,10 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Col, Container, Row } from 'react-bootstrap';
 import Product from '@components/Product';
-import { listProductByCategoryAction } from '../actions/product.actions';
+import { listProductByCategoryAction } from '@actions/product.actions';
 import Loader from '@components/Loader';
 import Paginate from '@components/Paginate';
-import BreadcrumbContainer from '../components/BreadcrumbContainer';
+import BreadcrumbContainer from '@components/BreadcrumbContainer';
 
 const ProductListCategory = props => {
   const { match, history } = props;

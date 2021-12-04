@@ -11,18 +11,18 @@ import {
   Alert,
 } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import Message from '../components/Message';
-import Loader from '../components/Loader';
+import Message from '@components/Message';
+import Loader from '@components/Loader';
 
 import {
   createProductAction,
   deleteProductAction,
   listProducts,
   resetProductListAlertAction,
-} from '../actions/product.actions';
-import BreadcrumbContainer from '../components/BreadcrumbContainer';
+} from '@actions/product.actions';
+import BreadcrumbContainer from '@components/BreadcrumbContainer';
 import { PRODUCT_CREATE_RESET } from '@constants/product.constants';
-import Paginate from '../components/Paginate';
+import Paginate from '@components/Paginate';
 
 /* eslint-disable */
 

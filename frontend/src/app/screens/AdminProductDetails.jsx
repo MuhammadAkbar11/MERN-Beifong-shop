@@ -2,10 +2,10 @@ import React from 'react';
 import { Card, Col, Container, Image, ListGroup, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { listProductDetails } from '../actions/product.actions';
-import BreadcrumbContainer from '../components/BreadcrumbContainer';
-import Loader from '../components/Loader';
-import Rating from '../components/Rating';
+import { listProductDetails } from '@actions/product.actions';
+import BreadcrumbContainer from '@components/BreadcrumbContainer';
+import Loader from '@components/Loader';
+import Rating from '@components/Rating';
 
 /* eslint-disable */
 

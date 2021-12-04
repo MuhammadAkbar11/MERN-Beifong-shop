@@ -11,13 +11,13 @@ import {
 } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import BreadcrumbContainer from '../components/BreadcrumbContainer';
-import CheckoutSteps from '../components/CheckoutSteps';
-import Message from '../components/Message';
-import FormatRupiah from '../components/FormatRupiah';
-import { addToCart } from '../actions/cart.actions';
-import { createOrderAction } from '../actions/order.actions';
-import Loader from '../components/Loader';
+import { addToCart } from '@actions/cart.actions';
+import { createOrderAction } from '@actions/order.actions';
+import BreadcrumbContainer from '@components/BreadcrumbContainer';
+import CheckoutSteps from '@components/CheckoutSteps';
+import Message from '@components/Message';
+import FormatRupiah from '@components/FormatRupiah';
+import Loader from '@components/Loader';
 /* eslint-disable */
 const OrderSummarycreen = ({ history }) => {
   const dispatch = useDispatch();

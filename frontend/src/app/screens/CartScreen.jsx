@@ -14,10 +14,9 @@ import {
   Breadcrumb,
   Table,
 } from 'react-bootstrap';
-import Message from '@components/Message';
-import { addToCart, removeFromCart } from '../actions/cart.actions';
-import FormatRupiah from '../components/FormatRupiah';
-import { redirectAction } from '../actions/redirect.actions';
+import { addToCart, removeFromCart } from '@actions/cart.actions';
+import FormatRupiah from '@components/FormatRupiah';
+import { redirectAction } from '@actions/redirect.actions';
 
 /* eslint-disable */
 

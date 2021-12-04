@@ -3,10 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Col, Row } from 'react-bootstrap';
 import Helmet from 'react-helmet';
 import Product from '@components/Product';
-import { listProducts } from '../actions/product.actions';
-import Loader from '../components/Loader';
-import Message from '../components/Message';
-import ProductCarousel from '../components/ProductCarousel';
+import { listProducts } from '@actions/product.actions';
+import Loader from '@components/Loader';
+import Message from '@components/Message';
+import ProductCarousel from '@components/ProductCarousel';
 
 const Home = () => {
   const dispatch = useDispatch();

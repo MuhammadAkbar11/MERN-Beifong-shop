@@ -2,14 +2,14 @@ import React from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Container, Table, Button, Badge, Modal, Alert } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import Message from '../components/Message';
-import Loader from '../components/Loader';
 import {
   deleteUserAction,
   getUserListAction,
   resetUserListAlertAction,
-} from '../actions/user.actions';
-import BreadcrumbContainer from '../components/BreadcrumbContainer';
+} from '@actions/user.actions';
+import Message from '@components/Message';
+import Loader from '@components/Loader';
+import BreadcrumbContainer from '@components/BreadcrumbContainer';
 
 /* eslint-disable */
 

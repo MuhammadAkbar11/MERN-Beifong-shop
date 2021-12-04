@@ -13,11 +13,11 @@ import {
 } from 'react-bootstrap';
 import Rating from '@components/Rating';
 import { useDispatch, useSelector } from 'react-redux';
-import { listProductDetails } from '../actions/product.actions';
-import Loader from '../components/Loader';
-import { addToCart } from '../actions/cart.actions';
+import { listProductDetails } from '@actions/product.actions';
+import Loader from '@components/Loader';
+import { addToCart } from '@actions/cart.actions';
 
-import ProductListReview from '../components/ProductListReview';
+import ProductListReview from '@components/ProductListReview';
 
 const ProductScreen = ({ history, match }) => {
   const [qty, setQty] = React.useState(1);

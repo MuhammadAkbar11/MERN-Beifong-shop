@@ -2,11 +2,11 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Col, Container, Row } from 'react-bootstrap';
 import Product from '@components/Product';
-import { listProducts } from '../actions/product.actions';
-import Loader from '../components/Loader';
-import Message from '../components/Message';
-import BreadcrumbContainer from '../components/BreadcrumbContainer';
-import Paginate from '../components/Paginate';
+import { listProducts } from '@actions/product.actions';
+import Loader from '@components/Loader';
+import Message from '@components/Message';
+import BreadcrumbContainer from '@components/BreadcrumbContainer';
+import Paginate from '@components/Paginate';
 /* eslint-disable */
 const ProductListScreen = ({ match, history }) => {
   const keyword = match.params?.keyword;

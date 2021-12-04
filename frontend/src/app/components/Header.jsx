@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Route } from 'react-router';
-import { userLogout } from '../actions/user.actions';
+import { userLogout } from '@actions/user.actions';
 import SearchBox from './SearchBox';
 
 const Header = () => {

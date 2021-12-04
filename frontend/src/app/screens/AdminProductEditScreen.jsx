@@ -2,18 +2,18 @@
 import React from 'react';
 import { Container, Button, Form } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import Message from '../components/Message';
-import Loader from '../components/Loader';
+import Message from '@components/Message';
+import Loader from '@components/Loader';
 import {
   listProductDetails,
   updateProductAction,
-} from '../actions/product.actions';
-import BreadcrumbContainer from '../components/BreadcrumbContainer';
-import FormContainer from '../components/FormContainer';
-import { listCategoriesAction } from '../actions/category.actions';
+} from '@actions/product.actions';
+import BreadcrumbContainer from '@components/BreadcrumbContainer';
+import FormContainer from '@components/FormContainer';
+import { listCategoriesAction } from '@actions/category.actions';
 import { Link } from 'react-router-dom';
 import { PRODUCT_UPDATE_RESET } from '@constants/product.constants';
-import useSingleImageUploader from '../hooks/useSingleImageUploader';
+import useSingleImageUploader from '@hooks/useSingleImageUploader';
 
 const AdminProductEditScreen = ({ match, history }) => {
   const productID = match.params.id;

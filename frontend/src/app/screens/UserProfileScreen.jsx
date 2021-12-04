@@ -17,13 +17,13 @@ import { Route, Switch } from 'react-router-dom';
 import {
   getUserDetailsAction,
   userUploadPictureAction,
-} from '../actions/user.actions';
-import BreadcrumbContainer from '../components/BreadcrumbContainer';
-import ProfileUpdate from '../components/ProfileUpdate';
-import { getListMyOrdersAction } from '../actions/order.actions';
-import ListMyOrders from '../components/ListMyOrders';
-import useSingleImageUploader from '../hooks/useSingleImageUploader';
-import Loader from '../components/Loader';
+} from '@actions/user.actions';
+import { getListMyOrdersAction } from '@actions/order.actions';
+import BreadcrumbContainer from '@components/BreadcrumbContainer';
+import ProfileUpdate from '@components/ProfileUpdate';
+import ListMyOrders from '@components/ListMyOrders';
+import useSingleImageUploader from '@hooks/useSingleImageUploader';
+import Loader from '@components/Loader';
 
 /* eslint-disable */
 const UserProfileScreen = ({ match, history, location }) => {

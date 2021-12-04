@@ -4,10 +4,10 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useSelector, useDispatch } from 'react-redux';
 
-import FormContainer from '../components/FormContainer';
-import { saveShippingAddressAction } from '../actions/cart.actions';
-import CheckoutSteps from '../components/CheckoutSteps';
-import BreadcrumbContainer from '../components/BreadcrumbContainer';
+import { saveShippingAddressAction } from '@actions/cart.actions';
+import FormContainer from '@components/FormContainer';
+import CheckoutSteps from '@components/CheckoutSteps';
+import BreadcrumbContainer from '@components/BreadcrumbContainer';
 
 const shippingSchema = Yup.object().shape({
   address: Yup.string().required('Address is required'),

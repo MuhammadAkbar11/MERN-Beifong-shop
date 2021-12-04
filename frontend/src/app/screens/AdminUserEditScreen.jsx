@@ -2,18 +2,14 @@
 import React from 'react';
 import { Form, Button, Container, Row, Col, Alert } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import Message from '../components/Message';
-import Loader from '../components/Loader';
-import {
-  getUserDetailsAction,
-  updateUserAction,
-} from '../actions/user.actions';
-import FormContainer from '../components/FormContainer';
-import BreadcrumbContainer from '../components/BreadcrumbContainer';
+import Message from '@components/Message';
+import Loader from '@components/Loader';
+import { getUserDetailsAction, updateUserAction } from '@actions/user.actions';
+import FormContainer from '@components/FormContainer';
+import BreadcrumbContainer from '@components/BreadcrumbContainer';
 import { USER_UPDATE_RESET } from '@constants/user.constants';
 
-const AdminUserEditScreen = ({ match, location, history }) => {
+const AdminUserEditScreen = ({ match, history }) => {
   const userId = match.params.id;
 
   const [disabledSubmit, setDisabledSubmit] = React.useState(false);

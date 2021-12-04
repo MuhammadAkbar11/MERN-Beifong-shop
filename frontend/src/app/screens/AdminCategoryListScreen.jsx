@@ -10,18 +10,17 @@ import {
   Alert,
 } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import Message from '../components/Message';
-import Loader from '../components/Loader';
-
-import BreadcrumbContainer from '../components/BreadcrumbContainer';
+import Message from '@components/Message';
+import Loader from '@components/Loader';
+import BreadcrumbContainer from '@components/BreadcrumbContainer';
 import {
   createCategoryAction,
   deleteCategoryAction,
   listCategoriesAction,
   resetListCategoryAlertAction,
   updateCategoryAction,
-} from '../actions/category.actions';
-import ModalCategoryForm from '../components/ModalCategoryForm';
+} from '@actions/category.actions';
+import ModalCategoryForm from '@components/ModalCategoryForm';
 
 /* eslint-disable */
 
