@@ -86,7 +86,7 @@ const ProductListScreen = ({ match, history }) => {
                     <Col
                       className='mb-3'
                       key={id}
-                      xs={6}
+                      xs={12}
                       sm={6}
                       md={6}
                       lg={4}
