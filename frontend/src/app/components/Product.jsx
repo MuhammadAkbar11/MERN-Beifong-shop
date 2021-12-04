@@ -22,9 +22,9 @@ const Product = props => {
           variant='top'
         />
       </LinkContainer>
-      <Card.Body className='px-0 text-nowrap'>
+      <Card.Body className='px-0 t'>
         <Link
-          className='text-dark '
+          className='text-dark ext-nowrap'
           to={`/product/${product._id}`}
           title={product.name}
         >
@@ -45,7 +45,9 @@ const Product = props => {
             text={`${product.numReviews} reviews`}
           />
         </Card.Text>
-        <Card.Text as='h5'>{product.price.rupiah}</Card.Text>
+        <Card.Text as='h5' className=' text-wrap bei-card-price '>
+          {product.price.rupiah}
+        </Card.Text>
       </Card.Body>
     </Card>
   );

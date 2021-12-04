@@ -4,6 +4,13 @@
     object-fit: cover;
   }
 
+  .bei-card-price {
+    @include media-breakpoint-down(sm) {
+      letter-spacing: 1px;
+      font-size: 12px !important;
+    }
+  }
+
   @include media-breakpoint-up(sm) {
     .bei-card-img {
       height: 178px;

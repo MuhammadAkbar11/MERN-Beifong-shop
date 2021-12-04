@@ -18,8 +18,13 @@
 
 .carousel-item {
   height: max-content;
+
   @include media-breakpoint-up(md) {
     height: 500px;
+  }
+
+  @include media-breakpoint-down(sm) {
+    padding-bottom: 2rem;
   }
 
   padding-top: 1.3rem;
@@ -43,9 +48,16 @@
 .carousel img {
   object-fit: cover;
   height: 300px;
-
-  padding: 30px;
-  margin: 40px;
+  @include media-breakpoint-down(md) {
+    width: 80% !important;
+    height: auto !important;
+    margin: {
+      bottom: 1rem;
+      top: 1rem;
+    }
+  }
+  // padding: 30px;
+  // margin: 40px;
 }
 
 .carousel a {
