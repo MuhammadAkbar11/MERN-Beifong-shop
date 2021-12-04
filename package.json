@@ -26,7 +26,7 @@
     "data:import": "node backend/seeder.js",
     "data:destroy": "node backend/seeder.js -d",
     "seed:gu": "node backend/seeds/generateUsers.js -d",
-    "heroku-postbuild": "YARN_PRODUCTION=true yarn --cwd frontend/ install && yarn --cwd frontend/ build/"
+    "heroku-postbuild": "YARN_PRODUCTION=true yarn --cwd frontend/ install && yarn --cwd frontend/ build"
   },
   "repository": "git@github.com:MuhammadAkbar11/MERN-Beifong-shop.git",
   "author": "MuhammadAkbar11 <muhammadakbarletlet@gmail.com>",
