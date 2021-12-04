@@ -20,6 +20,7 @@ import AdminCategoryListScreen from './screens/AdminCategoryListScreen';
 import AdminProductEditScreen from './screens/AdminProductEditScreen';
 import AdminOrderListScreen from './screens/AdminOrderListScreen';
 import ProductListScreen from './screens/ProductListScreen';
+import ProductListCategory from './screens/ProductListCategory';
 
 const App = () => {
   /* eslint-disable */
@@ -85,40 +86,80 @@ const App = () => {
                 return <CartScreen {...props} />;
               }}
             />
-            <Route path='/admin/userlist' component={AdminUserListScreen} />
+            <Route
+              path='/admin/userlist'
+              render={props => {
+                return <AdminUserListScreen {...props} />;
+              }}
+            />
             <Route
               path='/admin/productlist'
-              component={AdminProductListScreen}
+              render={props => {
+                return <AdminProductListScreen {...props} />;
+              }}
             />
             <Route
               path='/admin/product/:id/edit'
-              component={AdminProductEditScreen}
+              render={props => <AdminProductEditScreen {...props} />}
             />
             <Route
               path='/admin/categorylist'
-              component={AdminCategoryListScreen}
+              render={props => <AdminCategoryListScreen {...props} />}
             />
             <Route
               path='/admin/user/:id/edit'
-              component={AdminUserEditScreen}
+              render={props => {
+                return <AdminUserEditScreen {...props} />;
+              }}
             />
-            <Route path='/admin/orderlist' component={AdminOrderListScreen} />
+            <Route
+              path='/admin/orderlist'
+              render={props => {
+                return <AdminOrderListScreen {...props} />;
+              }}
+            />
             <Route
               path='/search/:keyword/page/:pageNumber'
               exact
-              component={ProductListScreen}
+              render={props => {
+                return <ProductListScreen {...props} />;
+              }}
             />
             <Route
               path='/search/:keyword'
               exact
-              component={ProductListScreen}
+              render={props => {
+                return <ProductListScreen {...props} />;
+              }}
             />
 
             <Route
               path='/products/page/:pageNumber'
-              component={ProductListScreen}
+              exact
+              render={props => {
+                return <ProductListScreen {...props} />;
+              }}
             />
-            <Route path='/products/' component={ProductListScreen} />
+            <Route
+              path='/category/:slug/page/:pageNumber'
+              exact
+              render={props => {
+                return <ProductListCategory {...props} />;
+              }}
+            />
+            <Route
+              path='/category/:slug'
+              exact
+              render={props => {
+                return <ProductListCategory {...props} />;
+              }}
+            />
+            <Route
+              path='/products/'
+              render={props => {
+                return <ProductListScreen {...props} />;
+              }}
+            />
 
             <Route path='/' exact component={Home} />
           </Switch>
