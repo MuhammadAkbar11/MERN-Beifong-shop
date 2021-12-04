@@ -30,7 +30,7 @@ import {
   PRODUCT_UPDATE_REQ,
   PRODUCT_UPDATE_SUCCESS,
 } from '@constants/product.constants';
-import queriesToString from '../utils/queriesToString';
+import queriesToString from '@utils/queriesToString';
 
 /* eslint-disable */
 export const listProducts = ({

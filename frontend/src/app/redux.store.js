@@ -1,6 +1,14 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
+import { redirectReducer } from '@reducers/redirect.reducer';
+import {
+  categoryCreateReducer,
+  categoryDeleteReducer,
+  categoryListAlertReducer,
+  categorytListReducer,
+  categoryUpdateReducer,
+} from '@reducers/category.reducer';
 import {
   productCategoryListReducer,
   productCreateReducer,
@@ -12,8 +20,8 @@ import {
   productReviewCreateReducer,
   productTopListReducer,
   productUpdateReducer,
-} from './reducers/product.reducer';
-import { cartReducer } from './reducers/cart.reducer';
+} from '@reducers/product.reducer';
+import { cartReducer } from '@reducers/cart.reducer';
 import {
   userChangePasswordReducer,
   userDeleteReducer,
@@ -24,7 +32,7 @@ import {
   userRegisterReducer,
   userUpdateProfileReducer,
   userUpdateReducer,
-} from './reducers/user.reducer';
+} from '@reducers/user.reducer';
 import {
   myOrderReducer,
   orderConfirmDeliverReducer,
@@ -33,16 +41,8 @@ import {
   orderListAlertReducer,
   orderListReducer,
   orderPayReducer,
-} from './reducers/order.reducer';
-import { redirectReducer } from './reducers/redirect.reducer';
+} from '@reducers/order.reducer';
 import autoLogout from './middleware/autologout';
-import {
-  categoryCreateReducer,
-  categoryDeleteReducer,
-  categoryListAlertReducer,
-  categorytListReducer,
-  categoryUpdateReducer,
-} from './reducers/category.reducer';
 
 const reducer = combineReducers({
   redirect: redirectReducer,

@@ -4,6 +4,7 @@ import { PayPalButton } from 'react-paypal-button-v2';
 import { Container, Row, Col, ListGroup, Image, Card } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import localeStringDate from '@utils/localeStringDate';
 import BreadcrumbContainer from '../components/BreadcrumbContainer';
 import CheckoutSteps from '../components/CheckoutSteps';
 import Message from '../components/Message';
@@ -15,7 +16,6 @@ import {
 } from '../actions/order.actions';
 import Loader from '../components/Loader';
 import useConvertCurrency from '../hooks/useConvertCurrency';
-import localeStringDate from '../utils/localeStringDate';
 /* eslint-disable */
 const OrderScreen = ({ match }) => {
   const orderId = match.params.id;
