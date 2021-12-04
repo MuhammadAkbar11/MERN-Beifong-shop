@@ -1,38 +1,35 @@
 import React from 'react';
 import { Pagination } from 'react-bootstrap';
-import { LinkContainer } from 'react-router-bootstrap';
 
 /* eslint-disable */
 
-const Paginate = ({
-  pages,
-  page,
-  isAdmin = false,
-  keyword = '',
-  onClickItem = null,
-}) => {
+const Paginate = ({ pages, page, isAdmin = false, onChangePage = null }) => {
   return (
     pages > 1 && (
       <Pagination>
         {[...Array(pages).keys()].map(x => {
           return isAdmin ? (
             <Pagination.Item
-              onClick={() => onClickItem(x + 1)}
+              key={x + 1}
+              onClick={e => {
+                e.preventDefault();
+                onChangePage(x + 1);
+              }}
               active={x + 1 === page}
             >
               {x + 1}
             </Pagination.Item>
           ) : (
-            <LinkContainer
+            <Pagination.Item
               key={x + 1}
-              to={
-                keyword
-                  ? `/search/${keyword}/${page}/${x + 1}`
-                  : `/products/page/${x + 1}`
-              }
+              onClick={e => {
+                e.preventDefault();
+                onChangePage(x + 1);
+              }}
+              active={x + 1 === page}
             >
-              <Pagination.Item active={x + 1 === page}>{x + 1}</Pagination.Item>
-            </LinkContainer>
+              {x + 1}
+            </Pagination.Item>
           );
         })}
       </Pagination>
