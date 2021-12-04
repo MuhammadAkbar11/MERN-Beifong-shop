@@ -41,7 +41,7 @@ const Home = () => {
           <Message variant='danger'>{error}</Message>
         </div>
       ) : (
-        <Row className=' align-items-stretch '>
+        <Row className=' align-items-stretch mb-4 '>
           {products.map(product => {
             /* eslint-disable */
             const id = product._id;

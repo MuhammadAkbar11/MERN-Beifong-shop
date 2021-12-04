@@ -10,7 +10,7 @@ const webpackConfig = require('../../webpack/webpack.config.js');
 
 const configs = { env: process.env.NODE_ENV };
 const devConfig = webpackConfig(configs);
-const devServerConfig = devConfig.devServer;
+// const devServerConfig = devConfig.devServer;
 const compiler = webpack(devConfig);
 
 const webpackDevMiddleware = require('webpack-dev-middleware')(compiler, {
@@ -30,7 +30,7 @@ const proxyHeader = {
 };
 
 const proxyMiddleware = httpProxy.createProxyMiddleware('/api', {
-  target: 'http://localhost:8080',
+  target: process.env.PROXY,
   pathRewrite: { '^/api/api': '/api' },
   changeOrigin: true,
   onError(err, req, res) {
@@ -45,7 +45,7 @@ const proxyMiddleware = httpProxy.createProxyMiddleware('/api', {
 });
 
 const assetsMiddleware = httpProxy.createProxyMiddleware('/uploads', {
-  target: 'http://localhost:8080',
+  target: process.env.PROXY,
   pathRewrite: { '^/uploads': '/uploads' },
   changeOrigin: true,
   onError(err, req, res) {
