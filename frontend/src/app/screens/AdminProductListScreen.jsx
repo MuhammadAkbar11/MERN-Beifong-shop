@@ -203,7 +203,7 @@ const AdminProductListScreen = ({ history, match }) => {
                 isAdmin
                 page={page}
                 pages={pages}
-                onClickItem={handleChangePagination}
+                onChangePage={handleChangePagination}
               />
             </section>
           )}

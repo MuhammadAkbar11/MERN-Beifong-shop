@@ -5,27 +5,20 @@ import { Col, Container, Row } from 'react-bootstrap';
 import Product from '@components/Product';
 import { listProductByCategoryAction } from '../actions/product.actions';
 import Loader from '@components/Loader';
-import Paginate from '../components/Paginate';
+import Paginate from '@components/Paginate';
 import BreadcrumbContainer from '../components/BreadcrumbContainer';
 
 const ProductListCategory = props => {
-  console.log(props);
-  const { match } = props;
+  const { match, history } = props;
 
   const slug = match.params.slug;
   const pageNumber = match.params?.pageNumber || 1;
 
   const dispatch = useDispatch();
 
-  const {
-    loading,
-    products,
-    page,
-    pages,
-    error,
-    category,
-    totalProducts,
-  } = useSelector(state => state.productCategoryList);
+  const { loading, products, page, pages, error, category } = useSelector(
+    state => state.productCategoryList
+  );
 
   let breadcrumbItems = [
     { name: 'Home', href: '/' },
@@ -38,8 +31,6 @@ const ProductListCategory = props => {
     dispatch(listProductByCategoryAction({ limit: 8, pageNumber, slug }));
     return () => {};
   }, [dispatch, slug, pageNumber]);
-
-  console.log(products);
 
   return (
     <>
@@ -97,6 +88,9 @@ const ProductListCategory = props => {
                 <Paginate
                   pages={pages}
                   page={page}
+                  onChangePage={to => {
+                    history.push(`/category/${slug}/page/${to}`);
+                  }}
                   // keyword={keyword ? keyword : ''}
                 />
               </section>

@@ -60,8 +60,6 @@ export const listProducts = ({
       },
     });
   } catch (error) {
-    console.log(error);
-
     let errData = {
       message: error.message,
     };
@@ -444,7 +442,7 @@ export const listProductByCategoryAction = ({
     const { data } = await axios.get(
       `/api/products/category/${slug}?${queriesString}`
     );
-    console.log(data, slug);
+
     dispatch({
       type: PRODUCT_CATEGORY_SUCCESS,
       payload: data,

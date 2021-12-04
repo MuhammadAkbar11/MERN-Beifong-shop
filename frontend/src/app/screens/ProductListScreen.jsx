@@ -8,7 +8,7 @@ import Message from '../components/Message';
 import BreadcrumbContainer from '../components/BreadcrumbContainer';
 import Paginate from '../components/Paginate';
 /* eslint-disable */
-const ProductListScreen = ({ match }) => {
+const ProductListScreen = ({ match, history }) => {
   const keyword = match.params?.keyword;
   const pageNumber = match.params?.pageNumber || 1;
 
@@ -18,7 +18,7 @@ const ProductListScreen = ({ match }) => {
   const { products, error, loading, page, pages } = productList;
 
   React.useEffect(() => {
-    dispatch(listProducts({ keyword, pageNumber }));
+    dispatch(listProducts({ result: 8, keyword, pageNumber }));
     return () => {};
   }, [dispatch, keyword, pageNumber]);
 
@@ -45,6 +45,14 @@ const ProductListScreen = ({ match }) => {
     }
   }
 
+  const handleChangePagination = to => {
+    if (keyword) {
+      return history.push(`/search/${keyword}/page/${to}`);
+    } else {
+      history.push(`/products/page/${to}`);
+    }
+  };
+
   return (
     <Container fluid className='px-1 px-sm-0 py-3 '>
       <BreadcrumbContainer items={breadcrumbItems} parentClass='ml-n3' />
@@ -55,7 +63,9 @@ const ProductListScreen = ({ match }) => {
         </div>
       ) : error ? (
         <div className='mt-4'>
-          <Message variant='danger'>{error}</Message>
+          <Message variant='danger'>
+            {error?.message || 'Opps Somethin went wrong'}
+          </Message>
         </div>
       ) : (
         <>
@@ -64,8 +74,9 @@ const ProductListScreen = ({ match }) => {
               <>
                 <Col xs={12}>
                   <h5>
-                    Showing {products.length} items{' '}
-                    {keyword && `for "${keyword}"`}
+                    {keyword
+                      ? `Showing Products for "${keyword}"`
+                      : 'Product List'}
                   </h5>
                 </Col>
                 {products.map(product => {
@@ -104,7 +115,7 @@ const ProductListScreen = ({ match }) => {
               <Paginate
                 pages={pages}
                 page={page}
-                keyword={keyword ? keyword : ''}
+                onChangePage={handleChangePagination}
               />
             </section>
           )}
