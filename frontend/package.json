@@ -5,19 +5,23 @@
   "keywords": [
     "Boilerplate",
     "Webpack",
+    "Nodejs",
     "Express",
     "React",
     "Babel",
-    "Bootstrap"
+    "Bootstrap",
+    "axios",
+    "formik",
+    "E-commerce"
   ],
   "author": "Muhammad Akbar",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
     "start": "nodemon src/server/server.main.js --dev",
-    "prod": "yarn build:prod & yarn start:prod",
+    "production": "yarn build:prod & yarn start:prod",
     "start:prod": "nodemon src/server/server.main.js",
-    "build:prod": "webpack --config webpack/webpack.config.js --env.env=prod --colors"
+    "build": "webpack --config webpack/webpack.config.js --env env=prod "
   },
   "devDependencies": {
     "@babel/core": "^7.13.14",
