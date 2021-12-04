@@ -306,10 +306,50 @@ const getTopProducts = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc Get Product by Category
+// @route GET /api/product/top
+// @access Public
+const getProductsByCategory = asyncHandler(async (req, res) => {
+  const slug = req.params.slug;
+  const { pageNumber, limit } = req.query;
+
+  const pageSize = Number(limit) || 10;
+  const page = Number(pageNumber) || 1;
+
+  try {
+    const category = await CategoryModel.findOne({ slug });
+
+    if (category) {
+      const count = await ProductModel.countDocuments({
+        category: category._id,
+      });
+
+      const products = await ProductModel.find()
+        .populate("category", "name slug icon")
+        .limit(limit)
+        .skip(limit * (page - 1));
+
+      res.json({
+        status: true,
+        page,
+        pages: Math.ceil(count / pageSize),
+        products,
+      });
+    } else {
+      res.status(404);
+      throw new ResponseError(400, `can't find Category with "${slug}"`);
+    }
+  } catch (error) {
+    res.status(error.statusCode || 500);
+    throw new ResponseError(error.statusCode, error.message, error.errors);
+  }
+});
+
 export {
   getProducts,
   getProductById,
   getTopProducts,
+  getProductsByCategory,
   deleteProduct,
   createProduct,
   updateProduct,
