@@ -94,7 +94,7 @@ const ProductListScreen = ({ match }) => {
                 {keyword && !pageNumber ? (
                   <h3>Can't find Product with "{keyword}"</h3>
                 ) : (
-                  <h3>Not Products</h3>
+                  <h3>No Products</h3>
                 )}
               </Col>
             )}

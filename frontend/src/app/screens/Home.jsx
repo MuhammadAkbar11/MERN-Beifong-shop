@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Col, Row } from 'react-bootstrap';
+import Helmet from 'react-helmet';
 import Product from '@components/Product';
 import { listProducts } from '../actions/product.actions';
 import Loader from '../components/Loader';
@@ -22,6 +23,9 @@ const Home = () => {
   return (
     <>
       {' '}
+      <Helmet>
+        <title>Welcome to Beifong Shop | Home</title>
+      </Helmet>
       <section className='mb-3'>
         <ProductCarousel />
       </section>
