@@ -2,6 +2,9 @@ import axios from 'axios';
 import {
   PRODUCT_ADMIN_ALERT,
   PRODUCT_ADMIN_ALERT_CLOSE,
+  PRODUCT_CATEGORY_FAIL,
+  PRODUCT_CATEGORY_REQ,
+  PRODUCT_CATEGORY_SUCCESS,
   PRODUCT_CREATE_FAIL,
   PRODUCT_CREATE_REQ,
   PRODUCT_CREATE_REVIEW_FAIL,
@@ -17,6 +20,9 @@ import {
   PRODUCT_LIST_FAIL,
   PRODUCT_LIST_REQ,
   PRODUCT_LIST_SUCCESS,
+  PRODUCT_RELATED_FAIL,
+  PRODUCT_RELATED_REQ,
+  PRODUCT_RELATED_SUCCESS,
   PRODUCT_TOP_FAIL,
   PRODUCT_TOP_REQ,
   PRODUCT_TOP_SUCCESS,
@@ -24,6 +30,7 @@ import {
   PRODUCT_UPDATE_REQ,
   PRODUCT_UPDATE_SUCCESS,
 } from '../constants/product.constants';
+import queriesToString from '../utils/queriesToString';
 
 /* eslint-disable */
 export const listProducts = ({
@@ -40,11 +47,9 @@ export const listProducts = ({
       result: result,
     };
 
-    const queriesToString = Object.keys(queries)
-      .map(key => `${key}=${queries[key]}`)
-      .join('&');
+    const queriesString = queriesToString(queries);
 
-    const { data } = await axios.get(`/api/products?${queriesToString}`);
+    const { data } = await axios.get(`/api/products?${queriesString}`);
 
     dispatch({
       type: PRODUCT_LIST_SUCCESS,
@@ -383,6 +388,80 @@ export const topListProductAction = ({ limit }) => async dispatch => {
 
     dispatch({
       type: PRODUCT_TOP_FAIL,
+      payload: errData,
+    });
+  }
+};
+
+export const relatedListProductAction = ({
+  limit,
+  prodID,
+}) => async dispatch => {
+  dispatch({ type: PRODUCT_RELATED_REQ });
+
+  try {
+    const { data } = await axios.get(
+      `/api/products/${prodID}/related?limit=${limit}`
+    );
+
+    dispatch({
+      type: PRODUCT_RELATED_SUCCESS,
+      payload: data.products,
+    });
+  } catch (error) {
+    let errData = {
+      message: error.message,
+    };
+
+    if (error.response && error.response.data.message) {
+      errData = {
+        message: error.response.data.message,
+      };
+    }
+
+    dispatch({
+      type: PRODUCT_RELATED_FAIL,
+      payload: errData,
+    });
+  }
+};
+
+export const listProductByCategoryAction = ({
+  limit = 10,
+  pageNumber = 1,
+  slug,
+}) => async dispatch => {
+  dispatch({ type: PRODUCT_CATEGORY_REQ });
+
+  try {
+    const queries = {
+      pageNumber: pageNumber,
+      limit: limit,
+    };
+
+    const queriesString = queriesToString(queries);
+
+    const { data } = await axios.get(
+      `/api/products/category/${slug}?${queriesString}`
+    );
+    console.log(data, slug);
+    dispatch({
+      type: PRODUCT_CATEGORY_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    let errData = {
+      message: error.message,
+    };
+
+    if (error.response && error.response.data.message) {
+      errData = {
+        message: error.response.data.message,
+      };
+    }
+
+    dispatch({
+      type: PRODUCT_CATEGORY_FAIL,
       payload: errData,
     });
   }

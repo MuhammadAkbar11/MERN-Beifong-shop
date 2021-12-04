@@ -25,6 +25,12 @@ import {
   PRODUCT_TOP_REQ,
   PRODUCT_TOP_SUCCESS,
   PRODUCT_TOP_FAIL,
+  PRODUCT_CATEGORY_REQ,
+  PRODUCT_CATEGORY_SUCCESS,
+  PRODUCT_CATEGORY_FAIL,
+  PRODUCT_RELATED_REQ,
+  PRODUCT_RELATED_SUCCESS,
+  PRODUCT_RELATED_FAIL,
 } from '../constants/product.constants';
 
 const initState = {
@@ -167,6 +173,32 @@ const productTopListReducer = (state = { products: [] }, action) => {
   }
 };
 
+const productCategoryListReducer = (state = { products: [] }, action) => {
+  switch (action.type) {
+    case PRODUCT_CATEGORY_REQ:
+      return { loading: true };
+    case PRODUCT_CATEGORY_SUCCESS:
+      return { loading: false, ...action.payload };
+    case PRODUCT_CATEGORY_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+const productRelatedListReducer = (state = { products: [] }, action) => {
+  switch (action.type) {
+    case PRODUCT_RELATED_REQ:
+      return { loading: true };
+    case PRODUCT_RELATED_SUCCESS:
+      return { loading: false, products: action.payload };
+    case PRODUCT_RELATED_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
 /* eslint-disable */
 
 export {
@@ -178,4 +210,6 @@ export {
   productUpdateReducer,
   productReviewCreateReducer,
   productTopListReducer,
+  productCategoryListReducer,
+  productRelatedListReducer,
 };
