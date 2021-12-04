@@ -41,12 +41,14 @@ const ProductListCategory = props => {
             <Loader />
           </div>
         ) : error ? (
-          <Col md={6} className='mx-auto pt-4 text-center '>
-            <h1 className=' display-3 text-dark mb-3 '>
-              <i className=' fa fa-sad-tear   '></i>
-            </h1>
-            <h3>{error?.message || 'Something went wrong'}</h3>
-          </Col>
+          <Row>
+            <Col md={6} className='mx-auto pt-4 text-center '>
+              <h1 className=' display-3 text-dark mb-3 '>
+                <i className=' fa fa-sad-tear   '></i>
+              </h1>
+              <h3>{error?.message || 'Something went wrong'}</h3>
+            </Col>
+          </Row>
         ) : (
           <>
             <Row className=' align-items-stretch  '>

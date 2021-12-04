@@ -2,6 +2,7 @@ import asyncHandler from "express-async-handler";
 import { validationResult } from "express-validator";
 import { sampleGenerateProduct } from "../data/products.js";
 import CategoryModel from "../models/categoryModel.js";
+import OrderModel from "../models/orderModel.js";
 import ProductModel from "../models/productModel.js";
 import convertRupiah from "../utils/convertRupiah.js";
 import errMessageValidation from "../utils/errMessagesValidation.js";
@@ -56,9 +57,14 @@ const getProductById = asyncHandler(async (req, res) => {
       "name slug icon"
     );
     if (product) {
+      const getSoldOutCount = await OrderModel.countDocuments({
+        isPaid: true,
+        orderItems: { $elemMatch: { product: product._id } },
+      });
+
       res.json({
         status: true,
-        product,
+        product: { ...product._doc, soldOut: getSoldOutCount },
       });
     } else {
       res.status(404);

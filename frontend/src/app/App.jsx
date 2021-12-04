@@ -21,6 +21,7 @@ import AdminProductEditScreen from './screens/AdminProductEditScreen';
 import AdminOrderListScreen from './screens/AdminOrderListScreen';
 import ProductListScreen from './screens/ProductListScreen';
 import ProductListCategory from './screens/ProductListCategory';
+import AdminProductDetails from './screens/AdminProductDetails';
 
 const App = () => {
   /* eslint-disable */
@@ -101,6 +102,10 @@ const App = () => {
             <Route
               path='/admin/product/:id/edit'
               render={props => <AdminProductEditScreen {...props} />}
+            />
+            <Route
+              path='/admin/product/:id'
+              render={props => <AdminProductDetails {...props} />}
             />
             <Route
               path='/admin/categorylist'
