@@ -159,7 +159,10 @@ const productReviewCreateReducer = (state = {}, action) => {
   }
 };
 
-const productTopListReducer = (state = { products: [] }, action) => {
+const productTopListReducer = (
+  state = { loading: true, products: [] },
+  action
+) => {
   switch (action.type) {
     case PRODUCT_TOP_REQ:
       return { loading: true };

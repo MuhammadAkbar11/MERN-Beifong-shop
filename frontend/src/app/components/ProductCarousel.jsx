@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, Carousel, Col, Image, Row } from 'react-bootstrap';
+import { Alert, Card, Carousel, Col, Image, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { topListProductAction } from '@actions/product.actions';
@@ -19,9 +19,13 @@ const ProductCarousel = () => {
   return (
     <>
       {loading ? (
-        <div className='d-flex w-100 justify-content-center'>
-          <Loader />
-        </div>
+        <Row>
+          <Col xs={12} className='mt-3'>
+            <div className='d-flex w-100 justify-content-center product-carousel-loader'>
+              <Card className=' w-100 h-100 bg-slate border ' body />
+            </div>
+          </Col>
+        </Row>
       ) : error ? (
         <Alert variant='danger'>{error?.message}</Alert>
       ) : (
