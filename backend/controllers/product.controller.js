@@ -313,6 +313,7 @@ const getTopProducts = asyncHandler(async (req, res) => {
 // @access Public
 const getProductsByCategory = asyncHandler(async (req, res) => {
   const slug = req.params.slug;
+
   const { pageNumber, limit } = req.query;
 
   const pageSize = Number(limit) || 10;
@@ -326,14 +327,16 @@ const getProductsByCategory = asyncHandler(async (req, res) => {
         category: category._id,
       });
 
-      const products = await ProductModel.find()
+      const products = await ProductModel.find({ category: category._id })
         .populate("category", "name slug icon")
-        .limit(limit)
-        .skip(limit * (page - 1));
+        .limit(pageSize)
+        .skip(pageSize * (page - 1));
 
       return res.json({
         status: true,
         page,
+        totalProducts: count,
+        category,
         pages: Math.ceil(count / pageSize),
         products,
       });
