@@ -10,7 +10,7 @@ import {
   CART_REMOVE_ITEM_REQ,
   CART_REMOVE_ITEM_SUCCESS,
   CART_REMOVE_ITEM_FAIL,
-} from '../constants/cart.constants';
+} from '@constants/cart.constants';
 
 export const cartReducer = (
   state = { cartItems: [], shippingAddress: {}, loading: false },

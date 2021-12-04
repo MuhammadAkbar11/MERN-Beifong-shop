@@ -12,7 +12,7 @@ import BreadcrumbContainer from '../components/BreadcrumbContainer';
 import FormContainer from '../components/FormContainer';
 import { listCategoriesAction } from '../actions/category.actions';
 import { Link } from 'react-router-dom';
-import { PRODUCT_UPDATE_RESET } from '../constants/product.constants';
+import { PRODUCT_UPDATE_RESET } from '@constants/product.constants';
 import useSingleImageUploader from '../hooks/useSingleImageUploader';
 
 const AdminProductEditScreen = ({ match, history }) => {

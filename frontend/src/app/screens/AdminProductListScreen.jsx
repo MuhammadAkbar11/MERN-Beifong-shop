@@ -21,7 +21,7 @@ import {
   resetProductListAlertAction,
 } from '../actions/product.actions';
 import BreadcrumbContainer from '../components/BreadcrumbContainer';
-import { PRODUCT_CREATE_RESET } from '../constants/product.constants';
+import { PRODUCT_CREATE_RESET } from '@constants/product.constants';
 import Paginate from '../components/Paginate';
 
 /* eslint-disable */

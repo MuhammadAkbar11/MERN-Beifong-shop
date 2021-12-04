@@ -31,7 +31,7 @@ import {
   USER_UPDATE_FAIL,
   USER_UPDATE_SUCCESS,
   USER_UPDATE_REQUEST,
-} from '../constants/user.constants';
+} from '@constants/user.constants';
 
 const initState = {};
 

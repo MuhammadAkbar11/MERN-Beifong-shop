@@ -29,7 +29,7 @@ import {
   PRODUCT_UPDATE_FAIL,
   PRODUCT_UPDATE_REQ,
   PRODUCT_UPDATE_SUCCESS,
-} from '../constants/product.constants';
+} from '@constants/product.constants';
 import queriesToString from '../utils/queriesToString';
 
 /* eslint-disable */

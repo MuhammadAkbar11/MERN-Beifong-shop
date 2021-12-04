@@ -14,7 +14,7 @@ import {
   CATEGORY_LIST_FAIL,
   CATEGORY_LIST_REQ,
   CATEGORY_LIST_SUCCESS,
-} from '../constants/category.constants';
+} from '@constants/category.constants';
 
 export const categoryListAlertReducer = (
   state = { type: 'success', message: '', open: false },

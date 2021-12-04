@@ -7,6 +7,8 @@ import BreadcrumbContainer from '../components/BreadcrumbContainer';
 import Loader from '../components/Loader';
 import Rating from '../components/Rating';
 
+/* eslint-disable */
+
 const AdminProductDetails = ({ match }) => {
   // const [qty]
   const dispatch = useDispatch();

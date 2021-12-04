@@ -1,7 +1,7 @@
 /* eslint-disable */
 import axios from 'axios';
-import { CART_RESET_ITEMS, CART_USER_LOAD } from '../constants/cart.constants';
-import { ORDER_USER_RESET } from '../constants/order.constants';
+import { CART_RESET_ITEMS, CART_USER_LOAD } from '@constants/cart.constants';
+import { ORDER_USER_RESET } from '@constants/order.constants';
 import {
   USER_DETAILS_FAIL,
   USER_DETAILS_REQUEST,
@@ -34,7 +34,7 @@ import {
   USER_UPDATE_REQUEST,
   USER_UPDATE_SUCCESS,
   USER_UPDATE_FAIL,
-} from '../constants/user.constants';
+} from '@constants/user.constants';
 
 export const userLoginAction = (email, password) => async (
   dispatch,

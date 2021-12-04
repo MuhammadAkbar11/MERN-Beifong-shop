@@ -1,6 +1,6 @@
 /* eslint-disable */
 import axios from 'axios';
-import { CART_RESET_ITEMS } from '../constants/cart.constants';
+import { CART_RESET_ITEMS } from '@constants/cart.constants';
 import {
   ORDER_CREATE_SUCCESS,
   ORDER_CREATE_REQUEST,
@@ -24,7 +24,7 @@ import {
   ORDER_DELIVER_REQUEST,
   ORDER_DELIVER_SUCCESS,
   ORDER_DELIVER_FAIL,
-} from '../constants/order.constants';
+} from '@constants/order.constants';
 
 export const createOrderAction = order => async (dispatch, getState) => {
   const {

@@ -1,12 +1,12 @@
 /* eslint-disable */
 import axios from 'axios';
-import { CART_RESET_ITEMS } from '../constants/cart.constants';
-import { ORDER_USER_RESET } from '../constants/order.constants';
+import { CART_RESET_ITEMS } from '@constants/cart.constants';
+import { ORDER_USER_RESET } from '@constants/order.constants';
 import {
   USER_DETAILS_RESET,
   USER_LIST_RESET,
   USER_LOGOUT,
-} from '../constants/user.constants';
+} from '@constants/user.constants';
 
 const autoLogout = store => next => action => {
   const { dispatch, getState } = store;

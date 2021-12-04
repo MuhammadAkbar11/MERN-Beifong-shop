@@ -9,11 +9,11 @@ import {
   Row,
 } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
+import { PRODUCT_CREATE_REVIEW_RESET } from '@constants/product.constants';
 import {
   createProductReviewAction,
   listProductDetails,
 } from '../actions/product.actions';
-import { PRODUCT_CREATE_REVIEW_RESET } from '../constants/product.constants';
 import Rating from './Rating';
 
 /* eslint-disable */

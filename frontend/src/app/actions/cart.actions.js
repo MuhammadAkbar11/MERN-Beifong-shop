@@ -8,8 +8,8 @@ import {
   CART_REMOVE_ITEM_FAIL,
   CART_SAVE_SHIPPING_ADDRESS,
   CART_SAVE_PAYMENT_METHOD,
-} from '../constants/cart.constants';
-import { PAGE_REDIRECT } from '../constants/page.constants';
+} from '@constants/cart.constants';
+import { PAGE_REDIRECT } from '@constants/page.constants';
 /* eslint-disable */
 
 export const addToCart = (id, qty) => async (dispatch, getState) => {

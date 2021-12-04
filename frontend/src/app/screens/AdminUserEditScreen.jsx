@@ -11,7 +11,7 @@ import {
 } from '../actions/user.actions';
 import FormContainer from '../components/FormContainer';
 import BreadcrumbContainer from '../components/BreadcrumbContainer';
-import { USER_UPDATE_RESET } from '../constants/user.constants';
+import { USER_UPDATE_RESET } from '@constants/user.constants';
 
 const AdminUserEditScreen = ({ match, location, history }) => {
   const userId = match.params.id;

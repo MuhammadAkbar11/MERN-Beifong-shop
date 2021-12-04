@@ -31,7 +31,7 @@ import {
   PRODUCT_RELATED_REQ,
   PRODUCT_RELATED_SUCCESS,
   PRODUCT_RELATED_FAIL,
-} from '../constants/product.constants';
+} from '@constants/product.constants';
 
 const initState = {
   loading: true,
