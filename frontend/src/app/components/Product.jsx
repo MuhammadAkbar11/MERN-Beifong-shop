@@ -32,6 +32,13 @@ const Product = props => {
             <strong> {product.name}</strong>
           </Card.Title>
         </Link>
+        <Link
+          className='text-dark '
+          to={`/category/${product.category?.slug}`}
+          title={product.name}
+        >
+          <p className=' text-primary-light '>{product.category?.name}</p>
+        </Link>
         <Card.Text as='div' className='lead mb-3'>
           <Rating
             value={product.rating}

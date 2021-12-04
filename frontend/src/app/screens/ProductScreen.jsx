@@ -70,20 +70,33 @@ const ProductScreen = ({ history, match }) => {
             <>
               <Col md={8} lg={3}>
                 <ListGroup variant='flush'>
-                  <ListGroup.Item className='border-bottom-0'>
+                  <ListGroup.Item className='border-bottom-0 pb-0'>
                     <h3>{product.name}</h3>
+                    <p className='my-0'>{product?.brand}</p>
                   </ListGroup.Item>
-                  <ListGroup.Item className='border-bottom-0'>
+                  <ListGroup.Item
+                    className='border-bottom-0 pb-1'
+                    style={{
+                      fontSize: 19,
+                    }}
+                  >
                     <Rating
                       value={product.rating === undefined ? 0 : product.rating}
                       text={`${product.numReviews} reviews`}
                     />
                   </ListGroup.Item>
-                  <ListGroup.Item>
-                    <span className=' text-primary '>
+                  <ListGroup.Item className='d-block'>
+                    <p className=' text-primary mb-2 '>
                       {product.price?.rupiah}
-                    </span>
+                    </p>
+                    <Link
+                      className=' badge badge-primary shadow-none '
+                      to={`/category/${product.category?.slug}`}
+                    >
+                      {product?.category?.name}
+                    </Link>
                   </ListGroup.Item>
+
                   <ListGroup.Item>
                     Description : <br /> {product.description}
                   </ListGroup.Item>
