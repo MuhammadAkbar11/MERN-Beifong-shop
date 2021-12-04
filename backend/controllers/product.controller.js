@@ -8,13 +8,15 @@ import errMessageValidation from "../utils/errMessagesValidation.js";
 import { deleteFile } from "../utils/file.js";
 import ResponseError from "../utils/responseError.js";
 
+const rgx = pattern => new RegExp(`.*${pattern}.*`);
+
 // @desc Fetch All Products
 // @route GET /api/products
 // @access Public
 const getProducts = asyncHandler(async (req, res) => {
   const { keyword, pageNumber, result } = req.query;
   // console.log(keyword);
-  const rgx = pattern => new RegExp(`.*${pattern}.*`);
+
   const searchRgx = rgx(keyword);
 
   const pageSize = Number(result) || 2;
@@ -329,7 +331,7 @@ const getProductsByCategory = asyncHandler(async (req, res) => {
         .limit(limit)
         .skip(limit * (page - 1));
 
-      res.json({
+      return res.json({
         status: true,
         page,
         pages: Math.ceil(count / pageSize),
@@ -345,11 +347,47 @@ const getProductsByCategory = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc Get Related Products
+// @route GET /api/products/:id/related
+// @access Public
+const getRelatedProducts = asyncHandler(async (req, res) => {
+  const id = req.params.id;
+  const { limit } = req.query;
+
+  try {
+    const product = await ProductModel.findById(id);
+    if (product) {
+      const query = {
+        $or: [
+          { sample: { $regex: rgx(product.brand), $options: "i" } },
+          { category: product.category },
+        ],
+      };
+
+      const products = await ProductModel.find({ ...query })
+        .populate("category", "name slug icon")
+        .limit(Number(limit));
+
+      return res.json({
+        status: true,
+        products,
+      });
+    } else {
+      res.status(404);
+      throw new ResponseError(400, `No related Products`);
+    }
+  } catch (error) {
+    res.status(error.statusCode || 500);
+    throw new ResponseError(error.statusCode, error.message, error.errors);
+  }
+});
+
 export {
   getProducts,
   getProductById,
   getTopProducts,
   getProductsByCategory,
+  getRelatedProducts,
   deleteProduct,
   createProduct,
   updateProduct,
