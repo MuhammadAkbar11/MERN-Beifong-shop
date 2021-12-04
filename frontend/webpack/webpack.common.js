@@ -18,6 +18,7 @@ const indexFile = HOT
   : path.resolve(__dirname, '../', 'src/index.js');
 
 module.exports = {
+  target: 'web',
   entry: {
     index: indexFile,
   },
@@ -40,15 +41,7 @@ module.exports = {
   stats: {
     colors: true,
   },
-  devServer: {
-    contentBase: path.join(__dirname, '..', 'dist'),
-    hot: true,
-    overlay: true,
-    compress: true,
-    historyApiFallback: {
-      index: 'index.html',
-    },
-  },
+
   module: {
     rules: [
       {

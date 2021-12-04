@@ -14,50 +14,56 @@ module.exports = {
     chunkFilename: 'js/chunk-[name].[contenthash].js',
     publicPath: './',
   },
+
+  watch: true,
+  watchOptions: {
+    ignored: '/node_modules/',
+    aggregateTimeout: 200,
+    poll: 1000,
+  },
   optimization: {
     minimizer: [
       new OptimizeCssAssetsPlugin(),
       new TerserPlugin({
         parallel: true,
-        cache: true,
-        sourceMap: true,
+        terserOptions: {
+          compress: true,
+        },
       }),
     ],
+    minimize: true,
+    runtimeChunk: true,
     splitChunks: {
-      chunks: 'async',
-      minSize: 0,
+      chunks: 'all',
+      minSize: 20000,
+      minRemainingSize: 0,
       minChunks: 1,
-      maxAsyncRequests: 5,
-      maxInitialRequests: 3,
+      maxAsyncRequests: 30,
+      maxInitialRequests: 30,
+      enforceSizeThreshold: 50000,
       cacheGroups: {
-        styles: {
-          name: 'styles',
-          test: /\.css$/,
-          chunks: 'all',
-          enforce: true,
-        },
-        default: {
-          minChunks: 2,
-          priority: -20,
-          reuseExistingChunk: true,
-        },
         vendors: {
           test: /[\\/]node_modules[\\/]/,
           priority: -10,
+          reuseExistingChunk: true,
         },
         components: {
           name: 'components',
           test: /[\\/]components[\\/]/,
           chunks: 'all',
         },
-        containers: {
-          name: 'containers',
-          test: /[\\/]containers[\\/]/,
+        screens: {
+          name: 'screens',
+          test: /[\\/]screens[\\/]/,
           chunks: 'all',
+        },
+        default: {
+          minChunks: 2,
+          priority: -20,
+          reuseExistingChunk: true,
         },
       },
     },
-    runtimeChunk: true,
   },
   plugins: [
     new CleanWebpackPlugin(),

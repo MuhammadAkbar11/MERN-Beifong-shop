@@ -16,7 +16,15 @@ module.exports = {
   watchOptions: {
     ignored: '/node_modules/',
   },
-
+  devServer: {
+    contentBase: path.join(__dirname, '..', 'dist'),
+    hot: true,
+    overlay: true,
+    compress: true,
+    historyApiFallback: {
+      index: 'index.html',
+    },
+  },
   optimization: {
     splitChunks: {
       cacheGroups: {
