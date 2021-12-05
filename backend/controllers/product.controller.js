@@ -276,10 +276,12 @@ const createProductReview = asyncHandler(async (req, res) => {
       }
 
       productReviews.push(review);
-      product.numReviews = productReviews.length;
-      product.rating =
+      const ratingResult =
         productReviews.reduce((acc, item) => item.rating + acc, 0) /
         productReviews.length;
+
+      product.rating = Math.round(ratingResult);
+      product.numReviews = productReviews.length;
 
       await product.save();
       res.status(201).json({
