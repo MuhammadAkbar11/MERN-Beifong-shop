@@ -12,7 +12,7 @@ module.exports = {
     path: path.resolve(__dirname, '../', 'build'),
     filename: 'js/[name].[contenthash].bundle.js',
     chunkFilename: 'js/chunk-[name].[contenthash].js',
-    publicPath: './',
+    publicPath: '/',
   },
   optimization: {
     minimizer: [
