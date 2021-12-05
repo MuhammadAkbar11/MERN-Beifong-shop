@@ -1,7 +1,6 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import { redirectReducer } from '@reducers/redirect.reducer';
 import {
   categoryCreateReducer,
   categoryDeleteReducer,
@@ -45,7 +44,6 @@ import {
 import autoLogout from './middleware/autologout';
 
 const reducer = combineReducers({
-  redirect: redirectReducer,
   productsAlert: productListAlertReducer,
   productList: productListReducer,
   productTopList: productTopListReducer,

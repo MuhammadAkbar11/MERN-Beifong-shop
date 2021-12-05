@@ -1,5 +1,5 @@
-import React from 'react';
 /* eslint-disable */
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -16,7 +16,6 @@ import {
 } from 'react-bootstrap';
 import { addToCart, removeFromCart } from '@actions/cart.actions';
 import FormatRupiah from '@components/FormatRupiah';
-import { redirectAction } from '@actions/redirect.actions';
 import { Helmet } from 'react-helmet';
 
 /* eslint-disable */
@@ -25,15 +24,8 @@ const CartScreen = ({ history, match, location }) => {
   const dispatch = useDispatch();
 
   const cart = useSelector(state => state.cart);
-  const pageRedirect = useSelector(state => state.redirect);
 
   const { cartItems, loading } = cart;
-
-  React.useEffect(() => {
-    if (pageRedirect.redirectTo) {
-      dispatch(redirectAction());
-    }
-  }, [dispatch, pageRedirect.redirectTo]);
 
   const goHome = e => {
     e.preventDefault();
@@ -42,6 +34,10 @@ const CartScreen = ({ history, match, location }) => {
 
   const removeFromCartHandler = id => {
     dispatch(removeFromCart(id));
+  };
+
+  const addCartHandler = (product, value) => {
+    dispatch(addToCart(product, +value));
   };
 
   const checkoutHandler = () => {
@@ -155,11 +151,9 @@ const CartScreen = ({ history, match, location }) => {
                                       value={item.qty}
                                       readOnly={loading}
                                       onChange={e =>
-                                        dispatch(
-                                          addToCart(
-                                            item.product,
-                                            +e.target.value
-                                          )
+                                        addCartHandler(
+                                          item.product,
+                                          +e.target.value
                                         )
                                       }
                                     >

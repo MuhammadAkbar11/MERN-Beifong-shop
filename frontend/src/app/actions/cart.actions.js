@@ -9,7 +9,6 @@ import {
   CART_SAVE_SHIPPING_ADDRESS,
   CART_SAVE_PAYMENT_METHOD,
 } from '@constants/cart.constants';
-import { PAGE_REDIRECT } from '@constants/page.constants';
 /* eslint-disable */
 
 export const addToCart = (id, qty) => async (dispatch, getState) => {
@@ -90,10 +89,7 @@ export const addToCart = (id, qty) => async (dispatch, getState) => {
         JSON.stringify(getState().cart.cartItems)
       );
 
-      dispatch({
-        type: PAGE_REDIRECT,
-        payload: '/cart',
-      });
+      return true;
     }, 500);
   } catch (error) {
     let errData = {
@@ -113,6 +109,7 @@ export const addToCart = (id, qty) => async (dispatch, getState) => {
       type: CART_ADD_ITEM_FAIL,
       payload: errData,
     });
+    throw errData;
   }
 };
 

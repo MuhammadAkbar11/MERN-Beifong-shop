@@ -33,7 +33,7 @@ import {
   USER_UPDATE_REQUEST,
 } from '@constants/user.constants';
 
-const initState = { loading: true };
+const initState = { loading: false };
 
 const userLoginReducer = (state = initState, action) => {
   switch (action.type) {
@@ -51,7 +51,7 @@ const userLoginReducer = (state = initState, action) => {
 };
 
 const registerInitState = {
-  loading: true,
+  loading: false,
 };
 
 const userRegisterReducer = (state = registerInitState, action) => {
@@ -118,7 +118,7 @@ const userUpdateProfileReducer = (state = { loading: false }, action) => {
   }
 };
 
-const userChangePasswordReducer = (state = { loading: true }, action) => {
+const userChangePasswordReducer = (state = { loading: false }, action) => {
   switch (action.type) {
     case USER_CHANGE_PASSWORD_REQUEST:
       return {
@@ -181,7 +181,7 @@ const userListReducer = (state = { loading: true, users: [] }, action) => {
   }
 };
 
-const userDeleteReducer = (state = { loading: true, users: [] }, action) => {
+const userDeleteReducer = (state = { loading: false, users: [] }, action) => {
   switch (action.type) {
     case USER_DELETE_REQUEST:
       return { loading: true };
@@ -194,7 +194,7 @@ const userDeleteReducer = (state = { loading: true, users: [] }, action) => {
   }
 };
 
-const userUpdateReducer = (state = { loading: true, user: {} }, action) => {
+const userUpdateReducer = (state = { loading: false, user: {} }, action) => {
   switch (action.type) {
     case USER_UPDATE_REQUEST:
       return { loading: true };
