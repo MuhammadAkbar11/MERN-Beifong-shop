@@ -296,7 +296,7 @@ const userPostCart = asyncHandler(async (req, res, next) => {
 
 const userRemoveCart = asyncHandler(async (req, res, next) => {
   const productId = req.body.product;
-  console.log(productId);
+
   try {
     const removeItem = await req.user.removeCartItem(productId);
 

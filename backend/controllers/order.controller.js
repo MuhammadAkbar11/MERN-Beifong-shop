@@ -47,6 +47,12 @@ const addOrderItems = asyncHandler(async (req, res) => {
 
       const order = new OrderModel(orderData);
 
+      await Promise.all(
+        orderItems.map(async ord => {
+          return await req.user.removeCartItem(ord.product);
+        })
+      );
+
       const createdOrder = await order.save();
       return res.status(201).json({
         status: true,
