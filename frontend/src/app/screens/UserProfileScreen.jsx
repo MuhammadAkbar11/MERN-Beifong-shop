@@ -127,66 +127,67 @@ const UserProfileScreen = ({ match, history, location }) => {
         <BreadcrumbContainer items={breadcrumbItems} parentClass='ml-n3' />
         <Row>
           <Col
+            xs={12}
             md={3}
             lg={2}
-            className='profile-picture-col py-3 border-left-0 border-top-0 border-bottom-0   '
+            className=' py-3 border-left-0 border-top-0 border-bottom-0   '
           >
             <p className='mt-2 mb-4 text-dark'>Profile Picture</p>
-            <Row>
+            <Row className='profile-picture'>
               <Col
                 xs={12}
                 sm={4}
                 md={12}
-                className='position-relative  d-flex flex-column align-items-center justify-content-center'
+                className='profile-picture-img  mx-auto '
               >
-                <div className='profile-picture-img'>
+                <div className='profile-picture-img-wrapper'>
                   <img
-                    className=' d-inline-block rounded-circle '
+                    className='  rounded-circle '
                     src={profile?.image}
                     style={{
                       objectFit: 'cover',
                     }}
                     onClick={() => btnPopoverRef.current.click()}
                   />
-                </div>
-                <div className='profile-pricture-overlay'>
-                  <OverlayTrigger
-                    trigger='click'
-                    placement='bottom'
-                    overlay={
-                      <Popover id='popover-basic'>
-                        <Popover.Content className='p-0'>
-                          {/* <> */}
-                          <ListGroup>
-                            <ListGroup.Item
-                              action
-                              onClick={() => {
-                                btnPopoverRef.current.click();
-                                handleShowModalUpload();
-                              }}
-                            >
-                              Upload a photo
-                            </ListGroup.Item>
-                          </ListGroup>
-                          {/* </> */}
-                        </Popover.Content>
-                      </Popover>
-                    }
-                  >
-                    <Button
-                      ref={btnPopoverRef}
-                      style={{
-                        bottom: 0,
-                        left: 0,
-                      }}
-                      // className=' position-absolute '
-
-                      size='sm'
-                      variant='primary'
+                  <div className='profile-pricture-img-overlay'>
+                    <OverlayTrigger
+                      trigger='click'
+                      placement='bottom'
+                      overlay={
+                        <Popover id='popover-basic'>
+                          <Popover.Content className='p-0'>
+                            {/* <> */}
+                            <ListGroup>
+                              <ListGroup.Item
+                                action
+                                onClick={() => {
+                                  btnPopoverRef.current.click();
+                                  handleShowModalUpload();
+                                }}
+                              >
+                                Upload a photo
+                              </ListGroup.Item>
+                            </ListGroup>
+                            {/* </> */}
+                          </Popover.Content>
+                        </Popover>
+                      }
                     >
-                      <i className='fas fa-pencil-alt mr-2'></i> Edit
-                    </Button>
-                  </OverlayTrigger>
+                      <Button
+                        ref={btnPopoverRef}
+                        style={{
+                          bottom: 0,
+                          left: 0,
+                        }}
+                        // className=' position-absolute '
+
+                        size='sm'
+                        variant='primary'
+                      >
+                        <i className='fas fa-pencil-alt mr-2'></i> Edit
+                      </Button>
+                    </OverlayTrigger>
+                  </div>
                 </div>
               </Col>
               <Col xs={12} sm={8} md={12} className='pt-3 text-md-center'>
