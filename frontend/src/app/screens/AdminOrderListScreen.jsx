@@ -141,7 +141,7 @@ const AdminOrderListScreen = ({ history }) => {
                             <i className='fas fa-info '></i>
                           </Button>
                         </LinkContainer>
-                        {!order.isDelivered && (
+                        {order.isPaid && !order.isDelivered && (
                           <Button
                             variant='primary'
                             size='sm'
