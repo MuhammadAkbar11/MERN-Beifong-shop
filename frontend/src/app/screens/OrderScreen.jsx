@@ -42,11 +42,12 @@ const OrderScreen = ({ match }) => {
 
   React.useEffect(() => {
     const addPayPalScript = async () => {
+      console.log('loading paypal..');
       const {
         data: { client_id },
       } = await axios.get('/api/config/paypal');
       const script = document.createElement('script');
-
+      console.log(client_id);
       script.type = 'text/javascript';
       script.src = `https://www.paypal.com/sdk/js?client-id=${client_id}`;
       script.async = true;
@@ -55,12 +56,14 @@ const OrderScreen = ({ match }) => {
       };
 
       document.body.appendChild(script);
+      console.log(' paypal added!');
     };
+
     if (!order || successPay) {
       dispatch(payOrderResetAction());
       dispatch(getOrderDetailsAction(orderId));
     } else if (!order.isPaid) {
-      if (userInfo?._id === order?._id) {
+      if (userInfo?._id === order?.user?._id) {
         if (!window.paypal) {
           addPayPalScript();
         } else {
@@ -76,8 +79,7 @@ const OrderScreen = ({ match }) => {
 
   const payAtDateFormat = localeStringDate(order?.paidAt);
   const deliveredAtDateFormat = localeStringDate(order?.deliveredAt);
-  const isUserOrdering = userInfo?._id === order?._id;
-
+  const isUserOrdering = userInfo?._id === order?.user?._id;
   return (
     <>
       <Helmet>
