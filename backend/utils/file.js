@@ -4,9 +4,14 @@ import path from "path";
 export const __dirname = path.resolve();
 
 export const deleteFile = filePath => {
-  fs.unlink(path.join(__dirname, filePath), err => {
-    if (err) {
-      throw new Error(err);
-    }
-  });
+  const file = path.join(__dirname, filePath);
+
+  if (fs.existsSync(file)) {
+    return fs.unlink(file, err => {
+      if (err) {
+        console.log(error);
+        throw new Error(err);
+      }
+    });
+  }
 };
