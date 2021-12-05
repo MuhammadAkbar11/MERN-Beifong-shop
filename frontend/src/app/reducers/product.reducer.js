@@ -87,7 +87,7 @@ const productDetailsReducer = (state = detailInitState, action) => {
   }
 };
 
-const productDeleteReducer = (state = { users: [] }, action) => {
+const productDeleteReducer = (state = { loading: true, users: [] }, action) => {
   switch (action.type) {
     case PRODUCT_DELETE_REQ:
       return { loading: true };
@@ -100,7 +100,7 @@ const productDeleteReducer = (state = { users: [] }, action) => {
   }
 };
 
-const productCreateReducer = (state = {}, action) => {
+const productCreateReducer = (state = { loading: true }, action) => {
   switch (action.type) {
     case PRODUCT_CREATE_REQ:
       return { loading: true };
@@ -115,7 +115,10 @@ const productCreateReducer = (state = {}, action) => {
   }
 };
 
-const productUpdateReducer = (state = { product: {} }, action) => {
+const productUpdateReducer = (
+  state = { loading: true, product: {} },
+  action
+) => {
   switch (action.type) {
     case PRODUCT_UPDATE_REQ:
       return { loading: true };
@@ -144,7 +147,7 @@ const productListAlertReducer = (
   }
 };
 
-const productReviewCreateReducer = (state = {}, action) => {
+const productReviewCreateReducer = (state = { loading: true }, action) => {
   switch (action.type) {
     case PRODUCT_CREATE_REVIEW_REQ:
       return { loading: true };
@@ -176,7 +179,10 @@ const productTopListReducer = (
   }
 };
 
-const productCategoryListReducer = (state = { products: [] }, action) => {
+const productCategoryListReducer = (
+  state = { loading: true, products: [] },
+  action
+) => {
   switch (action.type) {
     case PRODUCT_CATEGORY_REQ:
       return { loading: true };
@@ -189,7 +195,10 @@ const productCategoryListReducer = (state = { products: [] }, action) => {
   }
 };
 
-const productRelatedListReducer = (state = { products: [] }, action) => {
+const productRelatedListReducer = (
+  state = { loading: true, products: [] },
+  action
+) => {
   switch (action.type) {
     case PRODUCT_RELATED_REQ:
       return { loading: true };

@@ -13,7 +13,7 @@ import {
 } from '@constants/cart.constants';
 
 export const cartReducer = (
-  state = { cartItems: [], shippingAddress: {}, loading: false },
+  state = { cartItems: [], shippingAddress: {}, loading: true },
   action
 ) => {
   action.payload;

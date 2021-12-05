@@ -30,7 +30,10 @@ export const categoryListAlertReducer = (
   }
 };
 
-export const categoryDeleteReducer = (state = { users: [] }, action) => {
+export const categoryDeleteReducer = (
+  state = { users: [], loading: true },
+  action
+) => {
   switch (action.type) {
     case CATEGORY_DELETE_REQ:
       return { loading: true };
@@ -43,7 +46,10 @@ export const categoryDeleteReducer = (state = { users: [] }, action) => {
   }
 };
 
-export const categoryCreateReducer = (state = { users: [] }, action) => {
+export const categoryCreateReducer = (
+  state = { loading: true, users: [] },
+  action
+) => {
   switch (action.type) {
     case CATEGORY_CREATE_REQ:
       return { loading: true };
@@ -56,7 +62,10 @@ export const categoryCreateReducer = (state = { users: [] }, action) => {
   }
 };
 
-export const categoryUpdateReducer = (state = { users: [] }, action) => {
+export const categoryUpdateReducer = (
+  state = { loading: true, users: [] },
+  action
+) => {
   switch (action.type) {
     case CATEGORY_UPDATE_REQ:
       return { loading: true };
