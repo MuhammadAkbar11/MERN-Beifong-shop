@@ -264,10 +264,12 @@ const createProductReview = asyncHandler(async (req, res) => {
           return x.user.toString() === user._id.toString();
         });
         productReviews[reviewIndex] = review;
-        product.numReviews = productReviews.length;
-        product.rating =
+        const ratingResult =
           productReviews.reduce((acc, item) => item.rating + acc, 0) /
           productReviews.length;
+
+        product.rating = ratingResult.toFixed(1);
+        product.numReviews = productReviews.length;
         await product.save();
         return res.status(201).json({
           status: true,
@@ -280,7 +282,7 @@ const createProductReview = asyncHandler(async (req, res) => {
         productReviews.reduce((acc, item) => item.rating + acc, 0) /
         productReviews.length;
 
-      product.rating = Math.round(ratingResult);
+      product.rating = ratingResult.toFixed(1);
       product.numReviews = productReviews.length;
 
       await product.save();
