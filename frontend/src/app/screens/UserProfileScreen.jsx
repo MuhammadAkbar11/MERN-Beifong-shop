@@ -24,6 +24,7 @@ import ProfileUpdate from '@components/ProfileUpdate';
 import ListMyOrders from '@components/ListMyOrders';
 import useSingleImageUploader from '@hooks/useSingleImageUploader';
 import Loader from '@components/Loader';
+import { Helmet } from 'react-helmet';
 
 /* eslint-disable */
 const UserProfileScreen = ({ match, history, location }) => {
@@ -119,6 +120,9 @@ const UserProfileScreen = ({ match, history, location }) => {
     'border-bottom font-weight-bold text-primary border-primary ';
   return (
     <>
+      <Helmet>
+        <title>Beifong Shop | Profile</title>
+      </Helmet>
       <Container fluid className='px-1 px-sm-0 py-3 h-100 '>
         <BreadcrumbContainer items={breadcrumbItems} parentClass='ml-n3' />
         <Row>

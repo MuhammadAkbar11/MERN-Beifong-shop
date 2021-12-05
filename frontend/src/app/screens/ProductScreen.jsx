@@ -18,6 +18,7 @@ import Loader from '@components/Loader';
 import { addToCart } from '@actions/cart.actions';
 
 import ProductListReview from '@components/ProductListReview';
+import { Helmet } from 'react-helmet';
 
 const ProductScreen = ({ history, match }) => {
   const [qty, setQty] = React.useState(1);
@@ -48,6 +49,10 @@ const ProductScreen = ({ history, match }) => {
 
   return (
     <>
+      {' '}
+      <Helmet>
+        <title>Beifong Shop | {product?.name || 'No product found'}</title>
+      </Helmet>
       <Container fluid className='px-0 py-3'>
         <Link to='/' className='btn btn-light'>
           Go Back

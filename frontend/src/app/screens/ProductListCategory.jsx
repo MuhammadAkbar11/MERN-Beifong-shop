@@ -7,6 +7,7 @@ import { listProductByCategoryAction } from '@actions/product.actions';
 import Loader from '@components/Loader';
 import Paginate from '@components/Paginate';
 import BreadcrumbContainer from '@components/BreadcrumbContainer';
+import { Helmet } from 'react-helmet';
 
 const ProductListCategory = props => {
   const { match, history } = props;
@@ -34,6 +35,9 @@ const ProductListCategory = props => {
 
   return (
     <>
+      <Helmet>
+        <title>Beifong Shop | {slug}</title>
+      </Helmet>
       <Container fluid className='px-1 px-sm-0 py-3 '>
         <BreadcrumbContainer items={breadcrumbItems} parentClass='ml-n3' />
         {loading ? (
