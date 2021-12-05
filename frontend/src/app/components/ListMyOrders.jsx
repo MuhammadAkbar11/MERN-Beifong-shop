@@ -22,7 +22,7 @@ const ListMyOrders = ({ orders, errors, loading }) => {
             {errors ? (
               <Alert variant='danger'>Failed to load orders</Alert>
             ) : (
-              <Table size='sm' striped hover bordered>
+              <Table size='sm' responsive striped hover bordered>
                 <thead>
                   <tr>
                     <th>ID</th>

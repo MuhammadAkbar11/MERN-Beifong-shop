@@ -1,5 +1,16 @@
-.profile-picture-col {
+.profile-picture {
+  width: auto;
+  height: auto;
+
   .profile-picture-img {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .profile-picture-img-wrapper {
+    position: relative;
     height: 150px;
     max-width: 150px;
     width: auto;
@@ -9,7 +20,7 @@
     }
   }
 
-  .profile-pricture-overlay {
+  .profile-pricture-img-overlay {
     position: absolute;
     bottom: 5%;
     left: -5%;
