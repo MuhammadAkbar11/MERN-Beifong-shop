@@ -1,7 +1,15 @@
 import React from 'react';
 import axios from 'axios';
 import { PayPalButton } from 'react-paypal-button-v2';
-import { Container, Row, Col, ListGroup, Image, Card } from 'react-bootstrap';
+import {
+  Container,
+  Row,
+  Col,
+  ListGroup,
+  Image,
+  Card,
+  Alert,
+} from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import localeStringDate from '@utils/localeStringDate';
@@ -259,49 +267,40 @@ const OrderScreen = ({ match }) => {
                     </ListGroup.Item>
                     {/* {isUserOrdering} */}
                     {isUserOrdering && !order?.isPaid && (
-                      <ListGroup.Item>
-                        {loadingPay && (
-                          <Loader height={20} width={20} className='my-2' />
-                        )}
-                        {!sdkReady ? (
-                          <Loader height={20} width={20} />
-                        ) : (
-                          !loadingCurr && (
-                            <PayPalButton
-                              amount={currencyValue}
-                              onSuccess={successPaymentHandler}
-                            />
-                          )
-                        )}
-                      </ListGroup.Item>
+                      <>
+                        <ListGroup.Item>
+                          {loadingPay && (
+                            <Loader height={20} width={20} className='my-2' />
+                          )}
+                          {!sdkReady ? (
+                            <Loader height={20} width={20} />
+                          ) : (
+                            !loadingCurr && (
+                              <PayPalButton
+                                amount={currencyValue}
+                                onSuccess={successPaymentHandler}
+                              />
+                            )
+                          )}
+                        </ListGroup.Item>
+                        <ListGroup.Item className='mt-2'>
+                          <Alert variant='info'>
+                            this payment process is only a demo, make sure you
+                            don't use your original PayPal account, and if you
+                            want to continue the payment process you can use
+                            Sandbox test accounts
+                            <a
+                              target='_blank'
+                              className='mx-1 text-info'
+                              href='https://developer.paypal.com/developer/accounts'
+                            >
+                              click check here
+                            </a>{' '}
+                            for more info
+                          </Alert>
+                        </ListGroup.Item>
+                      </>
                     )}
-                    {/* {error ? (
-                    <ListGroup.Item className=' border-bottom-0  d-flex  bg-transparent px-0 pb-0  '>
-                      <div className='flex-grow-1 text-center'>
-                        <Message variant='danger'>{orderError.message}</Message>
-                      </div>
-                    </ListGroup.Item>
-                  ) : null} */}
-
-                    {/* <ListGroup.Item className='bg-transparent px-0'>
-                    <Button
-                      onClick={placeOrderHandler}
-                      type='button'
-                      className='btn btn-primary btn-block d-flex justify-content-center'
-                      disabled={order.cartItems.length === 0 || loading}
-                    >
-                      {loading ? (
-                        <>
-                          <div className='d-flex'>
-                            <Loader height={15} width={15} />
-                            <span className='ml-2'>Order now</span>
-                          </div>
-                        </>
-                      ) : (
-                        'Order now'
-                      )}
-                    </Button>
-                  </ListGroup.Item> */}
                   </ListGroup>
                 </Card>
               </Col>
