@@ -68,10 +68,10 @@ const CheckoutSteps = ({ step1, step2, step3, step4, currentStep }) => {
       >
         {step4 ? (
           <LinkContainer to='/summary' className={navLinkActiveClass}>
-            <Nav.Link>Order Summary</Nav.Link>
+            <Nav.Link>Checkout Summary</Nav.Link>
           </LinkContainer>
         ) : (
-          <Nav.Link disabled>Order Summary</Nav.Link>
+          <Nav.Link disabled>Checkout Summary</Nav.Link>
         )}
       </Nav.Item>
     </Nav>
