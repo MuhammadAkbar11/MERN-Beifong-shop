@@ -40,7 +40,9 @@ const ProductScreen = ({ history, match }) => {
   }, [dispatch, match]);
 
   const addToCartHandler = () => {
-    dispatch(addToCart(match.params.id, +qty));
+    dispatch(addToCart(match.params.id, +qty)).then(() => {
+      history.push('/cart');
+    });
   };
 
   if (pageRedirect.redirectTo) {
