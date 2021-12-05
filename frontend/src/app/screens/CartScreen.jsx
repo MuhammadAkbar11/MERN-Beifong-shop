@@ -81,7 +81,7 @@ const CartScreen = ({ history, match, location }) => {
               </div>
               <div>
                 {' '}
-                <h3>Total </h3>
+                <h3>Total ({cartItems.length !== 0 ? cartItems.length : 0})</h3>
               </div>
             </div>
             <hr />

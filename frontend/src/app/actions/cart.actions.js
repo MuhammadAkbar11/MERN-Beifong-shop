@@ -31,7 +31,7 @@ export const addToCart = (id, qty) => async (dispatch, getState) => {
       const newCartItem = {
         product: product._id,
         name: product.name,
-        image: `${product.image}`,
+        image: product.image,
         price: product.price,
         countInStock: product.countInStock,
         qty: qty,
@@ -69,7 +69,7 @@ export const addToCart = (id, qty) => async (dispatch, getState) => {
           product: item.product._id,
           name: item.product.name,
           price: item.product.price,
-          image: `${item.product.image}`,
+          image: item.product.image,
           countInStock: item.product.countInStock,
           subtotal: item.subtotal,
           qty: item.qty,
@@ -154,21 +154,20 @@ export const removeFromCart = id => async (dispatch, getState) => {
           qty: item.qty,
         };
       });
-
+      dispatch({
+        type: CART_REMOVE_ITEM_SUCCESS,
+        payload: {
+          cartItems: updatedCartItems,
+        },
+      });
       setTimeout(() => {
-        dispatch({
-          type: CART_REMOVE_ITEM_SUCCESS,
-          payload: {
-            cartItems: updatedCartItems,
-          },
-        });
-
         localStorage.setItem(
           'cartItems',
           JSON.stringify(getState().cart.cartItems)
         );
       }, 500);
     } catch (error) {
+      console.log(error);
       let errData = {
         message: error.message,
       };

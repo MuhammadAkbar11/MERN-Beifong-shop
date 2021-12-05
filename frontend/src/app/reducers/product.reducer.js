@@ -87,7 +87,10 @@ const productDetailsReducer = (state = detailInitState, action) => {
   }
 };
 
-const productDeleteReducer = (state = { loading: true, users: [] }, action) => {
+const productDeleteReducer = (
+  state = { loading: false, users: [] },
+  action
+) => {
   switch (action.type) {
     case PRODUCT_DELETE_REQ:
       return { loading: true };
@@ -100,7 +103,7 @@ const productDeleteReducer = (state = { loading: true, users: [] }, action) => {
   }
 };
 
-const productCreateReducer = (state = { loading: true }, action) => {
+const productCreateReducer = (state = { loading: false }, action) => {
   switch (action.type) {
     case PRODUCT_CREATE_REQ:
       return { loading: true };
@@ -116,7 +119,7 @@ const productCreateReducer = (state = { loading: true }, action) => {
 };
 
 const productUpdateReducer = (
-  state = { loading: true, product: {} },
+  state = { loading: false, product: {} },
   action
 ) => {
   switch (action.type) {
@@ -147,7 +150,7 @@ const productListAlertReducer = (
   }
 };
 
-const productReviewCreateReducer = (state = { loading: true }, action) => {
+const productReviewCreateReducer = (state = { loading: false }, action) => {
   switch (action.type) {
     case PRODUCT_CREATE_REVIEW_REQ:
       return { loading: true };

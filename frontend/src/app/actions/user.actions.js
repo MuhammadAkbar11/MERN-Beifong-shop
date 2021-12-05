@@ -381,6 +381,7 @@ export const updateUserProfileAction = ({ ...user }) => async (
     dispatch({
       type: USER_DETAILS_SUCCESS,
       payload: {
+        loading: false,
         user: data.user,
       },
     });
@@ -451,6 +452,7 @@ export const userChangePasswordAction = (
       type: USER_CHANGE_PASSWORD_SUCCESS,
       payload: {
         message: data.message,
+        loading: false,
       },
     });
   } catch (error) {

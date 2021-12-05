@@ -31,7 +31,7 @@ export const categoryListAlertReducer = (
 };
 
 export const categoryDeleteReducer = (
-  state = { users: [], loading: true },
+  state = { users: [], loading: false },
   action
 ) => {
   switch (action.type) {
@@ -47,7 +47,7 @@ export const categoryDeleteReducer = (
 };
 
 export const categoryCreateReducer = (
-  state = { loading: true, users: [] },
+  state = { loading: false, users: [] },
   action
 ) => {
   switch (action.type) {
@@ -63,7 +63,7 @@ export const categoryCreateReducer = (
 };
 
 export const categoryUpdateReducer = (
-  state = { loading: true, users: [] },
+  state = { loading: false, users: [] },
   action
 ) => {
   switch (action.type) {

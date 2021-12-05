@@ -26,7 +26,7 @@ import {
 
 export const orderCreateReducer = (
   state = {
-    loading: true,
+    loading: false,
   },
   action
 ) => {
@@ -91,7 +91,7 @@ export const orderDetailsReducer = (
   }
 };
 
-export const orderPayReducer = (state = { loading: true }, action) => {
+export const orderPayReducer = (state = { loading: false }, action) => {
   switch (action.type) {
     case ORDER_PAY_REQUEST:
       return {
@@ -181,7 +181,7 @@ export const orderListReducer = (
 };
 
 export const orderConfirmDeliverReducer = (
-  state = { loading: true },
+  state = { loading: false },
   action
 ) => {
   switch (action.type) {
