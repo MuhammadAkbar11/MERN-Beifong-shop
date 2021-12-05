@@ -12,7 +12,7 @@ import { Helmet } from 'react-helmet';
 const PaymentScreen = ({ history }) => {
   const cart = useSelector(state => state.cart);
 
-  const { shippingAddress } = cart;
+  const { shippingAddress, cartItems } = cart;
 
   if (isObjectEmpty(shippingAddress)) {
     history.push('/shipping');
@@ -21,6 +21,12 @@ const PaymentScreen = ({ history }) => {
   const [paymentMethod, setPaymentMethod] = useState('PayPal');
 
   const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    if (cartItems.length === 0) {
+      history.push('/cart');
+    }
+  }, [history, cartItems]);
 
   const onChangeHandler = e => {
     const value = e.target.value;

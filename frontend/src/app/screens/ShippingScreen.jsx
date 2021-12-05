@@ -22,7 +22,7 @@ const ShippingScreen = ({ history }) => {
 
   const cart = useSelector(state => state.cart);
 
-  const { shippingAddress } = cart;
+  const { shippingAddress, cartItems } = cart;
 
   let shippingAddressFormsInitValues = {
     address: '',
@@ -57,6 +57,12 @@ const ShippingScreen = ({ history }) => {
       history.push('/payment');
     },
   });
+
+  React.useEffect(() => {
+    if (cartItems.length === 0) {
+      history.push('/cart');
+    }
+  }, [history, cartItems]);
 
   return (
     <Container fluid className='px-1 px-sm-0 py-3 h-100 '>

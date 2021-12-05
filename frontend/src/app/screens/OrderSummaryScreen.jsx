@@ -42,7 +42,11 @@ const OrderSummarycreen = ({ history }) => {
     if (success) {
       history.push(`/order/${order._id}`);
     }
-  }, [history, success]);
+
+    if (cart.cartItems.length === 0) {
+      history.push(`/cart`);
+    }
+  }, [history, success, cart]);
 
   const placeOrderHandler = () => {
     dispatch(
