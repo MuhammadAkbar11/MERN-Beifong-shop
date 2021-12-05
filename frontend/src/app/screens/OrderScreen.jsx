@@ -19,7 +19,6 @@ import {
   payOrderResetAction,
 } from '@actions/order.actions';
 import BreadcrumbContainer from '@components/BreadcrumbContainer';
-import CheckoutSteps from '@components/CheckoutSteps';
 import Message from '@components/Message';
 import FormatRupiah from '@components/FormatRupiah';
 import Loader from '@components/Loader';
@@ -94,20 +93,18 @@ const OrderScreen = ({ match }) => {
         <title>Beifong Shop | Order</title>
       </Helmet>
       <Container fluid className='px-0 py-3 h-100'>
-        <Row className='mb-5 px-0'>
+        <Row className='mb-3 px-0'>
           <Col md={5} className='pl-0'>
             <BreadcrumbContainer
               items={[
                 { name: 'Home', href: '/' },
                 { name: 'Order', isActive: true },
-                { name: 'Summary', isActive: true },
+                { name: order?._id, isActive: true },
               ]}
             />
           </Col>
-          <Col md={7}>
-            {/* {!order?.isDelivered && !order?.isPaid && ( */}
-            <CheckoutSteps step1 step2 step3 step4 currentStep='step4' />
-            {/* )} */}
+          <Col md={12}>
+            <h3 className='mb-0'>Order Summary</h3>
           </Col>
         </Row>
         {loading ? (
