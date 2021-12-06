@@ -45,10 +45,6 @@ const ProductScreen = ({ history, match }) => {
     });
   };
 
-  if (pageRedirect.redirectTo) {
-    return <Redirect to={pageRedirect.redirectTo} />;
-  }
-
   return (
     <>
       {' '}
