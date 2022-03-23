@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import { Breadcrumb } from 'react-bootstrap';
 import { useHistory } from 'react-router';
 
+/* eslint-disable */
+
 const defaultProps = {
   parentClass: '',
   items: '',
