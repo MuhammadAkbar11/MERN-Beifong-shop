@@ -35,7 +35,7 @@ const ProductListReview = ({ product }) => {
     e.preventDefault();
     dispatch(
       createProductReviewAction({
-        _id: product._id,
+        _id: product?._id,
         rating,
         comment,
       })
@@ -45,12 +45,12 @@ const ProductListReview = ({ product }) => {
       dispatch({
         type: PRODUCT_CREATE_REVIEW_RESET,
       });
-      dispatch(listProductDetails(product._id));
+      dispatch(listProductDetails(product?._id));
     });
   };
 
   const isAlreadyReview = product.reviews.find(x => {
-    return x.user.toString() === userInfo._id.toString();
+    return x.user.toString() === userInfo?._id.toString();
   });
 
   React.useEffect(() => {
@@ -97,7 +97,7 @@ const ProductListReview = ({ product }) => {
               return (
                 <ListGroup.Item
                   className='pl-0 border-0 py-1 mt-1 '
-                  key={rev._id}
+                  key={rev?._id}
                 >
                   <h5 className='mb-1  text-capitalize text-spacing-1 text-dark  font-weight-bold'>
                     {rev?.name}
