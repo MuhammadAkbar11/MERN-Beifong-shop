@@ -15,3 +15,14 @@ export const deleteFile = filePath => {
     });
   }
 };
+
+export const checkIsGuestFoto = file => {
+  const defaultFoto = [
+    "sample-guest.jpg",
+    "sample-guest.png",
+    "sample-guest.jpeg",
+  ];
+  const fileToArr = file.split("/");
+  const fileName = fileToArr[fileToArr.length - 1];
+  return defaultFoto.some(f => f === fileName);
+};

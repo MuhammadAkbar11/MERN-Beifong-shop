@@ -6,7 +6,7 @@ const users = [
     email: "admin@beifong.com",
     password: bcrypt.hashSync("123456", 10),
     isAdmin: true,
-    image: "/uploads/images/sample-user.jpeg",
+    image: "/uploads/images/sample-guest.png",
     cart: {
       items: [],
     },
@@ -15,7 +15,7 @@ const users = [
     name: "Dubu",
     email: "dubu@example.com",
     password: bcrypt.hashSync("dubu1998", 10),
-    image: "/uploads/images/sample-user.jpeg",
+    image: "/uploads/images/sample-guest.png",
     isAdmin: false,
     cart: {
       items: [],
@@ -25,7 +25,7 @@ const users = [
     name: "bae",
     email: "bae@example.com",
     password: bcrypt.hashSync("bae1994", 10),
-    image: "/uploads/images/sample-user.jpeg",
+    image: "/uploads/images/sample-guest.png",
     isAdmin: false,
     cart: {
       items: [],

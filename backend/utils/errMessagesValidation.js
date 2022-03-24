@@ -1,7 +1,7 @@
 const errMessageValidation = (errors = []) => {
   let errorObj = {};
   const newArrError = [...errors];
-  for (var i = 0, len = newArrError.length; i < len; i++) {
+  for (let i = 0, len = newArrError.length; i < len; i++) {
     const messageArr = errors
       .filter(item => item.param == newArrError[i]["param"])
       .map(el => el.msg);
@@ -11,7 +11,7 @@ const errMessageValidation = (errors = []) => {
     };
   }
 
-  for (var key in errorObj) newArrError.push(errorObj[key]);
+  for (let key in errorObj) newArrError.push(errorObj[key]);
 
   return errorObj;
 };

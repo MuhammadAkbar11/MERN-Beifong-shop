@@ -5,7 +5,7 @@ import ProductModel from "../models/productModel.js";
 import errMessageValidation from "../utils/errMessagesValidation.js";
 import generateToken from "../utils/generateToken.js";
 import ResponseError from "../utils/responseError.js";
-import { deleteFile } from "../utils/file.js";
+import { checkIsGuestFoto, deleteFile } from "../utils/file.js";
 
 // @desc Auth user & get token
 // @route POST /api/users/login
@@ -93,6 +93,7 @@ const registerUser = asyncHandler(async (req, res) => {
       name,
       email,
       password,
+      image: "/uploads/images/sample-guest.png",
     });
 
     if (user) {
@@ -448,12 +449,9 @@ const uploadPhotoUser = asyncHandler(async (req, res) => {
 
       const updatedUser = await user.save();
 
-      if (
-        image !== oldImage &&
-        oldImage !== "/uploads/images/sample-user.jpeg"
-      ) {
-        deleteFile(oldImage);
-      }
+      const isGuestFoto = checkIsGuestFoto(oldImage);
+
+      oldImage && image !== oldImage && !isGuestFoto && deleteFile(oldImage);
 
       return res.status(200).json({
         status: true,
