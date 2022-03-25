@@ -7,6 +7,7 @@ import { listProducts } from '@actions/product.actions';
 import Loader from '@components/Loader';
 import Message from '@components/Message';
 import ProductCarousel from '@components/ProductCarousel';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -31,7 +32,10 @@ const Home = () => {
       </section>
       <br />
       <br />
-      <h1>Latets Products</h1>
+      <div className=' d-flex flex-column flex-sm-row  justify-content-between align-items-sm-center '>
+        <h1>Latets Products</h1>
+        <Link to={'/products'}>see more</Link>
+      </div>
       {loading ? (
         <div className='mt-5 '>
           <Loader />

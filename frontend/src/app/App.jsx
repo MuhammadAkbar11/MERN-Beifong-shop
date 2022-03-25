@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
 import Home from '@app/screens/Home';
 import Footer from '@components/Footer';
@@ -22,6 +22,7 @@ import AdminOrderListScreen from '@screens/AdminOrderListScreen';
 import ProductListScreen from '@screens/ProductListScreen';
 import ProductListCategory from '@screens/ProductListCategory';
 import AdminProductDetails from '@screens/AdminProductDetails';
+import AdminDetailsOrderScreen from '@screens/AdminDetailsOrderScreen';
 
 const App = () => {
   /* eslint-disable */
@@ -118,10 +119,21 @@ const App = () => {
               }}
             />
             <Route
+              path='/admin/order/:id'
+              render={props => {
+                return <AdminDetailsOrderScreen {...props} />;
+              }}
+            />
+
+            <Route
               path='/admin/orderlist'
               render={props => {
                 return <AdminOrderListScreen {...props} />;
               }}
+            />
+            <Route
+              path='/admin'
+              render={props => <Redirect to='/admin/dashboard' {...props} />}
             />
             <Route
               path='/search/:keyword/page/:pageNumber'

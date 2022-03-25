@@ -64,7 +64,6 @@ const UserProfileScreen = ({ match, history, location }) => {
       dispatch(getUserDetailsAction('profile'));
       dispatch(getListMyOrdersAction());
     } else {
-      console.log(user);
       setProfile({
         name: user.name,
         email: user.email,
@@ -80,7 +79,6 @@ const UserProfileScreen = ({ match, history, location }) => {
       if (index === 2) {
         br.name = user.name;
       }
-
       return { ...br };
     });
 

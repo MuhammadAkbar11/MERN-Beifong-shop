@@ -136,7 +136,7 @@ const AdminOrderListScreen = ({ history }) => {
                         }}
                         className=' d-flex align-items-center '
                       >
-                        <LinkContainer to={`/order/${order._id}`}>
+                        <LinkContainer to={`/admin/order/${order._id}`}>
                           <Button variant='light' size='sm'>
                             <i className='fas fa-info '></i>
                           </Button>
