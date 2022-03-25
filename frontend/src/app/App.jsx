@@ -1,5 +1,5 @@
 import React from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
 import Home from '@app/screens/Home';
 import Footer from '@components/Footer';
@@ -23,15 +23,19 @@ import ProductListScreen from '@screens/ProductListScreen';
 import ProductListCategory from '@screens/ProductListCategory';
 import AdminProductDetails from '@screens/AdminProductDetails';
 import AdminDetailsOrderScreen from '@screens/AdminDetailsOrderScreen';
+import { useSelector } from 'react-redux';
+import NotFoundScreen from './screens/NotFoundScreen';
 
 const App = () => {
   /* eslint-disable */
 
+  const { status: pageStatus } = useSelector(state => state.pageStatus);
+
   return (
     <>
-      <Header />
-      <main className='py-3 bg-light '>
-        <Container>
+      {!pageStatus && <Header />}
+      <main className='py-3 bg-light wrapper  '>
+        <Container className=''>
           <Switch>
             <Route
               path='/order/:id'
@@ -88,6 +92,7 @@ const App = () => {
                 return <CartScreen {...props} />;
               }}
             />
+
             <Route
               path='/admin/userlist'
               render={props => {
@@ -130,10 +135,6 @@ const App = () => {
               render={props => {
                 return <AdminOrderListScreen {...props} />;
               }}
-            />
-            <Route
-              path='/admin'
-              render={props => <Redirect to='/admin/dashboard' {...props} />}
             />
             <Route
               path='/search/:keyword/page/:pageNumber'
@@ -179,11 +180,13 @@ const App = () => {
             />
 
             <Route path='/' exact component={Home} />
+
+            <Route component={NotFoundScreen} />
           </Switch>
         </Container>
       </main>
 
-      <Footer />
+      {!pageStatus && <Footer />}
     </>
   );
 };

@@ -42,6 +42,7 @@ import {
   orderPayReducer,
 } from '@reducers/order.reducer';
 import autoLogout from './middleware/autologout';
+import { pageStatusReducer } from './reducers/page.reducer';
 
 const reducer = combineReducers({
   productsAlert: productListAlertReducer,
@@ -76,6 +77,7 @@ const reducer = combineReducers({
   orderListAlert: orderListAlertReducer,
   orderList: orderListReducer,
   orderConfirmDeliver: orderConfirmDeliverReducer,
+  pageStatus: pageStatusReducer,
 });
 
 const cartItemsFromStorage = localStorage.getItem('cartItems')
