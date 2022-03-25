@@ -47,13 +47,9 @@ const addOrderItems = asyncHandler(async (req, res) => {
 
       const order = new OrderModel(orderData);
 
-      await Promise.all(
-        orderItems.map(async ord => {
-          return await req.user.removeCartItem(ord.product);
-        })
-      );
-
       const createdOrder = await order.save();
+
+      await req.user.clearCart();
       return res.status(201).json({
         status: true,
         message: "Order created",
@@ -83,7 +79,7 @@ const getOrderById = asyncHandler(async (req, res) => {
     );
 
     if (order) {
-      res.json(order);
+      res.json({ order });
     } else {
       res.status(400);
       throw new ResponseError(400, "Order no found");

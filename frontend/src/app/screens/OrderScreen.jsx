@@ -54,16 +54,14 @@ const OrderScreen = ({ match }) => {
         data: { client_id },
       } = await axios.get('/api/config/paypal');
       const script = document.createElement('script');
-      console.log(client_id);
       script.type = 'text/javascript';
       script.src = `https://www.paypal.com/sdk/js?client-id=${client_id}`;
       script.async = true;
       script.onload = () => {
         setSdkReady(true);
       };
-
       document.body.appendChild(script);
-      console.log(' paypal added!');
+      console.log('paypal added!');
     };
 
     if (!order || successPay) {
@@ -87,6 +85,42 @@ const OrderScreen = ({ match }) => {
   const payAtDateFormat = localeStringDate(order?.paidAt);
   const deliveredAtDateFormat = localeStringDate(order?.deliveredAt);
   const isUserOrdering = userInfo?._id === order?.user?._id;
+
+  if (!order) {
+    return (
+      <>
+        {' '}
+        <Helmet>
+          <title>Beifong Shop | Order</title>
+        </Helmet>
+        <Container fluid className='px-0 py-3 h-100'>
+          <Row className='mb-3 px-0'>
+            <Col md={5} className='pl-0'>
+              <BreadcrumbContainer
+                items={[
+                  { name: 'Home', href: '/' },
+                  { name: 'Order', isActive: true },
+                  { name: order?._id, isActive: true },
+                ]}
+              />
+            </Col>
+            <Col md={12}>
+              <h3 className='mb-0'>Order Summary</h3>
+            </Col>
+          </Row>
+          <Loader />
+        </Container>
+      </>
+    );
+  }
+
+  let breadcrumbItems = [
+    { name: 'Home', href: '/' },
+    { name: 'Profile', href: '/profile' },
+    { name: 'Order', isActive: true },
+    { name: order?._id || 'Loading...', isActive: true },
+  ];
+
   return (
     <>
       <Helmet>
@@ -95,13 +129,7 @@ const OrderScreen = ({ match }) => {
       <Container fluid className='px-0 py-3 h-100'>
         <Row className='mb-3 px-0'>
           <Col md={5} className='pl-0'>
-            <BreadcrumbContainer
-              items={[
-                { name: 'Home', href: '/' },
-                { name: 'Order', isActive: true },
-                { name: order?._id, isActive: true },
-              ]}
-            />
+            <BreadcrumbContainer items={breadcrumbItems} />
           </Col>
           <Col md={12}>
             <h3 className='mb-0'>Order Summary</h3>
@@ -141,7 +169,7 @@ const OrderScreen = ({ match }) => {
                     </p>
                     <p>
                       <span className='text-dark'>Delivered Status: </span>{' '}
-                      {order.isDelivered ? (
+                      {order?.isDelivered ? (
                         <span className='text-success'>
                           Delivered On {deliveredAtDateFormat}
                         </span>
@@ -154,11 +182,11 @@ const OrderScreen = ({ match }) => {
                     <h6 className='text-primary font-weight-bolder'>Payment</h6>
                     <p className='mb-1'>
                       <span className='text-dark'>Method: </span>{' '}
-                      {order.paymentMethod}
+                      {order?.paymentMethod}
                     </p>
                     <p>
                       <span className='text-dark'>Paid Status: </span>{' '}
-                      {order.isPaid ? (
+                      {order?.isPaid ? (
                         <span className='text-success'>
                           Paid On {payAtDateFormat}
                         </span>
