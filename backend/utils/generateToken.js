@@ -14,7 +14,8 @@ export const generateAccessToken = userInfo => {
   return jwt.sign(
     {
       UserInfo: {
-        username: userInfo.name,
+        name: userInfo.name,
+        id: userInfo._id,
         // roles: roles,
       },
     },
@@ -25,7 +26,7 @@ export const generateAccessToken = userInfo => {
 
 export const generateRefreshToken = userInfo => {
   return jwt.sign(
-    { username: userInfo.name, id: userInfo._id },
+    { name: userInfo.name, id: userInfo._id },
     REFRESH_TOKEN_SECRET,
     {
       expiresIn: "1d",

@@ -1,4 +1,5 @@
 import { PREFIX_VERSION } from "../../configs/constants.js";
+import { handleRefreshToken } from "../../controllers/v2/auth.controller.js";
 import UserRoutes from "./user.routes.js";
 
 function AppRoutesV2(app) {
@@ -6,7 +7,9 @@ function AppRoutesV2(app) {
     res.json({ status: true, message: "Welcome to beifong shop Api V2" });
   });
 
-  // auth Routes
+  app.get(`${PREFIX_VERSION}/refresh`, handleRefreshToken);
+
+  // user Routes
   UserRoutes(app, `${PREFIX_VERSION}/users`);
 }
 
