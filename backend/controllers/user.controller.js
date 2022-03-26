@@ -47,7 +47,7 @@ const authUser = asyncHandler(async (req, res) => {
             email: user.email,
             token: generateToken(user._id),
             cart: userCart.cart,
-            image: "/uploads/images/sample-user.jpeg",
+            image: user?.image || "/uploads/images/sample-user.png",
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
           },
@@ -203,6 +203,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
         email: setUpdatedUser.email,
         createdAt: setUpdatedUser.createdAt,
         updatedAt: setUpdatedUser.updatedAt,
+        image: setUpdatedUser.image,
       };
 
       return res.status(200).json({
