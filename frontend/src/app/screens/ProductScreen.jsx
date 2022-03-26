@@ -1,6 +1,7 @@
 /* eslint-disable */
 import React from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
+import { Link } from 'react-router-dom';
 import {
   Row,
   Col,
@@ -11,22 +12,25 @@ import {
   Container,
   Form,
 } from 'react-bootstrap';
-import Rating from '@components/Rating';
-import { useDispatch, useSelector } from 'react-redux';
-import { listProductDetails } from '@actions/product.actions';
-import Loader from '@components/Loader';
-import { addToCart } from '@actions/cart.actions';
 
+import { useDispatch, useSelector } from 'react-redux';
+import Rating from '@components/Rating';
+import Loader from '@components/Loader';
 import ProductListReview from '@components/ProductListReview';
-import { Helmet } from 'react-helmet';
+import ProductNotFound from '@components/ProductNotFound';
+import ProductDetailsError from '@components/ProductDetailsError';
+import { addToCart } from '@actions/cart.actions';
+import { listProductDetails } from '@actions/product.actions';
+import { resetProductDetailsAction } from '@actions/product.actions';
 
 const ProductScreen = ({ history, match }) => {
   const [qty, setQty] = React.useState(1);
 
   const dispatch = useDispatch();
-  const { product, loading } = useSelector(state => state.productDetails);
+  const { product, loading, error } = useSelector(
+    state => state.productDetails
+  );
 
-  const pageRedirect = useSelector(state => state.redirect);
   const cart = useSelector(state => state.cart);
   let cartAddItemLoading = cart.loading;
 
@@ -36,7 +40,15 @@ const ProductScreen = ({ history, match }) => {
 
   React.useEffect(() => {
     dispatch(listProductDetails(match.params.id));
-    return () => {};
+
+    window.scrollTo({
+      top: 0,
+      left: 0,
+    });
+
+    return () => {
+      dispatch(resetProductDetailsAction());
+    };
   }, [dispatch, match]);
 
   const addToCartHandler = () => {
@@ -52,28 +64,50 @@ const ProductScreen = ({ history, match }) => {
         <title>Beifong Shop | {product?.name || 'No product found'}</title>
       </Helmet>
       <Container fluid className='px-0 py-3'>
-        <Link to='/' className='btn btn-light'>
-          Go Back
-        </Link>
+        {!error && (
+          <Link to='/products' className='btn btn-light'>
+            Back to products
+          </Link>
+        )}
         <Row className='pt-3 align-items-stretch  '>
-          <Col md={12} lg={6} className={`${!loading ? 'pb-5' : ''}`}>
-            {loading || product.image === undefined ? (
+          {!loading && error && (
+            <Col xs={12}>
+              {error?.message === 'Product not found' && <ProductNotFound />}
+              {error?.message !== 'Product not found' && (
+                <ProductDetailsError />
+              )}
+            </Col>
+          )}
+          <Col
+            md={12}
+            lg={6}
+            className={`${!loading ? 'pb-5' : ''} ${error ? 'd-none' : ''}`}
+          >
+            {loading && (
               <div
                 className='d-flex justify-content-center align-items-cente'
                 style={{ height: 200, width: '100%' }}
               >
                 <Loader height={200} width={200} />
               </div>
-            ) : (
-              <Image fluid src={`${product.image}`} alt={product.name} />
+            )}
+            {!loading && !error && (
+              <Image fluid src={`${product?.image}`} alt={product?.name} />
             )}
           </Col>
-          {!loading ? (
+          {loading && !error && (
+            <Col md={12} lg={6}>
+              <div className='mt-2 h-100  d-flex justify-content-center align-items-center'>
+                <Loader height={200} width={200} />
+              </div>
+            </Col>
+          )}
+          {!loading && !error && (
             <>
               <Col md={8} lg={3}>
                 <ListGroup variant='flush'>
                   <ListGroup.Item className='border-bottom-0 pb-0'>
-                    <h3>{product.name}</h3>
+                    <h3>{product?.name}</h3>
                     <p className='my-0'>{product?.brand}</p>
                   </ListGroup.Item>
                   <ListGroup.Item
@@ -83,24 +117,26 @@ const ProductScreen = ({ history, match }) => {
                     }}
                   >
                     <Rating
-                      value={product.rating === undefined ? 0 : product.rating}
-                      text={`${product.numReviews} reviews`}
+                      value={
+                        product?.rating === undefined ? 0 : product?.rating
+                      }
+                      text={`${product?.numReviews} reviews`}
                     />
                   </ListGroup.Item>
                   <ListGroup.Item className='d-block'>
                     <p className=' text-primary mb-2 '>
-                      {product.price?.rupiah}
+                      {product?.price?.rupiah}
                     </p>
                     <Link
                       className=' badge badge-primary shadow-none '
-                      to={`/category/${product.category?.slug}`}
+                      to={`/category/${product?.category?.slug}`}
                     >
                       {product?.category?.name}
                     </Link>
                   </ListGroup.Item>
 
                   <ListGroup.Item>
-                    Description : <br /> {product.description}
+                    Description : <br /> {product?.description}
                   </ListGroup.Item>
                 </ListGroup>
               </Col>
@@ -114,7 +150,7 @@ const ProductScreen = ({ history, match }) => {
                         </div>
                         <div>
                           <strong className=' font-weight-bold '>
-                            {product.price?.rupiah}
+                            {product?.price?.rupiah}
                           </strong>
                         </div>
                       </div>
@@ -125,7 +161,7 @@ const ProductScreen = ({ history, match }) => {
                         <div>Status :</div>
                         <div>
                           <strong>
-                            {product.countInStock > 0
+                            {product?.countInStock > 0
                               ? 'In Stock'
                               : 'out of Stock'}
                           </strong>
@@ -134,7 +170,7 @@ const ProductScreen = ({ history, match }) => {
                     </ListGroup.Item>
                     {!isProductInCart ? (
                       <>
-                        {product.countInStock > 0 && (
+                        {product?.countInStock > 0 && (
                           <ListGroup.Item>
                             <div className='d-flex justify-content-between'>
                               <div>Quantity :</div>
@@ -145,7 +181,7 @@ const ProductScreen = ({ history, match }) => {
                                   value={qty}
                                   onChange={e => setQty(e.target.value)}
                                 >
-                                  {[...Array(product.countInStock).keys()].map(
+                                  {[...Array(product?.countInStock).keys()].map(
                                     x => {
                                       const key = x + 1;
                                       return (
@@ -166,7 +202,7 @@ const ProductScreen = ({ history, match }) => {
                             className='btn-block bg-gradient-primary '
                             type='button'
                             disabled={
-                              product.countInStock === 0 || cartAddItemLoading
+                              product?.countInStock === 0 || cartAddItemLoading
                             }
                           >
                             {' '}
@@ -197,15 +233,9 @@ const ProductScreen = ({ history, match }) => {
                 </Card>
               </Col>
             </>
-          ) : (
-            <Col md={12} lg={6}>
-              <div className='mt-2 h-100  d-flex justify-content-center align-items-center'>
-                <Loader height={200} width={200} />
-              </div>
-            </Col>
           )}
         </Row>
-        <ProductListReview product={product} />
+        {!loading && !error && <ProductListReview product={product} />}
       </Container>
     </>
   );

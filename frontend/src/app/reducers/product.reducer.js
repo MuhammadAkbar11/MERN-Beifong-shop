@@ -31,6 +31,7 @@ import {
   PRODUCT_RELATED_REQ,
   PRODUCT_RELATED_SUCCESS,
   PRODUCT_RELATED_FAIL,
+  PRODUCT_DETAILS_RESET,
 } from '@constants/product.constants';
 
 const initState = {
@@ -54,6 +55,7 @@ const productListReducer = (state = initState, action) => {
 
     case PRODUCT_LIST_FAIL:
       return { loading: false, error: action.payload };
+
     default:
       return state;
   }
@@ -71,17 +73,26 @@ const productDetailsReducer = (state = detailInitState, action) => {
     case PRODUCT_DETAILS_REQ:
       return {
         loading: true,
-        ...state,
+        error: null,
       };
 
     case PRODUCT_DETAILS_SUCCESS:
       return {
         loading: false,
         product: action.payload,
+        error: null,
       };
 
     case PRODUCT_DETAILS_FAIL:
       return { loading: false, error: action.payload };
+    case PRODUCT_DETAILS_RESET:
+      return {
+        loading: false,
+        error: null,
+        product: {
+          reviews: [],
+        },
+      };
     default:
       return state;
   }

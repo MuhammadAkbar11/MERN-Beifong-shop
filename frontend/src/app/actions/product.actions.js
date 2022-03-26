@@ -29,6 +29,7 @@ import {
   PRODUCT_UPDATE_FAIL,
   PRODUCT_UPDATE_REQ,
   PRODUCT_UPDATE_SUCCESS,
+  PRODUCT_DETAILS_RESET,
 } from '@constants/product.constants';
 import queriesToString from '@utils/queriesToString';
 
@@ -106,6 +107,10 @@ export const listProductDetails = id => async dispatch => {
       payload: errData,
     });
   }
+};
+
+export const resetProductDetailsAction = () => dispatch => {
+  dispatch({ type: PRODUCT_DETAILS_RESET });
 };
 
 export const deleteProductAction = productID => async (dispatch, getState) => {

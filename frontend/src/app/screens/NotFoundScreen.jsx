@@ -8,7 +8,7 @@ import {
 } from '@actions/page.actions';
 
 import { Link } from 'react-router-dom';
-import smileySad from '../../assets/images/SmileySad.png';
+import smileySad from '@assets/images/SmileySad.png';
 
 const NotFoundScreen = () => {
   const dispatch = useDispatch();

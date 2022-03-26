@@ -35,6 +35,7 @@ module.exports = {
       '@constants': path.resolve(__dirname, '..', 'src/app/constants'),
       '@screens': path.resolve(__dirname, '..', 'src/app/screens'),
       '@components': path.resolve(__dirname, '..', 'src/app/components'),
+      '@assets': path.resolve(__dirname, '..', 'src/assets'),
       '~bootstrap': path.resolve(__dirname, '..', 'node_modules/bootstrap'),
     },
   },
