@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import colors from "colors";
 import express from "express";
 import morgan from "morgan";
+import cookieParser from "cookie-parser";
 import connectDB from "./configs/db.js";
 import categoryRoutes from "./routes/category.routes.js";
 import productRoutes from "./routes/product.routes.js";
@@ -12,6 +13,7 @@ import uploadRoutes from "./routes/uploads.routes.js";
 import { errorHandler, notFound } from "./middleware/error.middleware.js";
 import convertCurrency from "./utils/convertCurrency.js";
 import { getConvertCurrency } from "./controllers/config.controller.js";
+import AppRoutesV1 from "./routes/v2/index.routes.js";
 
 const __dirname = path.resolve();
 
@@ -19,7 +21,6 @@ let envFile = ".env";
 if (process.argv[2] === "--dev") {
   envFile = ".env.dev";
 }
-
 dotenv.config({
   path: envFile,
 });
@@ -31,7 +32,11 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 const MODE = process.env.NODE_ENV;
 
+app.use(express.urlencoded({ extended: false }));
+
 app.use(express.json());
+
+app.use(cookieParser());
 
 if (MODE === "development") {
   app.use(morgan("dev"));
@@ -52,6 +57,8 @@ app.get("/api/config/paypal", (req, res) =>
   })
 );
 app.get("/api/config/currency", getConvertCurrency);
+
+AppRoutesV1(app);
 
 if (MODE === "production") {
   const staticBuild = path.join(__dirname, "/frontend/build");
