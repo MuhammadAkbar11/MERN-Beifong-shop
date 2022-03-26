@@ -1,7 +1,7 @@
 import {
   postLogin,
   postRegister,
-} from "../../controllers/v1/auth.controller.js";
+} from "../../controllers/v2/auth.controller.js";
 import loginValidation from "../../middleware/validations/login.validation.js";
 import registerValidation from "../../middleware/validations/register.validation.js";
 

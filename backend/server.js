@@ -13,7 +13,7 @@ import uploadRoutes from "./routes/uploads.routes.js";
 import { errorHandler, notFound } from "./middleware/error.middleware.js";
 import convertCurrency from "./utils/convertCurrency.js";
 import { getConvertCurrency } from "./controllers/config.controller.js";
-import AppRoutesV1 from "./routes/v2/index.routes.js";
+import AppRoutesV2 from "./routes/v2/index.routes.js";
 
 const __dirname = path.resolve();
 
@@ -58,7 +58,7 @@ app.get("/api/config/paypal", (req, res) =>
 );
 app.get("/api/config/currency", getConvertCurrency);
 
-AppRoutesV1(app);
+AppRoutesV2(app);
 
 if (MODE === "production") {
   const staticBuild = path.join(__dirname, "/frontend/build");
