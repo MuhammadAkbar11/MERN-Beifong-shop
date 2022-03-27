@@ -1,17 +1,19 @@
 import asyncHandler from "express-async-handler";
+import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import { validationResult } from "express-validator";
 import UserModel from "../../models/userModel.js";
 import ProductModel from "../../models/productModel.js";
 import errMessageValidation from "../../utils/errMessagesValidation.js";
-import generateToken from "../../utils/generateToken.js";
+
 import ResponseError from "../../utils/responseError.js";
 import { checkIsGuestFoto, deleteFile } from "../../utils/file.js";
-import {
-  generateAccessToken,
-  generateRefreshToken,
-} from "../../utils/generateToken.js";
 import { REFRESH_TOKEN_SECRET } from "../../configs/constants.js";
+import {
+  signJWTAccessToken,
+  signJWTRefreshToken,
+} from "../../utils/jwt.utils.js";
+import SessionModel from "../../models/sessionModel.js";
 
 // @desc Login user to get access token
 // @route POST /api/v2/users/login
@@ -32,27 +34,53 @@ export const postLogin = asyncHandler(async (req, res) => {
     if (user) {
       const doMatchPw = await user.matchPassword(password);
       if (doMatchPw) {
-        // const userCart = await user
-        //   .populate({
-        //     path: "cart.items.product",
-        //     select: "name image countInStock price",
-        //   })
-        //   .execPopulate();
+        const userCart = await user
+          .populate({
+            path: "cart.items.product",
+            select: "name image countInStock price",
+          })
+          .execPopulate();
 
-        const accessToken = generateAccessToken(user);
-        const refreshToken = generateRefreshToken(user);
-        user.refreshToken = refreshToken;
-        const result = await user.save();
-        console.log(result);
-        res.cookie("jwt", refreshToken, {
+        const session = await SessionModel.create({
+          email: user.email,
+          userId: user._id,
+        });
+
+        const accessToken = signJWTAccessToken({
+          email: user.email,
+          userId: user._id,
+          sessionId: session._id,
+        });
+        const refreshToken = signJWTRefreshToken({
+          email: user.email,
+          userId: user._id,
+          sessionId: session._id,
+        });
+
+        const oneWeek = 7 * 24 * 3600 * 1000;
+        res.cookie("refreshToken", refreshToken, {
           httpOnly: true,
-          sameSite: "None",
-          maxAge: 24 * 60 * 60 * 1000,
-        }); //secure: true,
+          maxAge: new Date(Date.now() + oneWeek),
+        });
+
+        res.cookie("accessToken", accessToken, {
+          maxAge: 300000, // 5 minutes
+          httpOnly: true,
+        });
+
         return res.status(200).json({
           status: true,
           message: "Login success",
-          accessToken,
+          user: {
+            isAdmin: user.isAdmin,
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            cart: userCart.cart,
+            image: user?.image || "/uploads/images/sample-user.png",
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt,
+          },
         });
       } else {
         res.status(400);
@@ -99,23 +127,9 @@ export const postRegister = asyncHandler(async (req, res) => {
     });
 
     if (user) {
-      const accessToken = generateAccessToken(user);
-      const refreshToken = generateRefreshToken(user);
-      user.refreshToken = refreshToken;
-      await user.save();
-
-      const oneWeek = 7 * 24 * 3600 * 1000;
-
-      res.cookie("jwt", refreshToken, {
-        httpOnly: true,
-        sameSite: "None",
-        // maxAge: 24 * 60 * 60 * 1000,
-        maxAge: new Date(Date.now() + oneWeek),
-      }); //secure: true,
-      return res.status(200).json({
+      res.status(200).json({
         status: true,
         message: "Sign up success",
-        accessToken,
       });
     } else {
       res.status(400);
@@ -127,41 +141,8 @@ export const postRegister = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc Refresh token
-// @route POST /api/v2/refresh
-// @access Public
-export const handleRefreshToken = asyncHandler(async (req, res) => {
-  const cookies = req.cookies;
-  try {
-    if (!cookies?.jwt) {
-      res.status(400);
-      throw new ResponseError(400, "Failed to get your access token");
-    }
-    const refreshToken = cookies.jwt;
-
-    const user = await UserModel.findOne({ refreshToken }).exec();
-    if (!user) {
-      res.status(403);
-      throw new ResponseError(400, "User not found");
-    }
-    // evaluate jwt
-    jwt.verify(refreshToken, REFRESH_TOKEN_SECRET, (err, decoded) => {
-      if (err || user._id.toString().trim() !== decoded.id) {
-        res.status(403);
-        throw new ResponseError(
-          403,
-          "Forbidden : Failed to refresh your token"
-        );
-      }
-      // const roles = Object.values(user.roles);
-
-      const accessToken = generateAccessToken(user);
-      res.json({ message: "successed get your access token", accessToken });
-    });
-  } catch (error) {
-    console.log(error);
-    throw new ResponseError(error.statusCode, error.message, error.errors);
-  }
+export const getSession = asyncHandler((req, res) => {
+  return res.json({ message: "success to get session", user: req.user });
 });
 
 export const postLogout = asyncHandler(async (req, res) => {
@@ -176,10 +157,8 @@ export const postLogout = asyncHandler(async (req, res) => {
     // Is refreshToken in db?
     const foundUser = await UserModel.findOne({ refreshToken }).exec();
     if (!foundUser) {
-      res.clearCookie("jwt", {
+      res.clearCookie("refreshToken", {
         httpOnly: true,
-        sameSite: "None",
-        secure: true,
       });
       throw new ResponseError(400, "Refresh token not found");
     }
@@ -188,7 +167,9 @@ export const postLogout = asyncHandler(async (req, res) => {
     foundUser.refreshToken = "";
     const result = await foundUser.save();
 
-    res.clearCookie("jwt", { httpOnly: true, sameSite: "None", secure: true });
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+    });
     res.json({ message: "logout successfully" });
   } catch (error) {
     throw new ResponseError(error.statusCode, error.message, error.errors);
