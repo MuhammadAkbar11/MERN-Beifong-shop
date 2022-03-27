@@ -14,6 +14,7 @@ import { errorHandler, notFound } from "./middleware/error.middleware.js";
 import convertCurrency from "./utils/convertCurrency.js";
 import { getConvertCurrency } from "./controllers/config.controller.js";
 import AppRoutesV2 from "./routes/v2/index.routes.js";
+import { deserializeUser } from "./middleware/v2/auth.middleware.js";
 
 const __dirname = path.resolve();
 
@@ -37,6 +38,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.use(cookieParser());
+
+app.use(deserializeUser);
 
 if (MODE === "development") {
   app.use(morgan("dev"));
