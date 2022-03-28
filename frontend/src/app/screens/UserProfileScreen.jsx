@@ -14,10 +14,8 @@ import {
 import { LinkContainer } from 'react-router-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
-import {
-  getUserDetailsAction,
-  userUploadPictureAction,
-} from '@actions/user.actions';
+import { userUploadPictureAction } from '@actions/user.actions';
+import { getUserDetailsAction } from '@actions/v2/user.actions';
 import { getListMyOrdersAction } from '@actions/order.actions';
 import BreadcrumbContainer from '@components/BreadcrumbContainer';
 import ProfileUpdate from '@components/ProfileUpdate';
