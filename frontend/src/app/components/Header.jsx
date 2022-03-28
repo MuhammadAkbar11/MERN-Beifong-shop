@@ -8,7 +8,7 @@ import SearchBox from './SearchBox';
 
 const Header = () => {
   const dispatch = useDispatch();
-  const userLogin = useSelector(state => state.userLogin);
+  const { userInfo } = useSelector(state => state.session);
   const cart = useSelector(state => state.cart);
 
   const { cartItems } = cart;
@@ -17,8 +17,6 @@ const Header = () => {
     cartItems.length !== 0
       ? cartItems.reduce((acc, item) => acc + item.qty, 0)
       : 0;
-
-  const { userInfo } = userLogin;
 
   const logoutHandler = e => {
     e.preventDefault();
