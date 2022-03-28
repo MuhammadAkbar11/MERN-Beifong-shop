@@ -68,3 +68,17 @@ main {
     grid-area: 1 / 1 / 6 / 6;
   }
 }
+
+.page-transition {
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  z-index: 99999999999;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
