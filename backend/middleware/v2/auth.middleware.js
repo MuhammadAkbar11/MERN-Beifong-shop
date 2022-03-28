@@ -9,6 +9,22 @@ import { signJWTAccessToken, verifyJWT } from "../../utils/jwt.utils.js";
 import SessionModel from "../../models/sessionModel.js";
 import ResponseError from "../../utils/responseError.js";
 
+const getUserSession = asyncHandler(async session => {
+  const user = await UserModel.findById(session.userId).select(
+    "_id name email cart isAdmin createdAt updatedAt"
+  );
+  return {
+    isAdmin: user.isAdmin,
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+    image: user?.image || "/uploads/images/sample-user.png",
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
+    session: session.sessionId,
+  };
+});
+
 export const protect = asyncHandler(async (req, res, next) => {
   if (!req.user) {
     res.status(401);
@@ -23,6 +39,38 @@ export const deserializeUser = asyncHandler(async (req, res, next) => {
   const { accessToken, refreshToken } = req.cookies;
 
   if (!accessToken) {
+    const { payload: refresh } = refreshToken
+      ? verifyJWT(refreshToken, REFRESH_TOKEN_SECRET)
+      : { payload: null };
+
+    if (!refresh) {
+      console.log("expired access token & refresh token");
+      return next();
+    }
+
+    const session = await SessionModel.findById(refresh.sessionId);
+
+    if (!session) {
+      console.log("session not found");
+      return next();
+    }
+
+    const newAccessToken = signJWTAccessToken({
+      email: session.email,
+      userId: session.userId,
+      sessionId: session._id,
+    });
+
+    res.cookie("accessToken", newAccessToken, {
+      maxAge: 300000, // 5 minutes
+      httpOnly: true,
+    });
+
+    const decoded = verifyJWT(newAccessToken, ACCESS_TOKEN_SECRET).payload;
+    const currentUser = await getUserSession(decoded);
+
+    req.user = currentUser;
+    console.log("404 access token & generated new access token");
     return next();
   }
 
@@ -32,19 +80,7 @@ export const deserializeUser = asyncHandler(async (req, res, next) => {
   if (payload) {
     // @ts-ignore
 
-    const user = await UserModel.findById(payload.userId).select(
-      "_id name email cart isAdmin createdAt updatedAt"
-    );
-    const currentUser = {
-      isAdmin: user.isAdmin,
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      image: user?.image || "/uploads/images/sample-user.png",
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
-      session: payload,
-    };
+    const currentUser = await getUserSession(payload);
 
     req.user = currentUser;
     return next();
@@ -58,12 +94,14 @@ export const deserializeUser = asyncHandler(async (req, res, next) => {
       : { payload: null };
 
   if (!refresh) {
+    console.log("expired refresh token");
     return next();
   }
 
   const session = await SessionModel.findById(refresh.sessionId);
 
   if (!session) {
+    console.log("session not found");
     return next();
   }
 
@@ -79,21 +117,9 @@ export const deserializeUser = asyncHandler(async (req, res, next) => {
   });
 
   const decoded = verifyJWT(newAccessToken, ACCESS_TOKEN_SECRET).payload;
-  const user = await UserModel.findById(decoded.userId).select(
-    "_id name email cart isAdmin createdAt updatedAt"
-  );
-
-  const currentUser = {
-    isAdmin: user.isAdmin,
-    _id: user._id,
-    name: user.name,
-    email: user.email,
-    image: user?.image || "/uploads/images/sample-user.png",
-    createdAt: user.createdAt,
-    updatedAt: user.updatedAt,
-    session: decoded,
-  };
+  const currentUser = await getUserSession(decoded);
 
   req.user = currentUser;
+  console.log("generdated new access token");
   return next();
 });
