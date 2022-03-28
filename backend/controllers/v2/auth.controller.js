@@ -60,7 +60,8 @@ export const postLogin = asyncHandler(async (req, res) => {
         const oneWeek = 7 * 24 * 3600 * 1000;
         res.cookie("refreshToken", refreshToken, {
           httpOnly: true,
-          maxAge: new Date(Date.now() + oneWeek),
+          // maxAge: new Date(Date.now() + oneWeek),
+          maxAge: 1.8e6,
         });
 
         res.cookie("accessToken", accessToken, {
@@ -80,6 +81,7 @@ export const postLogin = asyncHandler(async (req, res) => {
             image: user?.image || "/uploads/images/sample-user.png",
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
+            session: session._id,
           },
         });
       } else {
@@ -142,7 +144,18 @@ export const postRegister = asyncHandler(async (req, res) => {
 });
 
 export const getSession = asyncHandler((req, res) => {
-  return res.json({ message: "success to get session", user: req.user });
+  if (!req.user) {
+    return res.json({
+      status: false,
+      message: "there is no session ",
+      user: null,
+    });
+  }
+  return res.json({
+    status: true,
+    message: "success to get session",
+    user: req.user,
+  });
 });
 
 export const postLogout = asyncHandler(async (req, res) => {
