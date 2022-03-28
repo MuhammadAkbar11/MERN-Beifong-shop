@@ -4,7 +4,7 @@ import {
   postLogout,
   postRegister,
 } from "../../controllers/v2/auth.controller.js";
-import { protectV2 } from "../../middleware/v2/auth.middleware.js";
+import { protect } from "../../middleware/v2/auth.middleware.js";
 import loginValidation from "../../middleware/validations/login.validation.js";
 import registerValidation from "../../middleware/validations/register.validation.js";
 
@@ -12,7 +12,7 @@ function UserRoutes(app, prefix) {
   app.route(`${prefix}/login`).post([loginValidation], postLogin);
   app.route(`${prefix}/register`).post([registerValidation], postRegister);
   app.route(`${prefix}/logout`).get(postLogout);
-  app.route(`${prefix}/profile`).get(protectV2, getUserProfile);
+  app.route(`${prefix}/profile`).get(protect, getUserProfile);
 }
 
 export default UserRoutes;
