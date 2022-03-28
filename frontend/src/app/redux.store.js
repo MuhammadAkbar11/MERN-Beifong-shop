@@ -41,8 +41,9 @@ import {
   orderListReducer,
   orderPayReducer,
 } from '@reducers/order.reducer';
-import autoLogout from './middleware/autologout';
 import { pageStatusReducer } from './reducers/page.reducer';
+
+import { sessionReducer } from './reducers/session.reducer';
 
 const reducer = combineReducers({
   productsAlert: productListAlertReducer,
@@ -63,6 +64,7 @@ const reducer = combineReducers({
   cart: cartReducer,
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
+  session: sessionReducer,
   userDetails: userDetailsReducer,
   userUpdateProfile: userUpdateProfileReducer,
   userChangePassword: userChangePasswordReducer,
@@ -107,7 +109,7 @@ const initialState = {
   },
 };
 
-const middleware = [thunk, autoLogout];
+const middleware = [thunk];
 
 const store = createStore(
   reducer,
