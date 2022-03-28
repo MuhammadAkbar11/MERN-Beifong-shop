@@ -31,7 +31,7 @@ const proxyHeader = {
 
 const proxyMiddleware = httpProxy.createProxyMiddleware('/api', {
   target: process.env.PROXY,
-  pathRewrite: { '^/api/api': '/api' },
+  pathRewrite: { '^/api/api': '/api', '^/api/api/v2': '/api/v2' },
   changeOrigin: true,
   onError(err, req, res) {
     res.writeHead(500, {
