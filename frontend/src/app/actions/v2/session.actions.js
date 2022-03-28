@@ -34,7 +34,7 @@ export const getSessionAction = () => async dispatch => {
           payload: null,
         });
       }
-    }, 100);
+    }, 96);
   } catch (error) {
     let errData = {
       message: error.message,
