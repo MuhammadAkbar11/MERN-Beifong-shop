@@ -8,6 +8,7 @@ import Loader from '@components/Loader';
 import FormContainer from '@components/FormContainer';
 import BreadcrumbContainer from '@components/BreadcrumbContainer';
 import { Helmet } from 'react-helmet';
+import { authUserLoginAction } from '../actions/v2/auth.actions';
 
 /* eslint-disable */
 const LoginScreen = ({ location, history }) => {
@@ -27,10 +28,6 @@ const LoginScreen = ({ location, history }) => {
   const redirect = location.search ? location.search.split('=')[1] : '/';
 
   React.useEffect(() => {
-    if (userInfo) {
-      history.push(redirect);
-    }
-
     if (loading) {
       setDisabledSubmit(true);
     }
@@ -47,7 +44,10 @@ const LoginScreen = ({ location, history }) => {
   const submitHandler = e => {
     e.preventDefault();
 
-    dispatch(userLoginAction(email, password));
+    // dispatch(userLoginAction(email, password));
+    dispatch(authUserLoginAction(email, password)).then(() =>
+      history.push('/')
+    );
   };
   return (
     <>
