@@ -22,19 +22,26 @@ export const getSessionAction = () => async dispatch => {
     const {
       data: { status, user },
     } = await axiosPrivate.get(`/session`, config);
+    console.log('get session');
     setTimeout(() => {
       if (status) {
         dispatch({
           type: SESSION_SUCCESS,
-          payload: user,
+          payload: {
+            userInfo: user,
+            status: 'authorized',
+          },
         });
       } else {
         dispatch({
           type: SESSION_SUCCESS,
-          payload: null,
+          payload: {
+            userInfo: null,
+            status: 'unauthorized',
+          },
         });
       }
-    }, 96);
+    }, 100);
   } catch (error) {
     let errData = {
       message: error.message,

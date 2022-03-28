@@ -5,12 +5,19 @@ import {
   SESSION_SUCCESS,
 } from '@constants/session.contants';
 
-export const sessionReducer = (state = {}, action) => {
+export const sessionReducer = (
+  state = {
+    loading: true,
+    userInfo: null,
+    status: null,
+  },
+  action
+) => {
   switch (action.type) {
     case SESSION_REQ:
       return { loading: true };
     case SESSION_SUCCESS:
-      return { ...state, loading: false, userInfo: action.payload };
+      return { ...state, loading: false, ...action.payload };
     case SESSION_FAIL:
       return { loading: false, error: action.payload };
     case RESET_SESSION:
