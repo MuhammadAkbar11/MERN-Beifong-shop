@@ -44,14 +44,16 @@ export const deserializeUser = asyncHandler(async (req, res, next) => {
       : { payload: null };
 
     if (!refresh) {
-      console.log(colors.yellow("[auth] expired access token & refresh token"));
+      console.log(
+        colors.yellow("[session] expired access token & refresh token")
+      );
       return next();
     }
 
     const session = await SessionModel.findById(refresh.sessionId);
 
     if (!session) {
-      console.log(colors.yellow("[auth] session not found"));
+      console.log(colors.yellow("[session] session not found"));
       return next();
     }
 
@@ -71,7 +73,9 @@ export const deserializeUser = asyncHandler(async (req, res, next) => {
 
     req.user = currentUser;
     console.log(
-      colors.cyan("[auth] expired access token & generated new access token")
+      colors.green(
+        "[session] expired access token & generated new access token"
+      )
     );
     return next();
   }
@@ -85,6 +89,16 @@ export const deserializeUser = asyncHandler(async (req, res, next) => {
     const currentUser = await getUserSession(payload);
 
     req.user = currentUser;
+    console.log(
+      colors.green("[session] session found and return current user data")
+    );
+    console.log(
+      colors.cyan(
+        `[session] current user is ${currentUser.name}:${
+          currentUser.email
+        } with session ID ${colors.underline(currentUser.session)}`
+      )
+    );
     return next();
   }
 
@@ -96,14 +110,14 @@ export const deserializeUser = asyncHandler(async (req, res, next) => {
       : { payload: null };
 
   if (!refresh) {
-    console.log(colors.yellow("[auth] expired refresh token"));
+    console.log(colors.yellow("[session] expired refresh token"));
     return next();
   }
 
   const session = await SessionModel.findById(refresh.sessionId);
 
   if (!session) {
-    console.log(colors.yellow("[auth] session not found"));
+    console.log(colors.yellow("[session] session not found"));
     return next();
   }
 
@@ -123,6 +137,6 @@ export const deserializeUser = asyncHandler(async (req, res, next) => {
 
   req.user = currentUser;
 
-  console.log(colors.cyan("[auth] generated new access token"));
+  console.log(colors.green("[session] generated new access token"));
   return next();
 });
