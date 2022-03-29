@@ -26,6 +26,7 @@ import AdminDetailsOrderScreen from '@screens/AdminDetailsOrderScreen';
 import { useSelector } from 'react-redux';
 import NotFoundScreen from './screens/NotFoundScreen';
 import GuestRoute from './components/GuestRoute';
+import PrivateRoute from './components/PrivateRoutes';
 
 const App = () => {
   /* eslint-disable */
@@ -80,12 +81,7 @@ const App = () => {
               restricted={true}
               component={RegisterScreen}
             />
-            <Route
-              path='/profile'
-              render={props => {
-                return <UserProfileScreen {...props} />;
-              }}
-            />
+            <PrivateRoute path='/profile' component={UserProfileScreen} />
             <GuestRoute path='/product/:id' component={ProductScreen} />
             <GuestRoute path='/cart/:productId?' component={CartScreen} />
             <Route

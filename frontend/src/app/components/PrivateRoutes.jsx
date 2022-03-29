@@ -22,13 +22,7 @@ const PrivateRoute = ({ component: Component, restricted, ...rest }) => {
       {...rest}
       render={props => {
         return !loading ? (
-          <>
-            {userInfo ? (
-              <Component {...props} />
-            ) : (
-              <Redirect to='/akun/masuk' />
-            )}
-          </>
+          <>{userInfo ? <Component {...props} /> : <Redirect to='/login' />}</>
         ) : (
           <PageTransition />
         );

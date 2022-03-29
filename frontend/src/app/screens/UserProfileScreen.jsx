@@ -48,17 +48,15 @@ const UserProfileScreen = ({ match, history, location }) => {
   const dispatch = useDispatch();
   const imageUploader = useSingleImageUploader({ defaultImage: null });
 
-  const { userLogin, userDetails } = useSelector(state => state);
-  const { userInfo } = userLogin;
+  const { userDetails } = useSelector(state => state);
+
   const { user } = userDetails;
 
   const myOrders = useSelector(state => state.myOrders);
   const { loading: loadingOrders, error: errorOrders, orders } = myOrders;
 
   React.useEffect(() => {
-    if (!userInfo) {
-      history.push('/login');
-    } else if (!user.name) {
+    if (!user.name) {
       dispatch(getUserDetailsAction('profile'));
       dispatch(getListMyOrdersAction());
     } else {
@@ -70,7 +68,7 @@ const UserProfileScreen = ({ match, history, location }) => {
     }
 
     return () => {};
-  }, [dispatch, userInfo, user]);
+  }, [dispatch, user]);
 
   React.useEffect(() => {
     const newBrItems = breadcrumbItems.map((br, index) => {
