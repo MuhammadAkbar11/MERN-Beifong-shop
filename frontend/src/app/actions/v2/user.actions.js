@@ -17,16 +17,8 @@ export const getUserDetailsAction = id => async (dispatch, getState) => {
     const {
       userLogin: { userInfo },
     } = getState();
-
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userInfo.accessToken}`,
-      },
-      withCredentials: true,
-    };
-
-    const { data } = await axiosPrivate.get(`/users/${id}`, config);
+    console.log(userInfo);
+    const { data } = await axiosPrivate.get(`/users/${id}`);
     console.log(data);
     dispatch({
       type: USER_DETAILS_SUCCESS,
@@ -49,7 +41,7 @@ export const getUserDetailsAction = id => async (dispatch, getState) => {
         ...errorData,
       };
     }
-
+    console.log(error.response.data.message);
     dispatch({
       type: USER_DETAILS_FAIL,
       payload: {
