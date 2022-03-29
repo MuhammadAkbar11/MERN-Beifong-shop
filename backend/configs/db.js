@@ -1,3 +1,4 @@
+import colors from "colors";
 import mongoose from "mongoose";
 
 const connectDB = async () => {
@@ -8,7 +9,9 @@ const connectDB = async () => {
       useCreateIndex: true,
     });
 
-    console.log(`\nMongoDB Connected : ${conn.connection.host}`.cyan);
+    console.log(
+      colors.cyan(`[mongoose] mongoDB connected : ${conn.connection.host}`.cyan)
+    );
   } catch (error) {
     console.log(`Error : ${error.message}`.red.underline.bold);
     process.exit(1);

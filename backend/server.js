@@ -83,6 +83,8 @@ app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(
-    `\nServer running in ${MODE} mode on port ${PORT.underline} `.yellow.bold
+    colors.green(
+      `[server] server running in ${MODE} mode on port ${PORT.underline}`
+    )
   );
 });

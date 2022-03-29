@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import colors from "colors";
 import asyncHandler from "express-async-handler";
 import UserModel from "../../models/userModel.js";
 import {
@@ -44,14 +44,14 @@ export const deserializeUser = asyncHandler(async (req, res, next) => {
       : { payload: null };
 
     if (!refresh) {
-      console.log("expired access token & refresh token");
+      console.log(colors.yellow("[auth] expired access token & refresh token"));
       return next();
     }
 
     const session = await SessionModel.findById(refresh.sessionId);
 
     if (!session) {
-      console.log("session not found");
+      console.log(colors.yellow("[auth] session not found"));
       return next();
     }
 
@@ -70,7 +70,9 @@ export const deserializeUser = asyncHandler(async (req, res, next) => {
     const currentUser = await getUserSession(decoded);
 
     req.user = currentUser;
-    console.log("404 access token & generated new access token");
+    console.log(
+      colors.cyan("[auth] expired access token & generated new access token")
+    );
     return next();
   }
 
@@ -94,14 +96,14 @@ export const deserializeUser = asyncHandler(async (req, res, next) => {
       : { payload: null };
 
   if (!refresh) {
-    console.log("expired refresh token");
+    console.log(colors.yellow("[auth] expired refresh token"));
     return next();
   }
 
   const session = await SessionModel.findById(refresh.sessionId);
 
   if (!session) {
-    console.log("session not found");
+    console.log(colors.yellow("[auth] session not found"));
     return next();
   }
 
@@ -120,6 +122,7 @@ export const deserializeUser = asyncHandler(async (req, res, next) => {
   const currentUser = await getUserSession(decoded);
 
   req.user = currentUser;
-  console.log("generdated new access token");
+
+  console.log(colors.cyan("[auth] generated new access token"));
   return next();
 });
