@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios';
 import { PayPalButton } from 'react-paypal-button-v2';
 import {
   Container,
@@ -24,6 +23,7 @@ import FormatRupiah from '@components/FormatRupiah';
 import Loader from '@components/Loader';
 import useConvertCurrency from '@hooks/useConvertCurrency';
 import { Helmet } from 'react-helmet';
+import axios from '@utils/api';
 /* eslint-disable */
 const OrderScreen = ({ match }) => {
   const orderId = match.params.id;
@@ -32,7 +32,7 @@ const OrderScreen = ({ match }) => {
 
   const dispatch = useDispatch();
 
-  const { userInfo } = useSelector(state => state.userLogin);
+  const { userInfo } = useSelector(state => state.session);
   const orderDetails = useSelector(state => state.orderDetails);
   const { loading, order, error } = orderDetails;
 
@@ -52,7 +52,7 @@ const OrderScreen = ({ match }) => {
       console.log('loading paypal..');
       const {
         data: { client_id },
-      } = await axios.get('/api/config/paypal');
+      } = await axios.get('/config/paypal');
       const script = document.createElement('script');
       script.type = 'text/javascript';
       script.src = `https://www.paypal.com/sdk/js?client-id=${client_id}`;

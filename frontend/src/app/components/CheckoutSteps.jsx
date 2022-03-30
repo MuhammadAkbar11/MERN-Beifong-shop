@@ -2,6 +2,7 @@ import React from 'react';
 import { Nav } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 
 const defaultProps = {
   step1: false,
@@ -19,6 +20,8 @@ const proptypes = {
 };
 
 const CheckoutSteps = ({ step1, step2, step3, step4, currentStep }) => {
+  const { userInfo } = useSelector(state => state.session);
+
   const navLinkActiveClass = 'font-weight-bold text-primary ';
   return (
     <Nav className=' justify-content-center step-nav '>
@@ -28,9 +31,13 @@ const CheckoutSteps = ({ step1, step2, step3, step4, currentStep }) => {
         } ${step1 && step2 && 'prev-step'} `}
       >
         {step1 ? (
-          <LinkContainer to='/login' className={navLinkActiveClass}>
-            <Nav.Link>Sign in</Nav.Link>
-          </LinkContainer>
+          !userInfo ? (
+            <LinkContainer to='/login' className={navLinkActiveClass}>
+              <Nav.Link>Sign in</Nav.Link>
+            </LinkContainer>
+          ) : (
+            <Nav.Link disabled>Sign In</Nav.Link>
+          )
         ) : (
           <Nav.Link disabled>Sign In</Nav.Link>
         )}

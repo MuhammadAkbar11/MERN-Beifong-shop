@@ -6,6 +6,8 @@ import {
   LOGOUT_SESSION,
 } from '@constants/session.contants';
 
+/* eslint-disable */
+
 export const sessionReducer = (
   state = {
     loading: true,

@@ -40,37 +40,11 @@ const App = () => {
       <main className='py-3 bg-light wrapper  '>
         <Container className=''>
           <Switch>
-            <Route
-              path='/order/:id'
-              render={props => {
-                return <OrderScreen {...props} />;
-              }}
-            />
-            <Route
-              path='/shipping'
-              render={props => {
-                return <ShippingScreen {...props} />;
-              }}
-            />
-            <Route
-              path='/payment'
-              render={props => {
-                return <PaymentScreen {...props} />;
-              }}
-            />
+            <RoutePrivate path='/order/:id' component={OrderScreen} />
+            <RoutePrivate path='/shipping' component={ShippingScreen} />
+            <RoutePrivate path='/payment' component={PaymentScreen} />
+            <RoutePrivate path='/summary' component={OrderSummarycreen} />
 
-            <Route
-              path='/summary'
-              render={props => {
-                return <OrderSummarycreen {...props} />;
-              }}
-            />
-            {/* <Route
-              path='/login'
-              render={props => {
-                return <LoginScreen {...props} />;
-              }}
-            /> */}
             <RouteGuest
               path='/login'
               restricted={true}
