@@ -1,6 +1,12 @@
 /* eslint-disable */
 import axios from 'axios';
+import { axiosPrivate } from '@utils/api';
 import { CART_RESET_ITEMS } from '@constants/cart.constants';
+import {
+  SESSION_SUCCESS,
+  RESET_SESSION,
+  LOGOUT_SESSION,
+} from '@constants/session.contants';
 import {
   ORDER_CREATE_SUCCESS,
   ORDER_CREATE_REQUEST,
@@ -27,23 +33,12 @@ import {
 } from '@constants/order.constants';
 
 export const createOrderAction = order => async (dispatch, getState) => {
-  const {
-    userLogin: { userInfo },
-  } = getState();
-
   try {
     dispatch({
       type: ORDER_CREATE_REQUEST,
     });
 
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
-
-    const { data } = await axios.post(`/api/orders`, order, config);
+    const { data } = await axiosPrivate.post(`/orders`, order);
 
     dispatch({
       type: ORDER_CREATE_SUCCESS,
@@ -71,6 +66,15 @@ export const createOrderAction = order => async (dispatch, getState) => {
         ...errorData,
       };
     }
+    console.log(error.response.data);
+    if (error.response.data?.errors?.notAuth) {
+      dispatch({
+        type: LOGOUT_SESSION,
+        payload: {
+          isLogout: true,
+        },
+      });
+    }
 
     dispatch({
       type: ORDER_CREATE_FAIL,
@@ -81,23 +85,13 @@ export const createOrderAction = order => async (dispatch, getState) => {
   }
 };
 
-export const getOrderDetailsAction = id => async (dispatch, getState) => {
-  const {
-    userLogin: { userInfo },
-  } = getState();
-
+export const getOrderDetailsAction = id => async dispatch => {
   try {
     dispatch({
       type: ORDER_DETAILS_REQUEST,
     });
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
-
-    const { data } = await axios.get(`/api/orders/details/${id}`, config);
+    const { data } = await axiosPrivate.get(`/orders/details/${id}`);
 
     dispatch({
       type: ORDER_DETAILS_SUCCESS,
@@ -119,6 +113,15 @@ export const getOrderDetailsAction = id => async (dispatch, getState) => {
       };
     }
 
+    if (error.response.data?.errors?.notAuth) {
+      dispatch({
+        type: LOGOUT_SESSION,
+        payload: {
+          isLogout: true,
+        },
+      });
+    }
+
     dispatch({
       type: ORDER_DETAILS_FAIL,
       payload: {
@@ -128,31 +131,13 @@ export const getOrderDetailsAction = id => async (dispatch, getState) => {
   }
 };
 
-export const payOrderAction = (orderId, paymentResult) => async (
-  dispatch,
-  getState
-) => {
-  const {
-    userLogin: { userInfo },
-  } = getState();
-
+export const payOrderAction = (orderId, paymentResult) => async dispatch => {
   try {
     dispatch({
       type: ORDER_PAY_REQUEST,
     });
 
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
-
-    const { data } = await axios.put(
-      `/api/orders/${orderId}/pay`,
-      paymentResult,
-      config
-    );
+    await axiosPrivate.put(`/orders/${orderId}/pay`, paymentResult);
 
     dispatch({
       type: ORDER_PAY_SUCCESS,
@@ -171,6 +156,15 @@ export const payOrderAction = (orderId, paymentResult) => async (
       };
     }
 
+    if (error.response.data?.errors?.notAuth) {
+      dispatch({
+        type: LOGOUT_SESSION,
+        payload: {
+          isLogout: true,
+        },
+      });
+    }
+
     dispatch({
       type: ORDER_PAY_FAIL,
       payload: {
@@ -180,31 +174,13 @@ export const payOrderAction = (orderId, paymentResult) => async (
   }
 };
 
-export const confirmOrderDeliverAction = orderId => async (
-  dispatch,
-  getState
-) => {
-  const {
-    userLogin: { userInfo },
-  } = getState();
-
+export const confirmOrderDeliverAction = orderId => async dispatch => {
   try {
     dispatch({
       type: ORDER_DELIVER_REQUEST,
     });
 
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
-
-    const { data } = await axios.put(
-      `/api/orders/${orderId}/deliver`,
-      {},
-      config
-    );
+    const { data } = await axiosPrivate.put(`/orders/${orderId}/deliver`, {});
 
     dispatch({
       type: ORDER_DELIVER_SUCCESS,
@@ -238,6 +214,15 @@ export const confirmOrderDeliverAction = orderId => async (
       payload: errData,
     });
 
+    if (error.response.data?.errors?.notAuth) {
+      dispatch({
+        type: LOGOUT_SESSION,
+        payload: {
+          isLogout: true,
+        },
+      });
+    }
+
     dispatch({
       type: ORDER_LIST_ALERT,
       payload: {
@@ -250,22 +235,12 @@ export const confirmOrderDeliverAction = orderId => async (
 };
 
 export const getListMyOrdersAction = () => async (dispatch, getState) => {
-  const {
-    userLogin: { userInfo },
-  } = getState();
-
   try {
     dispatch({
       type: ORDER_USER_REQUEST,
     });
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
-
-    const { data } = await axios.get(`/api/orders/myorders`, config);
+    const { data } = await axiosPrivate.get(`/orders/myorders`);
 
     dispatch({
       type: ORDER_USER_SUCCESS,
@@ -284,7 +259,14 @@ export const getListMyOrdersAction = () => async (dispatch, getState) => {
         ...errorData,
       };
     }
-
+    if (error.response.data?.errors?.notAuth) {
+      dispatch({
+        type: LOGOUT_SESSION,
+        payload: {
+          isLogout: true,
+        },
+      });
+    }
     dispatch({
       type: ORDER_USER_FAIL,
       payload: {
@@ -316,13 +298,7 @@ export const getListOrderAction = () => async (dispatch, getState) => {
       type: ORDER_LIST_REQUEST,
     });
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
-
-    const { data } = await axios.get(`/api/orders`, config);
+    const { data } = await axiosPrivate.get(`/orders`);
 
     dispatch({
       type: ORDER_LIST_SUCCESS,
@@ -341,7 +317,14 @@ export const getListOrderAction = () => async (dispatch, getState) => {
         ...errorData,
       };
     }
-
+    if (error.response.data?.errors?.notAuth) {
+      dispatch({
+        type: LOGOUT_SESSION,
+        payload: {
+          isLogout: true,
+        },
+      });
+    }
     dispatch({
       type: ORDER_LIST_FAIL,
       payload: errData,
