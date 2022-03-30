@@ -1,4 +1,5 @@
 export const SESSION_REQ = 'SESSION_REQ';
 export const SESSION_SUCCESS = 'SESSION_SUCCESS';
 export const SESSION_FAIL = 'SESSION_FAIL';
-export const RESET_SESSION = 'SET_SESSION';
+export const RESET_SESSION = 'RESET_SESSION';
+export const LOGOUT_SESSION = 'LOGOUT_SESSION';

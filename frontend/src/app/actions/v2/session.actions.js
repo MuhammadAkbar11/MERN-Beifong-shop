@@ -1,7 +1,6 @@
 import {
   SESSION_FAIL,
   SESSION_REQ,
-  RESET_SESSION,
   SESSION_SUCCESS,
 } from '@constants/session.contants';
 import { axiosPrivate } from '../../utils/api';
@@ -22,7 +21,7 @@ export const getSessionAction = () => async dispatch => {
     const {
       data: { status, user },
     } = await axiosPrivate.get(`/session`, config);
-    console.log('get session');
+
     setTimeout(() => {
       if (status) {
         dispatch({
@@ -57,7 +56,7 @@ export const getSessionAction = () => async dispatch => {
     }
 
     dispatch({
-      type: USER_DETAILS_FAIL,
+      type: SESSION_FAIL,
       payload: {
         loading: false,
         error: errData,

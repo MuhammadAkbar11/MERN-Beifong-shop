@@ -3,6 +3,7 @@ import {
   SESSION_REQ,
   RESET_SESSION,
   SESSION_SUCCESS,
+  LOGOUT_SESSION,
 } from '@constants/session.contants';
 
 export const sessionReducer = (
@@ -21,7 +22,9 @@ export const sessionReducer = (
     case SESSION_FAIL:
       return { loading: false, error: action.payload };
     case RESET_SESSION:
-      return { ...state, loading: false, userInfo: action.payload };
+      return { status: null, loading: false, userInfo: null };
+    case LOGOUT_SESSION:
+      return { ...state, ...action.payload };
     default:
       return state;
   }

@@ -213,3 +213,24 @@ export const userResetChangePasswordFeedBackAction = () => dispatch => {
     type: USER_CHANGE_PASSWORD_RESET,
   });
 };
+
+export const userLogoutAction = () => async (dispatch, getState) => {
+  const {
+    session: { userInfo },
+  } = getState();
+  try {
+    await axiosPrivate.post(`/users/logout`, {
+      session: userInfo.session,
+    });
+
+    localStorage.removeItem('cartItems');
+    // dispatch({ type: CART_RESET_ITEMS });
+    // dispatch({ type: ORDER_USER_RESET });
+    dispatch({ type: USER_DETAILS_RESET });
+    // dispatch({ type: USER_LIST_RESET });
+    dispatch({ type: RESET_SESSION });
+    window.location = '/';
+  } catch (error) {
+    console.log(error);
+  }
+};
