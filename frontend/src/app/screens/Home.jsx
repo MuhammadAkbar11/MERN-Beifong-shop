@@ -42,7 +42,7 @@ const Home = () => {
         </Link>
       </div>
       {loading ? (
-        <div className='mt-5 '>
+        <div className='mt-5 mb-5 '>
           <Loader />
         </div>
       ) : error ? (

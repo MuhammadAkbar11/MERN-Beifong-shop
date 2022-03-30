@@ -16,7 +16,9 @@ const ListMyOrders = ({ orders, errors, loading }) => {
       </div>
       <div className='pt-2'>
         {loading ? (
-          <Loader />
+          <div className='mt-3'>
+            <Loader />
+          </div>
         ) : (
           <>
             {errors ? (
