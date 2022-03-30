@@ -1,5 +1,5 @@
 import { PREFIX_VERSION } from "../../configs/constants.js";
-import { getSession } from "../../controllers/v2/auth.controller.js";
+import { getSession } from "../../controllers/auth.controller.js";
 import UserRoutes from "./user.routes.js";
 
 function AppRoutesV2(app) {

@@ -230,21 +230,28 @@ const userPostCart = asyncHandler(async (req, res, next) => {
   const productId = req.query.product;
   const qty = req.query.qty;
 
+  const user = await UserModel.findById(req.user._id);
+
   if (cartItems.length !== 0 && !productId) {
     try {
       // let products;
       let userCart;
+      const currentCart = await user
+        .populate({
+          path: "cart.items.product",
+          select: "name image countInStock price",
+        })
+        .execPopulate();
 
-      console.log(req.user.cart.items.length);
-      if (req.user.cart.items.length !== 0) {
+      if (currentCart.length !== 0) {
         const products = await ProductModel.find({
           _id: {
             $in: cartItems.map(x => x.product),
           },
         });
-        userCart = await req.user.updateCart(cartItems, products);
+        userCart = await user.updateCart(cartItems, products);
       } else {
-        userCart = await req.user.insertUserCart(cartItems);
+        userCart = await user.insertUserCart(cartItems);
       }
 
       const updatedCart = await userCart
@@ -276,7 +283,7 @@ const userPostCart = asyncHandler(async (req, res, next) => {
         throw new ResponseError(404, "Product not Found", null);
       }
 
-      const userCart = await req.user.addToCart(product, qty);
+      const userCart = await user.addToCart(product, qty);
 
       const updatedCart = await userCart
         .populate({
@@ -299,9 +306,9 @@ const userPostCart = asyncHandler(async (req, res, next) => {
 
 const userRemoveCart = asyncHandler(async (req, res, next) => {
   const productId = req.body.product;
-
+  const user = await UserModel.findById(req.user._id);
   try {
-    const removeItem = await req.user.removeCartItem(productId);
+    const removeItem = await user.removeCartItem(productId);
 
     const updatedCart = await removeItem
       .populate({

@@ -1,12 +1,14 @@
 import {
   getUserProfile,
   updateUserProfile,
+  userPostCart,
+  userRemoveCart,
 } from "../../controllers/user.controller.js";
 import {
   postLogin,
   postLogout,
   postRegister,
-} from "../../controllers/v2/auth.controller.js";
+} from "../../controllers/auth.controller.js";
 import { protect } from "../../middleware/v2/auth.middleware.js";
 import loginValidation from "../../middleware/validations/login.validation.js";
 import registerValidation from "../../middleware/validations/register.validation.js";
@@ -19,6 +21,9 @@ function UserRoutes(app, prefix) {
     .route(`${prefix}/profile`)
     .get(protect, getUserProfile)
     .put(protect, updateUserProfile);
+
+  app.route(`${prefix}/cart`).post(protect, userPostCart);
+  app.route(`${prefix}/cart/delete`).post(protect, userRemoveCart);
 }
 
 export default UserRoutes;
