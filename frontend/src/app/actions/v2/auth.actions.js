@@ -5,6 +5,8 @@ import {
 } from '@constants/user.constants';
 import axiosApi from '@utils/api';
 import { SESSION_SUCCESS } from '@constants/session.contants';
+import { CART_USER_LOAD } from '@constants/cart.constants';
+import { axiosPrivate } from '../../utils/api';
 
 export const authUserLoginAction = (email, password) => async (
   dispatch,
@@ -29,68 +31,44 @@ export const authUserLoginAction = (email, password) => async (
       JSON.stringify({ email, password }),
       config
     );
-    // const userCart = data.user.cart;
-    // const userToken = data.user.token;
+    const userCart = data.user.cart;
 
-    // const userCartItems = cartItems.map(cart => {
-    //   return {
-    //     product: cart.product,
-    //     qty: cart.qty,
-    //     subtotal: cart.qty * cart.price.num,
-    //   };
-    // });
+    const userCartItems = cartItems.map(cart => {
+      return {
+        product: cart.product,
+        qty: cart.qty,
+        subtotal: cart.qty * cart.price.num,
+      };
+    });
+    console.log(userCart);
+    if (userCart.items.length === 0) {
+      if (cartItems.length !== 0) {
+        const insertNewCartItems = await axiosPrivate.post(`/users/cart`, {
+          cartItems: userCartItems,
+        });
+        data.user.cart = insertNewCartItems.data.cart;
+      }
+    } else if (cartItems.length !== 0) {
+      const updateCartItems = await axiosPrivate.post(`/users/cart`, {
+        cartItems: userCartItems,
+      });
 
-    // if (userCart.items.length === 0) {
-    //   if (cartItems.length !== 0) {
-    //     const insertNewCartItems = await axios.post(
-    //       `/api/users/cart`,
-    //       { cartItems: userCartItems },
-    //       {
-    //         headers: {
-    //           'Content-Type': 'application/json',
-    //           Authorization: `Bearer ${userToken}`,
-    //         },
-    //       }
-    //     );
-    //     data.user.cart = insertNewCartItems.data.cart;
-    //   }
-    // } else {
-    //   if (cartItems.length !== 0) {
-    //     const updateCartItems = await axios.post(
-    //       `/api/users/cart`,
-    //       { cartItems: userCartItems },
-    //       {
-    //         headers: {
-    //           'Content-Type': 'application/json',
-    //           Authorization: `Bearer ${userToken}`,
-    //         },
-    //       }
-    //     );
-
-    //     data.user.cart = updateCartItems.data.cart;
-    //   }
-    // }
+      data.user.cart = updateCartItems.data.cart;
+    }
 
     const updatedUserCart = data.user.cart;
 
-    // const transformCart = updatedUserCart.items.map(item => {
-    //   return {
-    //     product: item.product._id,
-    //     name: item.product.name,
-    //     price: item.product.price,
-    //     image: item.product.image,
-    //     countInStock: item.product.countInStock,
-    //     subtotal: item.subtotal,
-    //     qty: item.qty,
-    //   };
-    // });
-
-    // dispatch({
-    //   type: CART_USER_LOAD,
-    //   payload: {
-    //     cartItems: transformCart,
-    //   },
-    // });
+    const transformCart = updatedUserCart.items.map(item => {
+      return {
+        product: item.product._id,
+        name: item.product.name,
+        price: item.product.price,
+        image: item.product.image,
+        countInStock: item.product.countInStock,
+        subtotal: item.subtotal,
+        qty: item.qty,
+      };
+    });
 
     dispatch({
       type: USER_LOGIN_SUCCESS,
@@ -103,6 +81,16 @@ export const authUserLoginAction = (email, password) => async (
         status: 'authorized',
       },
     });
+    dispatch({
+      type: CART_USER_LOAD,
+      payload: {
+        cartItems: transformCart,
+      },
+    });
+    localStorage.setItem(
+      'cartItems',
+      JSON.stringify(getState().cart.cartItems)
+    );
     return true;
   } catch (error) {
     let errData = {
