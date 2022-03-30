@@ -1,5 +1,6 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { Container } from 'react-bootstrap';
 import Home from '@app/screens/Home';
 import Footer from '@components/Footer';
@@ -23,10 +24,10 @@ import ProductListScreen from '@screens/ProductListScreen';
 import ProductListCategory from '@screens/ProductListCategory';
 import AdminProductDetails from '@screens/AdminProductDetails';
 import AdminDetailsOrderScreen from '@screens/AdminDetailsOrderScreen';
-import { useSelector } from 'react-redux';
-import NotFoundScreen from './screens/NotFoundScreen';
-import GuestRoute from './components/GuestRoute';
-import PrivateRoute from './components/PrivateRoutes';
+
+import NotFoundScreen from '@screens/NotFoundScreen';
+import RouteGuest from '@components/RouteGuest';
+import RoutePrivate from '@components/RoutePrivate';
 
 const App = () => {
   /* eslint-disable */
@@ -70,20 +71,20 @@ const App = () => {
                 return <LoginScreen {...props} />;
               }}
             /> */}
-            <GuestRoute
+            <RouteGuest
               path='/login'
               restricted={true}
               component={LoginScreen}
             />
 
-            <GuestRoute
+            <RouteGuest
               path='/register'
               restricted={true}
               component={RegisterScreen}
             />
-            <PrivateRoute path='/profile' component={UserProfileScreen} />
-            <GuestRoute path='/product/:id' component={ProductScreen} />
-            <GuestRoute path='/cart/:productId?' component={CartScreen} />
+            <RoutePrivate path='/profile' component={UserProfileScreen} />
+            <RouteGuest path='/product/:id' component={ProductScreen} />
+            <RouteGuest path='/cart/:productId?' component={CartScreen} />
             <Route
               path='/admin/userlist'
               render={props => {
@@ -128,35 +129,35 @@ const App = () => {
               }}
             />
 
-            <GuestRoute
+            <RouteGuest
               path='/search/:keyword/page/:pageNumber'
               exact
               component={ProductListScreen}
             />
-            <GuestRoute
+            <RouteGuest
               path='/search/:keyword'
               exact
               component={ProductListScreen}
             />
-            <GuestRoute
+            <RouteGuest
               path='/products/page/:pageNumber'
               exact
               component={ProductListScreen}
             />
-            <GuestRoute
+            <RouteGuest
               path='/category/:slug/page/:pageNumber'
               exact
               component={ProductListCategory}
             />
 
-            <GuestRoute
+            <RouteGuest
               path='/category/:slug'
               exact
               component={ProductListCategory}
             />
 
-            <GuestRoute path='/products/' component={ProductListScreen} />
-            <GuestRoute path='/' exact component={Home} />
+            <RouteGuest path='/products/' component={ProductListScreen} />
+            <RouteGuest path='/' exact component={Home} />
 
             <Route component={NotFoundScreen} />
           </Switch>

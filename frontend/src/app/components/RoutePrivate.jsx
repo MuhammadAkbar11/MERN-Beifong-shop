@@ -4,7 +4,7 @@ import { Route, Redirect } from 'react-router-dom';
 import { getSessionAction } from '../actions/v2/session.actions';
 import PageTransition from './PageTransition';
 
-const GuestRoute = ({ component: Component, restricted, ...rest }) => {
+const RoutePrivate = ({ component: Component, restricted, ...rest }) => {
   const { loading, userInfo, status: sessionStatus } = useSelector(
     state => state.session
   );
@@ -22,13 +22,7 @@ const GuestRoute = ({ component: Component, restricted, ...rest }) => {
       {...rest}
       render={props => {
         return !loading ? (
-          <>
-            {userInfo && restricted ? (
-              <Redirect to='/' />
-            ) : (
-              <Component {...props} />
-            )}
-          </>
+          <>{userInfo ? <Component {...props} /> : <Redirect to='/login' />}</>
         ) : (
           <PageTransition />
         );
@@ -37,4 +31,4 @@ const GuestRoute = ({ component: Component, restricted, ...rest }) => {
   );
 };
 
-export default GuestRoute;
+export default RoutePrivate;
