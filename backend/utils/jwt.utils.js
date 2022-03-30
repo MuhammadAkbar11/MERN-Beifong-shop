@@ -11,7 +11,7 @@ export function signJWT(payload, privateKey, expiresIn) {
 }
 
 export const signJWTAccessToken = payload => {
-  return signJWT(payload, ACCESS_TOKEN_SECRET, "30s");
+  return signJWT(payload, ACCESS_TOKEN_SECRET, "300s");
 };
 
 export const signJWTRefreshToken = payload => {

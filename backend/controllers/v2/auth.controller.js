@@ -57,11 +57,9 @@ export const postLogin = asyncHandler(async (req, res) => {
           sessionId: session._id,
         });
 
-        const oneWeek = 7 * 24 * 3600 * 1000;
         res.cookie("refreshToken", refreshToken, {
           httpOnly: true,
-          // maxAge: new Date(Date.now() + oneWeek),
-          maxAge: 1.8e6,
+          maxAge: 6.048e8,
         });
 
         res.cookie("accessToken", accessToken, {
@@ -159,30 +157,23 @@ export const getSession = asyncHandler((req, res) => {
 });
 
 export const postLogout = asyncHandler(async (req, res) => {
-  const cookies = req.cookies;
+  const { session: sessionId } = req.body;
   try {
-    if (!cookies?.jwt) {
+    const session = await SessionModel.findById(sessionId);
+    if (!session) {
       res.status(400);
       throw new ResponseError(400, "Failed to logout");
     }
-    const refreshToken = cookies.jwt;
 
-    // Is refreshToken in db?
-    const foundUser = await UserModel.findOne({ refreshToken }).exec();
-    if (!foundUser) {
-      res.clearCookie("refreshToken", {
-        httpOnly: true,
-      });
-      throw new ResponseError(400, "Refresh token not found");
-    }
-
-    // Delete refreshToken in db
-    foundUser.refreshToken = "";
-    const result = await foundUser.save();
-
-    res.clearCookie("refreshToken", {
+    res.cookie("accessToken", "", {
+      maxAge: 0,
       httpOnly: true,
     });
+    res.cookie("refreshToken", "", {
+      maxAge: 0,
+      httpOnly: true,
+    });
+    await session.remove();
     res.json({ message: "logout successfully" });
   } catch (error) {
     throw new ResponseError(error.statusCode, error.message, error.errors);
