@@ -2,6 +2,7 @@ import asyncHandler from "express-async-handler";
 import OrderModel from "../models/orderModel.js";
 import ResponseError from "../utils/responseError.js";
 import convertRupiah from "../utils/convertRupiah.js";
+import UserModel from "../models/userModel.js";
 
 // @desc c  Create a new orders
 // @route   GET /api/products
@@ -16,7 +17,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
     shippingPrice,
     totalPrice,
   } = req.body;
-
+  const user = await UserModel.findById(req.user._id);
   try {
     if (orderItems && orderItems.length === 0) {
       res.status(400);
@@ -49,7 +50,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
 
       const createdOrder = await order.save();
 
-      await req.user.clearCart();
+      await user.clearCart();
       return res.status(201).json({
         status: true,
         message: "Order created",
