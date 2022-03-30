@@ -42,7 +42,7 @@ const CartScreen = ({ history, match, location }) => {
 
   const checkoutHandler = () => {
     console.log('checkout');
-    history.push('/login?redirect=shipping');
+    history.push('/shipping');
   };
 
   const totalPrice = cartItems.reduce((acc, item) => {
