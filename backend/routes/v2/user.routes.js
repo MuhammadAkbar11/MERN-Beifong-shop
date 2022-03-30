@@ -1,4 +1,7 @@
-import { getUserProfile } from "../../controllers/user.controller.js";
+import {
+  getUserProfile,
+  updateUserProfile,
+} from "../../controllers/user.controller.js";
 import {
   postLogin,
   postLogout,
@@ -11,8 +14,11 @@ import registerValidation from "../../middleware/validations/register.validation
 function UserRoutes(app, prefix) {
   app.route(`${prefix}/login`).post([loginValidation], postLogin);
   app.route(`${prefix}/register`).post([registerValidation], postRegister);
-  app.route(`${prefix}/logout`).get(postLogout);
-  app.route(`${prefix}/profile`).get(protect, getUserProfile);
+  app.route(`${prefix}/logout`).post(postLogout);
+  app
+    .route(`${prefix}/profile`)
+    .get(protect, getUserProfile)
+    .put(protect, updateUserProfile);
 }
 
 export default UserRoutes;
