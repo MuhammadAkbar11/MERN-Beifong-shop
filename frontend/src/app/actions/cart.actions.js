@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { axiosPrivate } from '@utils/api';
 import {
   CART_ADD_ITEM_REQ,
   CART_ADD_ITEM_SUCCESS,
@@ -9,11 +10,13 @@ import {
   CART_SAVE_SHIPPING_ADDRESS,
   CART_SAVE_PAYMENT_METHOD,
 } from '@constants/cart.constants';
+import { LOGOUT_SESSION } from '@constants/session.contants';
+
 /* eslint-disable */
 
 export const addToCart = (id, qty) => async (dispatch, getState) => {
   const {
-    userLogin: { userInfo },
+    session: { userInfo },
     cart: { cartItems },
   } = getState();
 
@@ -49,18 +52,10 @@ export const addToCart = (id, qty) => async (dispatch, getState) => {
         updatedCartItems = [...cartItems, newCartItem];
       }
     } else {
-      const userToken = userInfo.token;
-      const userAddNewCartItem = await axios.post(
-        `/api/users/cart?product=${product._id}&qty=${qty}`,
-        { cartItems: [] },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${userToken}`,
-          },
-        }
+      const userAddNewCartItem = await axiosPrivate.post(
+        `/users/cart?product=${product._id}&qty=${qty}`,
+        { cartItems: [] }
       );
-
       const updatedUserCartItems = userAddNewCartItem.data.cart;
 
       updatedCartItems = updatedUserCartItems.items.map(item => {
@@ -76,21 +71,19 @@ export const addToCart = (id, qty) => async (dispatch, getState) => {
       });
     }
 
-    setTimeout(() => {
-      dispatch({
-        type: CART_ADD_ITEM_SUCCESS,
-        payload: {
-          cartItems: updatedCartItems,
-        },
-      });
+    dispatch({
+      type: CART_ADD_ITEM_SUCCESS,
+      payload: {
+        cartItems: updatedCartItems,
+      },
+    });
 
-      localStorage.setItem(
-        'cartItems',
-        JSON.stringify(getState().cart.cartItems)
-      );
+    localStorage.setItem(
+      'cartItems',
+      JSON.stringify(getState().cart.cartItems)
+    );
 
-      return true;
-    }, 500);
+    return true;
   } catch (error) {
     let errData = {
       message: error.message,
@@ -105,6 +98,14 @@ export const addToCart = (id, qty) => async (dispatch, getState) => {
       };
     }
 
+    if (userInfo && error.response.data?.errors?.notAuth) {
+      dispatch({
+        type: LOGOUT_SESSION,
+        payload: {
+          isLogout: true,
+        },
+      });
+    }
     dispatch({
       type: CART_ADD_ITEM_FAIL,
       payload: errData,
@@ -119,24 +120,17 @@ export const removeFromCart = id => async (dispatch, getState) => {
   });
 
   const {
-    userLogin: { userInfo },
+    session: { userInfo },
     cart: { cartItems },
   } = getState();
 
   if (userInfo) {
     try {
       let updatedCartItems = cartItems;
-      const userToken = userInfo.token;
-      const removeCartItem = await axios.post(
-        `/api/users/cart/delete`,
-        { product: id },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${userToken}`,
-          },
-        }
-      );
+
+      const removeCartItem = await axiosPrivate.post(`/users/cart/delete`, {
+        product: id,
+      });
 
       const updatedUserCart = removeCartItem.data.cart;
 
@@ -157,12 +151,11 @@ export const removeFromCart = id => async (dispatch, getState) => {
           cartItems: updatedCartItems,
         },
       });
-      setTimeout(() => {
-        localStorage.setItem(
-          'cartItems',
-          JSON.stringify(getState().cart.cartItems)
-        );
-      }, 500);
+
+      localStorage.setItem(
+        'cartItems',
+        JSON.stringify(getState().cart.cartItems)
+      );
     } catch (error) {
       console.log(error);
       let errData = {
@@ -178,30 +171,36 @@ export const removeFromCart = id => async (dispatch, getState) => {
         };
       }
 
-      setTimeout(() => {
+      if (userInfo && error.response.data?.errors?.notAuth) {
         dispatch({
-          type: CART_REMOVE_ITEM_FAIL,
-          payload: errData,
+          type: LOGOUT_SESSION,
+          payload: {
+            isLogout: true,
+          },
         });
-      }, 500);
+      }
+
+      dispatch({
+        type: CART_REMOVE_ITEM_FAIL,
+        payload: errData,
+      });
     }
 
     return;
   } else {
     const updatedCartItems = cartItems.filter(x => x.product !== id);
-    setTimeout(() => {
-      dispatch({
-        type: CART_REMOVE_ITEM_SUCCESS,
-        payload: {
-          cartItems: updatedCartItems,
-        },
-      });
 
-      localStorage.setItem(
-        'cartItems',
-        JSON.stringify(getState().cart.cartItems)
-      );
-    }, 500);
+    dispatch({
+      type: CART_REMOVE_ITEM_SUCCESS,
+      payload: {
+        cartItems: updatedCartItems,
+      },
+    });
+
+    localStorage.setItem(
+      'cartItems',
+      JSON.stringify(getState().cart.cartItems)
+    );
   }
 };
 

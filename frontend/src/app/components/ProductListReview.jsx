@@ -25,7 +25,7 @@ const ProductListReview = ({ product }) => {
 
   const dispatch = useDispatch();
 
-  const { userInfo } = useSelector(state => state.userLogin);
+  const { userInfo } = useSelector(state => state.session);
 
   const { error: errorReviewCreate } = useSelector(
     state => state.productRewiewCreate
@@ -60,7 +60,7 @@ const ProductListReview = ({ product }) => {
       setFormReview(true);
     }
   }, [isAlreadyReview]);
-  console.log(isAlreadyReview);
+
   return (
     <>
       <Row className='my-5 mt-md-2'>
