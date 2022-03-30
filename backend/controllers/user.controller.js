@@ -204,12 +204,13 @@ const updateUserProfile = asyncHandler(async (req, res) => {
         createdAt: setUpdatedUser.createdAt,
         updatedAt: setUpdatedUser.updatedAt,
         image: setUpdatedUser.image,
+        session: req.user.session,
       };
 
       return res.status(200).json({
         status: true,
         message: req.body.oldPassword
-          ? "Changen password successfully"
+          ? "Changed password successfully"
           : "Updated profile success",
         user: updatedUser,
       });
