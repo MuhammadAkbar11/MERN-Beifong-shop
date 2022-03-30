@@ -2,18 +2,15 @@ import asyncHandler from "express-async-handler";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import { validationResult } from "express-validator";
-import UserModel from "../../models/userModel.js";
-import ProductModel from "../../models/productModel.js";
-import errMessageValidation from "../../utils/errMessagesValidation.js";
+import UserModel from "../models/userModel.js";
+import ProductModel from "../models/productModel.js";
+import errMessageValidation from "../utils/errMessagesValidation.js";
 
-import ResponseError from "../../utils/responseError.js";
-import { checkIsGuestFoto, deleteFile } from "../../utils/file.js";
-import { REFRESH_TOKEN_SECRET } from "../../configs/constants.js";
-import {
-  signJWTAccessToken,
-  signJWTRefreshToken,
-} from "../../utils/jwt.utils.js";
-import SessionModel from "../../models/sessionModel.js";
+import ResponseError from "../utils/responseError.js";
+import { checkIsGuestFoto, deleteFile } from "../utils/file.js";
+import { REFRESH_TOKEN_SECRET } from "../configs/constants.js";
+import { signJWTAccessToken, signJWTRefreshToken } from "../utils/jwt.utils.js";
+import SessionModel from "../models/sessionModel.js";
 
 // @desc Login user to get access token
 // @route POST /api/v2/users/login
@@ -156,6 +153,9 @@ export const getSession = asyncHandler((req, res) => {
   });
 });
 
+// @desc Logout
+// @route POST /api/v2/users/logout
+// @access Public
 export const postLogout = asyncHandler(async (req, res) => {
   const { session: sessionId } = req.body;
   try {
@@ -174,7 +174,7 @@ export const postLogout = asyncHandler(async (req, res) => {
       httpOnly: true,
     });
     await session.remove();
-    res.json({ message: "logout successfully" });
+    res.json({ message: "Logout successfully" });
   } catch (error) {
     throw new ResponseError(error.statusCode, error.message, error.errors);
   }
