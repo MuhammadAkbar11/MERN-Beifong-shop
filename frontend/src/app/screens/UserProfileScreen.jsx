@@ -15,7 +15,7 @@ import { LinkContainer } from 'react-router-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import { userUploadPictureAction } from '@actions/user.actions';
-// import { getListMyOrdersAction } from '@actions/order.actions';
+import { getListMyOrdersAction } from '@actions/order.actions';
 import BreadcrumbContainer from '@components/BreadcrumbContainer';
 import ProfileUpdate from '@components/ProfileUpdate';
 import ListMyOrders from '@components/ListMyOrders';
@@ -58,7 +58,7 @@ const UserProfileScreen = ({ match, history, location }) => {
   React.useEffect(() => {
     if (!user.name) {
       dispatch(userGetDetailsAction());
-      // dispatch(getListMyOrdersAction());
+      dispatch(getListMyOrdersAction());
     } else {
       setProfile({
         name: user.name,
@@ -241,7 +241,6 @@ const UserProfileScreen = ({ match, history, location }) => {
               variant='danger'
               dismissible
               onClose={() => setUploadError(null)}
-              dismissible
             >
               {uploadError?.message}
             </Alert>
