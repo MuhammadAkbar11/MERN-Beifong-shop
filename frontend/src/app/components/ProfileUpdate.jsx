@@ -4,12 +4,13 @@ import { Form, Row, Col, Button } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
+
 import {
-  resetChangePasswordFeedBackAction,
-  resetUpdateProfileFeedBackAction,
-  updateUserProfileAction,
+  userUpdateProfileAction,
+  userResetChangePasswordFeedBackAction,
   userChangePasswordAction,
-} from '@actions/user.actions';
+  userResetUpdateProfileFeedBackAction,
+} from '@actions/v2/user.actions';
 import Loader from './Loader';
 import Message from './Message';
 
@@ -57,7 +58,7 @@ const ProfileUpdate = props => {
     },
     onSubmit: values => {
       dispatch(
-        updateUserProfileAction({ email: values.email, name: values.name })
+        userUpdateProfileAction({ email: values.email, name: values.name })
       );
     },
   });
@@ -89,8 +90,8 @@ const ProfileUpdate = props => {
 
   React.useEffect(() => {
     return () => {
-      dispatch(resetUpdateProfileFeedBackAction());
-      dispatch(resetChangePasswordFeedBackAction());
+      dispatch(userResetUpdateProfileFeedBackAction());
+      dispatch(userResetChangePasswordFeedBackAction());
     };
   }, [dispatch]);
 
