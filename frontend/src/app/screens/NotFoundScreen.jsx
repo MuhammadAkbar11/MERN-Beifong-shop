@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Col, Container, Jumbotron, Row } from 'react-bootstrap';
+import { Col, Jumbotron, Row } from 'react-bootstrap';
 import { Helmet } from 'react-helmet';
 import { useDispatch } from 'react-redux';
 import {
@@ -42,7 +42,9 @@ const NotFoundScreen = () => {
             className=' d-flex flex-column align-items-start justify-content-center'
           >
             <h1>Oops! Page Not Found</h1>
-            <p>We Cant Seem to find the page you're looking for</p>
+            {/* prettier-ignore */}
+            {/* eslint-disable */}
+            <p>We Cant Seem to find the page you're looking for</p>{' '}
             <p>
               <Link to='/' className='btn btn-primary'>
                 Back Home
