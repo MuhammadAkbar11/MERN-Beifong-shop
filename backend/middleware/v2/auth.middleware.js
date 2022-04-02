@@ -44,9 +44,7 @@ export const deserializeUser = asyncHandler(async (req, res, next) => {
       : { payload: null };
 
     if (!refresh) {
-      console.log(
-        colors.yellow("[session] expired access token & refresh token")
-      );
+      console.log(colors.yellow("[session] no authorized"));
       return next();
     }
 

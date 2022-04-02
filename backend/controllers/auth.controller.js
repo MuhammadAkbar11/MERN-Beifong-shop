@@ -158,8 +158,10 @@ export const getSession = asyncHandler((req, res) => {
 // @access Public
 export const postLogout = asyncHandler(async (req, res) => {
   const { session: sessionId } = req.body;
+
   try {
-    const session = await SessionModel.findById(sessionId);
+    const session = await SessionModel.findOne({ _id: sessionId });
+
     if (!session) {
       res.status(400);
       throw new ResponseError(400, "Failed to logout");
@@ -173,9 +175,10 @@ export const postLogout = asyncHandler(async (req, res) => {
       maxAge: 0,
       httpOnly: true,
     });
-    await session.remove();
+    await SessionModel.findOneAndDelete({ id: sessionId });
     res.json({ message: "Logout successfully" });
   } catch (error) {
+    console.log(error);
     throw new ResponseError(error.statusCode, error.message, error.errors);
   }
 });
