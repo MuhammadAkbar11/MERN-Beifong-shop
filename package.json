@@ -27,6 +27,7 @@
     "start": "node backend/server.js",
     "client": "yarn --cwd ./frontend/ start",
     "dev": "concurrently \"yarn server\" \"yarn client\"",
+    "pm2-dev": "pm2 start yarn --name beifong-shop -- dev",
     "data:import": "node backend/seeder.js",
     "data:destroy": "node backend/seeder.js -d",
     "seed:gu": "node backend/seeds/generateUsers.js -d",
