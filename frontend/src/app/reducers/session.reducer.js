@@ -24,7 +24,12 @@ export const sessionReducer = (
     case SESSION_FAIL:
       return { loading: false, error: action.payload };
     case RESET_SESSION:
-      return { status: null, loading: false, userInfo: null };
+      return {
+        status: null,
+        loading: false,
+        userInfo: null,
+        status: 'unauthorized',
+      };
     case LOGOUT_SESSION:
       return { ...state, ...action.payload };
     default:
