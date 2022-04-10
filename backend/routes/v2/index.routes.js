@@ -1,6 +1,9 @@
 import { PREFIX_VERSION } from "../../configs/constants.js";
 import { getSession } from "../../controllers/auth.controller.js";
-import { getPaypalId } from "../../controllers/config.controller.js";
+import {
+  getConvertCurrency,
+  getPaypalId,
+} from "../../controllers/config.controller.js";
 import OrderRoutes from "./order.routes.js";
 import UserRoutes from "./user.routes.js";
 
@@ -15,6 +18,7 @@ function AppRoutesV2(app) {
 
   app.get(`${PREFIX_VERSION}/session`, getSession);
   app.get(`${PREFIX_VERSION}/config/paypal`, getPaypalId);
+  app.get(`${PREFIX_VERSION}/config/currency`, getConvertCurrency);
 
   // user Routes
   UserRoutes(app, `${PREFIX_VERSION}/users`);
