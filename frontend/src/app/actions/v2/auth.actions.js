@@ -87,6 +87,7 @@ export const authUserLoginAction = (email, password) => async (
         cartItems: transformCart,
       },
     });
+    localStorage.setItem('userInfo', JSON.stringify(data.user));
     localStorage.setItem(
       'cartItems',
       JSON.stringify(getState().cart.cartItems)

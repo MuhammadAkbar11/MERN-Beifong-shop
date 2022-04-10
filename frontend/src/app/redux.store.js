@@ -104,7 +104,7 @@ const initialState = {
     shippingAddress: shippingAddressFromStorage,
     paymentMethod: paymentMethodFromStorage,
   },
-  userLogin: {
+  session: {
     userInfo: userInfoFromStorage,
   },
 };
