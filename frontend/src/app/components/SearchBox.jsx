@@ -1,8 +1,8 @@
 /* eslint-disable */
 import React from 'react';
-import { Button, Col, Form, Row } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 
-const SearchBox = ({ history }) => {
+const SearchBox = ({ history, id }) => {
   const [keyword, setKeyword] = React.useState('');
 
   const submitHandler = e => {
@@ -22,7 +22,7 @@ const SearchBox = ({ history }) => {
       <Form onSubmit={submitHandler} inline>
         <Form.Group
           className=' d-flex align-content-center  h-100 '
-          controlId='keyword'
+          controlId={id}
         >
           <Form.Control
             type='text'
