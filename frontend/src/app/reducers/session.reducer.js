@@ -12,7 +12,6 @@ export const sessionReducer = (
   state = {
     loading: true,
     userInfo: null,
-    status: null,
   },
   action
 ) => {
@@ -28,7 +27,6 @@ export const sessionReducer = (
         status: null,
         loading: false,
         userInfo: null,
-        status: 'unauthorized',
       };
     case LOGOUT_SESSION:
       return { ...state, ...action.payload };
