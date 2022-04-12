@@ -40,11 +40,11 @@ const userLoginReducer = (state = initState, action) => {
     case USER_LOGIN_REQUEST:
       return { loading: true };
     case USER_LOGIN_SUCCESS:
-      return { ...state, loading: false, userInfo: action.payload };
+      return { ...state, loading: false };
     case USER_LOGIN_FAIL:
       return { loading: false, error: action.payload };
     case USER_LOGOUT:
-      return { ...state, loading: false, userInfo: action.payload };
+      return { ...state, loading: false };
     default:
       return state;
   }
@@ -52,6 +52,7 @@ const userLoginReducer = (state = initState, action) => {
 
 const registerInitState = {
   loading: false,
+  success: null,
 };
 
 const userRegisterReducer = (state = registerInitState, action) => {
@@ -59,7 +60,7 @@ const userRegisterReducer = (state = registerInitState, action) => {
     case USER_REGISTER_REQUEST:
       return { loading: true };
     case USER_REGISTER_SUCCESS:
-      return { ...state, loading: false, userInfo: action.payload };
+      return { ...state, loading: false, ...action.payload };
     case USER_REGISTER_FAIL:
       return { loading: false, error: action.payload };
     default:
