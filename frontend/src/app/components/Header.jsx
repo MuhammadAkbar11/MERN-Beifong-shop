@@ -38,7 +38,9 @@ const Header = () => {
           <Navbar.Collapse id='basic-navbar-nav'>
             <div className='mx-auto d-none d-md-block'>
               <Route
-                render={({ history }) => <SearchBox history={history} />}
+                render={({ history }) => (
+                  <SearchBox id='keyword-mobile' history={history} />
+                )}
               />
             </div>
             <Nav className='ml-auto'>
@@ -124,7 +126,9 @@ const Header = () => {
             </Nav>
             <div className='mx-auto d-block d-md-none mt-2'>
               <Route
-                render={({ history }) => <SearchBox history={history} />}
+                render={({ history }) => (
+                  <SearchBox id='keyword-desktop' history={history} />
+                )}
               />
             </div>
           </Navbar.Collapse>
