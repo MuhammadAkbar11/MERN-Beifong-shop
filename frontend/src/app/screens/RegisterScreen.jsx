@@ -8,6 +8,7 @@ import Loader from '@components/Loader';
 import FormContainer from '@components/FormContainer';
 import BreadcrumbContainer from '@components/BreadcrumbContainer';
 import { Helmet } from 'react-helmet';
+import { authUserRegisterAction } from '../actions/v2/auth.actions';
 
 /* eslint-disable */
 const RegisterScreen = ({ location, history }) => {
@@ -30,10 +31,6 @@ const RegisterScreen = ({ location, history }) => {
   const redirect = location.search ? location.search.split('=')[1] : '/';
 
   React.useEffect(() => {
-    if (userInfo) {
-      history.push(redirect);
-    }
-
     if (loading) {
       setDisabledSubmit(true);
     }
@@ -45,12 +42,16 @@ const RegisterScreen = ({ location, history }) => {
     return () => {
       setDisabledSubmit(false);
     };
-  }, [loading, error, userInfo, history]);
+  }, [loading, error]);
 
   const submitHandler = e => {
     e.preventDefault();
 
-    dispatch(userRegisterAction(name, email, password, password2));
+    dispatch(authUserRegisterAction(name, email, password, password2)).then(
+      () => {
+        history.push('/login');
+      }
+    );
   };
   return (
     <>

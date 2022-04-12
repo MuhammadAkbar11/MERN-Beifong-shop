@@ -2,10 +2,12 @@ import {
   USER_LOGIN_FAIL,
   USER_LOGIN_REQUEST,
   USER_LOGIN_SUCCESS,
+  USER_LOGIN_RESET,
   USER_LOGOUT,
   USER_REGISTER_FAIL,
   USER_REGISTER_REQUEST,
   USER_REGISTER_SUCCESS,
+  USER_REGISTER_RESET,
   USER_DETAILS_REQUEST,
   USER_DETAILS_SUCCESS,
   USER_DETAILS_FAIL,
@@ -45,6 +47,8 @@ const userLoginReducer = (state = initState, action) => {
       return { loading: false, error: action.payload };
     case USER_LOGOUT:
       return { ...state, loading: false };
+    case USER_LOGIN_RESET:
+      return initState;
     default:
       return state;
   }
@@ -63,6 +67,8 @@ const userRegisterReducer = (state = registerInitState, action) => {
       return { ...state, loading: false, ...action.payload };
     case USER_REGISTER_FAIL:
       return { loading: false, error: action.payload };
+    case USER_REGISTER_RESET:
+      return registerInitState;
     default:
       return state;
   }

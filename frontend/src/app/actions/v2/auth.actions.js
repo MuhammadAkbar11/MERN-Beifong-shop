@@ -2,6 +2,9 @@ import {
   USER_LOGIN_FAIL,
   USER_LOGIN_REQUEST,
   USER_LOGIN_SUCCESS,
+  USER_REGISTER_FAIL,
+  USER_REGISTER_REQUEST,
+  USER_REGISTER_SUCCESS,
 } from '@constants/user.constants';
 import axiosApi from '@utils/api';
 import { SESSION_SUCCESS } from '@constants/session.contants';
@@ -40,7 +43,6 @@ export const authUserLoginAction = (email, password) => async (
         subtotal: cart.qty * cart.price.num,
       };
     });
-    console.log(userCart);
     if (userCart.items.length === 0) {
       if (cartItems.length !== 0) {
         const insertNewCartItems = await axiosPrivate.post(`/users/cart`, {
@@ -78,7 +80,6 @@ export const authUserLoginAction = (email, password) => async (
       type: SESSION_SUCCESS,
       payload: {
         userInfo: data.user,
-        status: 'authorized',
       },
     });
     dispatch({
@@ -112,6 +113,58 @@ export const authUserLoginAction = (email, password) => async (
       payload: errData,
     });
 
+    throw new Error(errData);
+  }
+};
+
+export const authUserRegisterAction = (
+  name,
+  email,
+  password,
+  password2
+) => async dispatch => {
+  try {
+    dispatch({
+      type: USER_REGISTER_REQUEST,
+    });
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        withCredentials: true,
+      },
+    };
+
+    const { data } = await axiosPrivate.post(
+      '/users/register',
+      { name, email, password, password2 },
+      config
+    );
+
+    dispatch({
+      type: USER_REGISTER_SUCCESS,
+      payload: {
+        success: { ...data },
+      },
+    });
+  } catch (error) {
+    let errData = {
+      message: error.message,
+    };
+
+    if (error.response && error.response.data.message) {
+      const errorData =
+        error.response.data.errors && error.response.data.errors;
+      errData = {
+        message: error.response.data.message,
+        ...errorData,
+      };
+    }
+
+    dispatch({
+      type: USER_REGISTER_FAIL,
+      payload: errData,
+    });
     throw new Error(errData);
   }
 };
