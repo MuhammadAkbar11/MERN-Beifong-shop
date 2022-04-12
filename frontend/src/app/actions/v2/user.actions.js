@@ -17,6 +17,8 @@ import {
   RESET_SESSION,
   LOGOUT_SESSION,
 } from '@constants/session.contants';
+import { CART_RESET_ITEMS } from '@constants/cart.constants';
+import { ORDER_USER_RESET } from '@constants/order.constants';
 import { axiosPrivate } from '../../utils/api';
 
 /* eslint-disable */
@@ -101,7 +103,6 @@ export const userUpdateProfileAction = ({ ...user }) => async dispatch => {
       type: SESSION_SUCCESS,
       payload: {
         userInfo: data.user,
-        status: 'authorized',
       },
     });
 
@@ -112,6 +113,8 @@ export const userUpdateProfileAction = ({ ...user }) => async dispatch => {
         user: data.user,
       },
     });
+
+    localStorage.setItem('userInfo', JSON.stringify(data.user));
   } catch (error) {
     let errData = {
       message: error.message,
@@ -224,8 +227,9 @@ export const userLogoutAction = () => async (dispatch, getState) => {
     });
 
     localStorage.removeItem('cartItems');
-    // dispatch({ type: CART_RESET_ITEMS });
-    // dispatch({ type: ORDER_USER_RESET });
+    localStorage.removeItem('userInfo');
+    dispatch({ type: CART_RESET_ITEMS });
+    dispatch({ type: ORDER_USER_RESET });
     dispatch({ type: USER_DETAILS_RESET });
     // dispatch({ type: USER_LIST_RESET });
     dispatch({ type: RESET_SESSION });
