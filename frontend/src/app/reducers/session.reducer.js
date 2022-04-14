@@ -12,6 +12,7 @@ export const sessionReducer = (
   state = {
     loading: true,
     userInfo: null,
+    status: null,
   },
   action
 ) => {
