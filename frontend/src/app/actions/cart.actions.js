@@ -8,6 +8,7 @@ import {
   CART_REMOVE_ITEM_SUCCESS,
   CART_REMOVE_ITEM_FAIL,
   CART_SAVE_SHIPPING_ADDRESS,
+  CART_USER_LOAD,
   CART_SAVE_PAYMENT_METHOD,
 } from '@constants/cart.constants';
 import { LOGOUT_SESSION } from '@constants/session.contants';
@@ -201,6 +202,44 @@ export const removeFromCart = id => async (dispatch, getState) => {
       'cartItems',
       JSON.stringify(getState().cart.cartItems)
     );
+  }
+};
+
+export const loadUserSessionCartAction = user => async (dispatch, getState) => {
+  try {
+    const seen = new Set();
+    const userCart = user.cart;
+
+    const transformCart = userCart.items
+      .map(item => {
+        return {
+          product: item.product._id,
+          name: item.product.name,
+          price: item.product.price,
+          image: item.product.image,
+          countInStock: item.product.countInStock,
+          subtotal: item.subtotal,
+          qty: item.qty,
+        };
+      })
+      .filter(el => {
+        const duplicate = seen.has(el.product);
+        seen.add(el.product);
+        return !duplicate;
+      });
+    dispatch({
+      type: CART_USER_LOAD,
+      payload: {
+        cartItems: transformCart,
+      },
+    });
+
+    localStorage.setItem(
+      'cartItems',
+      JSON.stringify(getState().cart.cartItems)
+    );
+  } catch (error) {
+    console.log(error);
   }
 };
 
