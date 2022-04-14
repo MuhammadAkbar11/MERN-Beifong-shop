@@ -106,6 +106,7 @@ const initialState = {
   },
   session: {
     userInfo: userInfoFromStorage,
+    status: userInfoFromStorage ? 'authorized' : null,
   },
 };
 
