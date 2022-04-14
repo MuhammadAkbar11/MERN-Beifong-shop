@@ -76,6 +76,8 @@ export const authUserLoginAction = (email, password) => async (
       type: USER_LOGIN_SUCCESS,
       payload: null,
     });
+
+    delete data.user.cart;
     dispatch({
       type: SESSION_SUCCESS,
       payload: {
