@@ -32,7 +32,7 @@ export const getSessionAction = () => async dispatch => {
             status: 'authorized',
           },
         });
-        localStorage.setItem('userInfo', JSON.stringify(data.user));
+        localStorage.setItem('userInfo', JSON.stringify(user));
       } else {
         dispatch({
           type: SESSION_SUCCESS,
