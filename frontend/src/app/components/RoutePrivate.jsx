@@ -1,20 +1,29 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Redirect } from 'react-router-dom';
-import { userLogoutAction } from '@actions/v2/user.actions';
+import { getSessionAction } from '../actions/v2/session.actions';
+import { userLogoutAction } from '../actions/v2/user.actions';
 import PageTransition from './PageTransition';
 
 const RoutePrivate = ({ component: Component, restricted, ...rest }) => {
-  const { loading, userInfo, isLogout } = useSelector(state => state.session);
+  const { loading, userInfo, status: sessionStatus, isLogout } = useSelector(
+    state => state.session
+  );
 
   const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    if (!sessionStatus) {
+      dispatch(getSessionAction());
+    }
+  }, [dispatch, sessionStatus]);
 
   React.useEffect(() => {
     if (isLogout) {
       dispatch(userLogoutAction());
     }
   }, [isLogout]);
-
+  console.log(userInfo, sessionStatus);
   return (
     <Route
       {...rest}
