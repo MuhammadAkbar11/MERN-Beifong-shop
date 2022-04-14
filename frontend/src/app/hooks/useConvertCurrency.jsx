@@ -11,7 +11,7 @@ const useConvertCurrency = ({ amount, fromCurrency, toCurrency }) => {
       setLoading(true);
       try {
         const { data } = await axios.get(
-          `/api/config/currency?amount=${amount}&fromCurr=${fromCurrency}&toCurr=${toCurrency}`
+          `/api/v2/config/currency?amount=${amount}&fromCurr=${fromCurrency}&toCurr=${toCurrency}`
         );
         setValue(data.result);
         setLoading(false);
