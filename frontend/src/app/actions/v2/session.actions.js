@@ -24,9 +24,9 @@ export const getSessionAction = () => async dispatch => {
     } = await axiosPrivate.get(`/session`, config);
 
     setTimeout(() => {
-      const userInfo = user;
-      delete userInfo.cart;
       if (status) {
+        const userInfo = user;
+        delete userInfo.cart;
         dispatch({
           type: SESSION_SUCCESS,
           payload: {
@@ -35,6 +35,7 @@ export const getSessionAction = () => async dispatch => {
           },
         });
         localStorage.setItem('userInfo', JSON.stringify(userInfo));
+        dispatch(loadUserSessionCartAction(user));
       } else {
         dispatch({
           type: SESSION_SUCCESS,
@@ -45,7 +46,6 @@ export const getSessionAction = () => async dispatch => {
         });
       }
     }, 100);
-    dispatch(loadUserSessionCartAction(user));
   } catch (error) {
     let errData = {
       message: error.message,
