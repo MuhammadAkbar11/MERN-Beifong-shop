@@ -1,14 +1,9 @@
 import asyncHandler from "express-async-handler";
-import mongoose from "mongoose";
-import jwt from "jsonwebtoken";
 import { validationResult } from "express-validator";
 import UserModel from "../models/userModel.js";
-import ProductModel from "../models/productModel.js";
 import errMessageValidation from "../utils/errMessagesValidation.js";
 
 import ResponseError from "../utils/responseError.js";
-import { checkIsGuestFoto, deleteFile } from "../utils/file.js";
-import { REFRESH_TOKEN_SECRET } from "../configs/constants.js";
 import { signJWTAccessToken, signJWTRefreshToken } from "../utils/jwt.utils.js";
 import SessionModel from "../models/sessionModel.js";
 
@@ -48,6 +43,7 @@ export const postLogin = asyncHandler(async (req, res) => {
           userId: user._id,
           sessionId: session._id,
         });
+
         const refreshToken = signJWTRefreshToken({
           email: user.email,
           userId: user._id,
@@ -113,7 +109,10 @@ export const postRegister = asyncHandler(async (req, res) => {
 
     if (getUser) {
       res.status(400);
-      throw new ResponseError(400, "User already exists");
+      throw new ResponseError(
+        400,
+        `User with email "${email}" is already exists, please try another email`
+      );
     }
 
     const user = await UserModel.create({
@@ -126,11 +125,11 @@ export const postRegister = asyncHandler(async (req, res) => {
     if (user) {
       res.status(200).json({
         status: true,
-        message: "Sign up success",
+        message: "Registration has been successful, please login",
       });
     } else {
       res.status(400);
-      throw new ResponseError(400, "Failed to create new user");
+      throw new ResponseError(400, "Registration failed, please try again");
     }
   } catch (error) {
     console.log(error);
@@ -138,19 +137,37 @@ export const postRegister = asyncHandler(async (req, res) => {
   }
 });
 
-export const getSession = asyncHandler((req, res) => {
-  if (!req.user) {
+export const getSession = asyncHandler(async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.json({
+        status: false,
+        message: "there is no session ",
+        user: null,
+      });
+    }
+    // console.log(req.user);
+    const user = await UserModel.findOne({ email: req.user.email });
+    const userCart = await user
+      .populate({
+        path: "cart.items.product",
+        select: "name image countInStock price",
+      })
+      .execPopulate();
+
+    return res.json({
+      status: true,
+      message: "success to get session",
+      user: { ...req.user, cart: userCart.cart },
+    });
+  } catch (error) {
+    console.log(error);
     return res.json({
       status: false,
       message: "there is no session ",
       user: null,
     });
   }
-  return res.json({
-    status: true,
-    message: "success to get session",
-    user: req.user,
-  });
 });
 
 // @desc Logout
