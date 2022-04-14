@@ -10,7 +10,7 @@ import axiosApi from '@utils/api';
 import { SESSION_SUCCESS } from '@constants/session.contants';
 import { CART_USER_LOAD } from '@constants/cart.constants';
 import { axiosPrivate } from '../../utils/api';
-
+/* eslint-disable */
 export const authUserLoginAction = (email, password) => async (
   dispatch,
   getState

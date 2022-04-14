@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, Col, Row } from 'react-bootstrap';
 import smileySad from '@assets/images/SmileySad.png';
 import { Link } from 'react-router-dom';
-
+/* eslint-disable */
 const ProductNotFound = props => {
   return (
     <>

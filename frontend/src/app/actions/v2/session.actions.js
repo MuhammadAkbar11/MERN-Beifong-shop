@@ -5,7 +5,7 @@ import {
 } from '@constants/session.contants';
 import { axiosPrivate } from '../../utils/api';
 import { loadUserSessionCartAction } from '../cart.actions';
-
+/* eslint-disable */
 export const getSessionAction = () => async dispatch => {
   try {
     dispatch({

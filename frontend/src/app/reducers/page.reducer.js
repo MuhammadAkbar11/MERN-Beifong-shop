@@ -1,5 +1,5 @@
 import { RESET_PAGE_404, SET_PAGE_404 } from '@constants/page.constants';
-
+/* eslint-disable */
 export const pageStatusReducer = (
   state = { status: null, content: null },
   action

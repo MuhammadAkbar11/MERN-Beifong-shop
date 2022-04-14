@@ -2,13 +2,13 @@ import React from 'react';
 import { Form, Button, Row, Col, Container } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { userLoginAction } from '@actions/user.actions';
 import Message from '@components/Message';
 import Loader from '@components/Loader';
 import FormContainer from '@components/FormContainer';
 import BreadcrumbContainer from '@components/BreadcrumbContainer';
 import { Helmet } from 'react-helmet';
 import { authUserLoginAction } from '../actions/v2/auth.actions';
+import { USER_REGISTER_RESET } from '../constants/user.constants';
 
 /* eslint-disable */
 const LoginScreen = ({ location, history }) => {
@@ -24,6 +24,7 @@ const LoginScreen = ({ location, history }) => {
 
   const userLogin = useSelector(state => state.userLogin);
   const { loading, error, userInfo } = userLogin;
+  const { success: successRegister } = useSelector(state => state.userRegister);
 
   const redirect = location.search ? location.search.split('=')[1] : '/';
 
@@ -38,6 +39,11 @@ const LoginScreen = ({ location, history }) => {
 
     return () => {
       setDisabledSubmit(false);
+      if (successRegister) {
+        dispatch({
+          type: USER_REGISTER_RESET,
+        });
+      }
     };
   }, [loading, error, userInfo, history]);
 
@@ -61,6 +67,10 @@ const LoginScreen = ({ location, history }) => {
 
           {error && !error.validation && (
             <Message variant='danger'>{error.message}</Message>
+          )}
+
+          {successRegister && (
+            <Message variant='success'>{successRegister.message}</Message>
           )}
 
           <Form onSubmit={submitHandler}>

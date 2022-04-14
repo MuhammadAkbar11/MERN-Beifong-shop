@@ -18,7 +18,7 @@ const proptypes = {
   step4: PropTypes.bool,
   currentStep: PropTypes.string.isRequired,
 };
-
+/* eslint-disable */
 const CheckoutSteps = ({ step1, step2, step3, step4, currentStep }) => {
   const { userInfo } = useSelector(state => state.session);
 
