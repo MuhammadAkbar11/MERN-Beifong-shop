@@ -4,6 +4,7 @@ import {
   SESSION_SUCCESS,
 } from '@constants/session.contants';
 import { axiosPrivate } from '../../utils/api';
+import { loadUserSessionCartAction } from '../cart.actions';
 
 export const getSessionAction = () => async dispatch => {
   try {
@@ -41,6 +42,7 @@ export const getSessionAction = () => async dispatch => {
         });
       }
     }, 100);
+    dispatch(loadUserSessionCartAction(user));
   } catch (error) {
     let errData = {
       message: error.message,
