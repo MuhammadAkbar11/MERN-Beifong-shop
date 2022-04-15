@@ -1,24 +1,26 @@
 import { PAYPAL_CLIENT_ID } from "../configs/constants.js";
-import convertCurrency from "../utils/convertCurrency.js";
 import ResponseError from "../utils/responseError.js";
+import axios from "axios";
 
-export const getConvertCurrency = (req, res) => {
+export const getConvertCurrency = async (req, res) => {
   const amount = +req.query.amount;
   const fromCurr = req.query.fromCurr;
   const toCurr = req.query.toCurr;
-  console.log(req.query);
+
+  const uri = `https://api.exchangerate-api.com/v4/latest/USD`;
   try {
-    convertCurrency(amount, fromCurr, toCurr, (err, result) => {
-      if (err) {
-        throw new ResponseError(500, err);
-      }
-      return res.json({
-        status: true,
-        result,
-      });
+    const {
+      data: { rates },
+    } = await axios.get(uri);
+    let fromRate = rates[fromCurr];
+    let toRate = rates[toCurr];
+    const result = ((toRate / fromRate) * amount).toFixed(2);
+    res.json({
+      status: true,
+      result: result,
     });
   } catch (error) {
-    console.log(err);
+    console.log(error);
     throw new ResponseError(500, error);
   }
 };

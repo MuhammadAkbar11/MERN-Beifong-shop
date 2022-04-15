@@ -37,6 +37,7 @@
   "author": "MuhammadAkbar11 <muhammadakbarletlet@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.26.1",
     "bcryptjs": "^2.4.3",
     "colors": "^1.4.0",
     "cookie-parser": "^1.4.6",
