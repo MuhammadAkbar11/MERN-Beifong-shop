@@ -7,8 +7,8 @@ import Loader from '@components/Loader';
 import FormContainer from '@components/FormContainer';
 import BreadcrumbContainer from '@components/BreadcrumbContainer';
 import { Helmet } from 'react-helmet';
-import { authUserLoginAction } from '../actions/v2/auth.actions';
-import { USER_REGISTER_RESET } from '../constants/user.constants';
+import { authUserLoginAction } from '@actions/v2/auth.actions';
+import { USER_REGISTER_RESET } from '@constants/user.constants';
 
 /* eslint-disable */
 const LoginScreen = ({ location, history }) => {

@@ -19,7 +19,7 @@ import {
 } from '@constants/session.contants';
 import { CART_RESET_ITEMS } from '@constants/cart.constants';
 import { ORDER_USER_RESET } from '@constants/order.constants';
-import { axiosPrivate } from '../../utils/api';
+import { axiosPrivate } from '@utils/api';
 
 /* eslint-disable */
 

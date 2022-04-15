@@ -3,8 +3,8 @@ import {
   SESSION_REQ,
   SESSION_SUCCESS,
 } from '@constants/session.contants';
-import { axiosPrivate } from '../../utils/api';
-import { loadUserSessionCartAction } from '../cart.actions';
+import { axiosPrivate } from '@utils/api';
+import { loadUserSessionCartAction } from '@actions/cart.actions';
 /* eslint-disable */
 export const getSessionAction = () => async dispatch => {
   try {
@@ -34,6 +34,7 @@ export const getSessionAction = () => async dispatch => {
             status: 'authorized',
           },
         });
+        loadUserSessionCartAction(user);
         localStorage.setItem('userInfo', JSON.stringify(user));
       } else {
         dispatch({

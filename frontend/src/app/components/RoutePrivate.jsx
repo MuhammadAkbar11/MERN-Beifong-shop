@@ -1,8 +1,8 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Redirect } from 'react-router-dom';
-import { getSessionAction } from '../actions/v2/session.actions';
-import { userLogoutAction } from '../actions/v2/user.actions';
+import { getSessionAction } from '@actions/v2/session.actions';
+import { userLogoutAction } from '@actions/v2/user.actions';
 import PageTransition from './PageTransition';
 /* eslint-disable */
 const RoutePrivate = ({ component: Component, restricted, ...rest }) => {
