@@ -207,7 +207,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
         session: req.user.session,
       };
 
-      return res.status(200).json({
+      return res.status(201).json({
         status: true,
         message: req.body.oldPassword
           ? "Changed password successfully"

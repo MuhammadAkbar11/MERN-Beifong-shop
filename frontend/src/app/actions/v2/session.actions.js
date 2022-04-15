@@ -25,10 +25,12 @@ export const getSessionAction = () => async dispatch => {
 
     setTimeout(() => {
       if (status) {
+        const userInfo = user;
+        delete userInfo.cart;
         dispatch({
           type: SESSION_SUCCESS,
           payload: {
-            userInfo: user,
+            userInfo: userInfo,
             status: 'authorized',
           },
         });
@@ -43,7 +45,6 @@ export const getSessionAction = () => async dispatch => {
         });
       }
     }, 100);
-    dispatch(loadUserSessionCartAction(user));
   } catch (error) {
     let errData = {
       message: error.message,
