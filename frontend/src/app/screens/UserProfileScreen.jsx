@@ -14,7 +14,6 @@ import {
 import { LinkContainer } from 'react-router-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
-import { userUploadPictureAction } from '@actions/user.actions';
 import { getListMyOrdersAction } from '@actions/order.actions';
 import BreadcrumbContainer from '@components/BreadcrumbContainer';
 import ProfileUpdate from '@components/ProfileUpdate';
@@ -22,7 +21,10 @@ import ListMyOrders from '@components/ListMyOrders';
 import useSingleImageUploader from '@hooks/useSingleImageUploader';
 import Loader from '@components/Loader';
 import { Helmet } from 'react-helmet';
-import { userGetDetailsAction } from '@actions/v2/user.actions';
+import {
+  userGetDetailsAction,
+  userUploadPictureAction,
+} from '@actions/v2/user.actions';
 
 /* eslint-disable */
 const UserProfileScreen = ({ match, history, location }) => {
