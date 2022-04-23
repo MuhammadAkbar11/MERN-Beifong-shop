@@ -5,6 +5,7 @@ import {
   getPaypalId,
 } from "../../controllers/config.controller.js";
 import OrderRoutes from "./order.routes.js";
+import UploadRoutes from "./upload.routes.js";
 import UserRoutes from "./user.routes.js";
 
 function AppRoutesV2(app) {
@@ -25,6 +26,9 @@ function AppRoutesV2(app) {
 
   // Order Routes
   OrderRoutes(app, `${PREFIX_VERSION}/orders`);
+
+  // Upload Routes
+  UploadRoutes(app, `${PREFIX_VERSION}/upload`);
 }
 
 export default AppRoutesV2;
