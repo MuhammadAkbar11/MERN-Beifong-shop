@@ -32,7 +32,7 @@ function UserRoutes(app, prefix) {
   app.route(`${prefix}/cart/delete`).post(protect, userRemoveCart);
 
   app
-    .route("/:id")
+    .route(`${prefix}/:id`)
     .get(protect, adminProtect, getUserById)
     .delete(protect, adminProtect, deleteUser)
     .put(protect, adminProtect, [userUpdateValidation], updateUser);
