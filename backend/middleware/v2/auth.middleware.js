@@ -25,7 +25,7 @@ const getUserSession = asyncHandler(async session => {
   };
 });
 
-export const protect = asyncHandler(async (req, res, next) => {
+export const protect = (req, res, next) => {
   if (!req.user) {
     res.status(401);
     throw new ResponseError(401, "Not Authorized", {
@@ -33,7 +33,20 @@ export const protect = asyncHandler(async (req, res, next) => {
     });
   }
   return next();
-});
+};
+
+export const adminProtect = (req, res, next) => {
+  if (req.user && req.user.isAdmin) {
+    next();
+  } else {
+    res.status(401);
+    const errorObj = new Error();
+    errorObj.statusCode = 401;
+    errorObj.message = "Not authorized as admin";
+    errorObj.errors = {};
+    throw errorObj;
+  }
+};
 
 export const deserializeUser = asyncHandler(async (req, res, next) => {
   const { accessToken, refreshToken } = req.cookies;
