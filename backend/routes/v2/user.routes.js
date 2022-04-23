@@ -5,6 +5,7 @@ import {
   getUsers,
   updateUser,
   updateUserProfile,
+  uploadPhotoUser,
   userPostCart,
   userRemoveCart,
 } from "../../controllers/user.controller.js";
@@ -23,6 +24,7 @@ function UserRoutes(app, prefix) {
   app.route(`${prefix}/login`).post([loginValidation], postLogin);
   app.route(`${prefix}/register`).post([registerValidation], postRegister);
   app.route(`${prefix}/logout`).post(protect, postLogout);
+  app.route(`${prefix}/upload-photo/:id`).post(protect, uploadPhotoUser);
   app
     .route(`${prefix}/profile`)
     .get(protect, getUserProfile)
