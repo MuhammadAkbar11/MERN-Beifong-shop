@@ -22,7 +22,7 @@ import useSingleImageUploader from '@hooks/useSingleImageUploader';
 import Loader from '@components/Loader';
 import { Helmet } from 'react-helmet';
 import {
-  userGetDetailsAction,
+  userGetProfileAction,
   userUploadPictureAction,
 } from '@actions/v2/user.actions';
 
@@ -50,16 +50,16 @@ const UserProfileScreen = ({ match, history, location }) => {
   const dispatch = useDispatch();
   const imageUploader = useSingleImageUploader({ defaultImage: null });
 
-  const { userDetails } = useSelector(state => state);
+  const { userProfile } = useSelector(state => state);
 
-  const { user } = userDetails;
+  const { user } = userProfile;
 
   const myOrders = useSelector(state => state.myOrders);
   const { loading: loadingOrders, error: errorOrders, orders } = myOrders;
 
   React.useEffect(() => {
     if (!user.name) {
-      dispatch(userGetDetailsAction());
+      dispatch(userGetProfileAction());
       dispatch(getListMyOrdersAction());
     } else {
       setProfile({

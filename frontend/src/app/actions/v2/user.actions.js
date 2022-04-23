@@ -3,6 +3,10 @@ import {
   USER_DETAILS_REQUEST,
   USER_DETAILS_SUCCESS,
   USER_DETAILS_RESET,
+  USER_PROFILE_FAIL,
+  USER_PROFILE_REQUEST,
+  USER_PROFILE_SUCCESS,
+  USER_PROFILE_RESET,
   USER_UPDATE_PROFILE_REQUEST,
   USER_UPDATE_PROFILE_SUCCESS,
   USER_UPDATE_PROFILE_FAIL,
@@ -35,10 +39,10 @@ import { axiosPrivate } from '@utils/api';
 
 /* eslint-disable */
 
-export const userGetDetailsAction = () => async dispatch => {
+export const userGetProfileAction = () => async dispatch => {
   try {
     dispatch({
-      type: USER_DETAILS_REQUEST,
+      type: USER_PROFILE_REQUEST,
       payload: {
         loading: true,
       },
@@ -47,7 +51,7 @@ export const userGetDetailsAction = () => async dispatch => {
     const { data } = await axiosPrivate.get(`/users/profile`);
 
     dispatch({
-      type: USER_DETAILS_SUCCESS,
+      type: USER_PROFILE_SUCCESS,
       payload: {
         loading: false,
         user: data.user,
@@ -77,7 +81,7 @@ export const userGetDetailsAction = () => async dispatch => {
     }
 
     dispatch({
-      type: USER_DETAILS_FAIL,
+      type: USER_PROFILE_FAIL,
       payload: {
         loading: false,
         error: errData,
@@ -252,7 +256,7 @@ export const userLogoutAction = () => async (dispatch, getState) => {
       localStorage.removeItem('userInfo');
       dispatch({ type: CART_RESET_ITEMS });
       dispatch({ type: ORDER_USER_RESET });
-      dispatch({ type: USER_DETAILS_RESET });
+      dispatch({ type: USER_PROFILE_RESET });
       dispatch({ type: USER_LIST_RESET });
       dispatch({ type: RESET_SESSION });
       window.location = '/';
