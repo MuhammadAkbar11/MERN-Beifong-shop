@@ -11,6 +11,11 @@ import {
   USER_DETAILS_REQUEST,
   USER_DETAILS_SUCCESS,
   USER_DETAILS_FAIL,
+  USER_DETAILS_RESET,
+  USER_PROFILE_REQUEST,
+  USER_PROFILE_SUCCESS,
+  USER_PROFILE_FAIL,
+  USER_PROFILE_RESET,
   USER_UPDATE_PROFILE_REQUEST,
   USER_UPDATE_PROFILE_SUCCESS,
   USER_UPDATE_PROFILE_FAIL,
@@ -19,7 +24,6 @@ import {
   USER_CHANGE_PASSWORD_SUCCESS,
   USER_CHANGE_PASSWORD_FAIL,
   USER_CHANGE_PASSWORD_RESET,
-  USER_DETAILS_RESET,
   USER_LIST_REQUEST,
   USER_LIST_SUCCESS,
   USER_LIST_FAIL,
@@ -95,6 +99,36 @@ const userDetailsReducer = (
         ...action.payload,
       };
     case USER_DETAILS_RESET:
+      return {
+        loading: false,
+        user: {},
+      };
+    default:
+      return state;
+  }
+};
+
+const userProfileReducer = (
+  state = {
+    loading: true,
+    user: {},
+  },
+  action
+) => {
+  switch (action.type) {
+    case USER_PROFILE_REQUEST:
+      return { ...state, ...action.payload };
+    case USER_PROFILE_SUCCESS:
+      return {
+        ...state,
+        ...action.payload,
+      };
+    case USER_PROFILE_FAIL:
+      return {
+        ...state,
+        ...action.payload,
+      };
+    case USER_PROFILE_RESET:
       return {
         loading: false,
         user: {},
@@ -222,6 +256,7 @@ export {
   userLoginReducer,
   userRegisterReducer,
   userDetailsReducer,
+  userProfileReducer,
   userUpdateProfileReducer,
   userChangePasswordReducer,
   userListReducer,

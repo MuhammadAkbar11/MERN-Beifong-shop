@@ -31,6 +31,7 @@ import {
   userRegisterReducer,
   userUpdateProfileReducer,
   userUpdateReducer,
+  userProfileReducer,
 } from '@reducers/user.reducer';
 import {
   myOrderReducer,
@@ -42,7 +43,6 @@ import {
   orderPayReducer,
 } from '@reducers/order.reducer';
 import { pageStatusReducer } from './reducers/page.reducer';
-
 import { sessionReducer } from './reducers/session.reducer';
 
 const reducer = combineReducers({
@@ -65,6 +65,7 @@ const reducer = combineReducers({
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
   session: sessionReducer,
+  userProfile: userProfileReducer,
   userDetails: userDetailsReducer,
   userUpdateProfile: userUpdateProfileReducer,
   userChangePassword: userChangePasswordReducer,
