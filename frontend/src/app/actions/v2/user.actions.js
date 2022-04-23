@@ -123,7 +123,7 @@ export const userUpdateProfileAction = ({ ...user }) => async dispatch => {
     });
 
     dispatch({
-      type: USER_DETAILS_SUCCESS,
+      type: USER_PROFILE_SUCCESS,
       payload: {
         loading: false,
         user: data.user,
@@ -247,7 +247,7 @@ export const userLogoutAction = () => async (dispatch, getState) => {
     dispatch({ type: CART_RESET_ITEMS });
     dispatch({ type: ORDER_USER_RESET });
     dispatch({ type: USER_DETAILS_RESET });
-    // dispatch({ type: USER_LIST_RESET });
+    dispatch({ type: USER_LIST_RESET });
     dispatch({ type: RESET_SESSION });
     window.location = '/';
   } catch (error) {
@@ -318,7 +318,59 @@ export const getUserListAction = () => async (dispatch, getState) => {
   }
 };
 
-export const deleteUserAction = userId => async (dispatch, getState) => {
+export const getUserDetailsAction = id => async dispatch => {
+  try {
+    dispatch({
+      type: USER_DETAILS_REQUEST,
+      payload: {
+        loading: true,
+      },
+    });
+
+    const { data } = await axiosPrivate.get(`/users/${id}`);
+
+    dispatch({
+      type: USER_DETAILS_SUCCESS,
+      payload: {
+        loading: false,
+        user: data.user,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    let errData = {
+      message: error.message,
+    };
+
+    if (error.response && error.response.data.message) {
+      const errorData =
+        error.response.data.errors && error.response.data.errors;
+      errData = {
+        message: error.response.data.message,
+        ...errorData,
+      };
+    }
+
+    if (error.response.data?.errors?.notAuth) {
+      dispatch({
+        type: LOGOUT_SESSION,
+        payload: {
+          isLogout: true,
+        },
+      });
+    }
+
+    dispatch({
+      type: USER_DETAILS_FAIL,
+      payload: {
+        loading: false,
+        error: errData,
+      },
+    });
+  }
+};
+
+export const deleteUserAction = userId => async dispatch => {
   try {
     dispatch({
       type: USER_DELETE_REQUEST,
@@ -498,7 +550,7 @@ export const userUploadPictureAction = values => async (dispatch, getState) => {
     });
 
     dispatch({
-      type: USER_DETAILS_SUCCESS,
+      type: USER_PROFILE_SUCCESS,
       payload: {
         loading: false,
         user: data.user,

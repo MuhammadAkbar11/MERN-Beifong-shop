@@ -4,13 +4,8 @@ import { Container, Table, Button, Badge, Modal, Alert } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   deleteUserAction,
-  // getUserListAction,
-  resetUserListAlertAction,
-} from '@actions/user.actions';
-import {
-  // deleteUserAction,
   getUserListAction,
-  // resetUserListAlertAction,
+  resetUserListAlertAction,
 } from '@actions/v2/user.actions';
 import Message from '@components/Message';
 import Loader from '@components/Loader';
@@ -190,7 +185,7 @@ const AdminUserListScreen = ({ history }) => {
                   className='ml-2'
                   onClick={() => deleteHandler()}
                 >
-                  Save Changes
+                  Yes, Delete
                 </Button>
               </div>
             </>

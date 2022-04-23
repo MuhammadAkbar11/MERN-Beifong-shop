@@ -81,11 +81,9 @@ const App = () => {
               path='/admin/categorylist'
               render={props => <AdminCategoryListScreen {...props} />}
             />
-            <Route
+            <RoutePrivate
               path='/admin/user/:id/edit'
-              render={props => {
-                return <AdminUserEditScreen {...props} />;
-              }}
+              component={AdminUserEditScreen}
             />
             <Route
               path='/admin/order/:id'

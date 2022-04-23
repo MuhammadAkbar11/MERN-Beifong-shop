@@ -4,7 +4,10 @@ import { Form, Button, Container, Row, Col, Alert } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '@components/Message';
 import Loader from '@components/Loader';
-import { getUserDetailsAction, updateUserAction } from '@actions/user.actions';
+import {
+  getUserDetailsAction,
+  updateUserAction,
+} from '@actions/v2/user.actions';
 import FormContainer from '@components/FormContainer';
 import BreadcrumbContainer from '@components/BreadcrumbContainer';
 import { USER_UPDATE_RESET } from '@constants/user.constants';
@@ -20,7 +23,7 @@ const AdminUserEditScreen = ({ match, history }) => {
 
   const dispatch = useDispatch();
 
-  const { userInfo } = useSelector(state => state.userLogin);
+  const { userInfo } = useSelector(state => state.session);
 
   const userDetails = useSelector(state => state.userDetails);
   const { loading, error, user } = userDetails;
