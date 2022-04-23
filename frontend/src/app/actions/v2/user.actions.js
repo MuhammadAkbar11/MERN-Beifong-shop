@@ -11,6 +11,18 @@ import {
   USER_CHANGE_PASSWORD_SUCCESS,
   USER_CHANGE_PASSWORD_FAIL,
   USER_CHANGE_PASSWORD_RESET,
+  USER_LIST_REQUEST,
+  USER_LIST_SUCCESS,
+  USER_LIST_FAIL,
+  USER_LIST_RESET,
+  USER_DELETE_REQUEST,
+  USER_DELETE_SUCCESS,
+  USER_DELETE_FAIL,
+  USER_LIST_ALERT_OPEN,
+  USER_LIST_ALERT_CLOSE,
+  USER_UPDATE_REQUEST,
+  USER_UPDATE_SUCCESS,
+  USER_UPDATE_FAIL,
 } from '@constants/user.constants';
 import {
   SESSION_SUCCESS,
@@ -235,6 +247,69 @@ export const userLogoutAction = () => async (dispatch, getState) => {
     dispatch({ type: RESET_SESSION });
     window.location = '/';
   } catch (error) {
+    if (error.response.data?.errors?.notAuth) {
+      localStorage.removeItem('cartItems');
+      localStorage.removeItem('userInfo');
+      dispatch({ type: CART_RESET_ITEMS });
+      dispatch({ type: ORDER_USER_RESET });
+      dispatch({ type: USER_DETAILS_RESET });
+      dispatch({ type: USER_LIST_RESET });
+      dispatch({ type: RESET_SESSION });
+      window.location = '/';
+    }
+  }
+};
+
+export const resetUserListAlertAction = () => async dispatch => {
+  dispatch({ type: USER_LIST_ALERT_CLOSE });
+};
+
+export const getUserListAction = () => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: USER_LIST_REQUEST,
+      payload: {
+        success: null,
+        loading: true,
+      },
+    });
+
+    const { data } = await axiosPrivate.get(`/users`);
+
+    dispatch({
+      type: USER_LIST_SUCCESS,
+      payload: data.users,
+    });
+  } catch (error) {
     console.log(error);
+    let errData = {
+      message: error.message,
+    };
+
+    if (error.response && error.response.data.message) {
+      const errorData =
+        error.response.data.errors && error.response.data.errors;
+      errData = {
+        message: error.response.data.message,
+        ...errorData,
+      };
+    }
+
+    if (error.response.data?.errors?.notAuth) {
+      dispatch({
+        type: LOGOUT_SESSION,
+        payload: {
+          isLogout: true,
+        },
+      });
+    }
+
+    dispatch({
+      type: USER_LIST_FAIL,
+      payload: {
+        errors: errData,
+        loading: false,
+      },
+    });
   }
 };

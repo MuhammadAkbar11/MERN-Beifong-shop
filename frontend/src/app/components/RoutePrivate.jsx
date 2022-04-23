@@ -23,7 +23,6 @@ const RoutePrivate = ({ component: Component, restricted, ...rest }) => {
       dispatch(userLogoutAction());
     }
   }, [isLogout]);
-  console.log(userInfo, sessionStatus);
   return (
     <Route
       {...rest}

@@ -59,11 +59,9 @@ const App = () => {
             <RoutePrivate path='/profile' component={UserProfileScreen} />
             <RouteGuest path='/product/:id' component={ProductScreen} />
             <RouteGuest path='/cart/:productId?' component={CartScreen} />
-            <Route
+            <RoutePrivate
               path='/admin/userlist'
-              render={props => {
-                return <AdminUserListScreen {...props} />;
-              }}
+              component={AdminUserListScreen}
             />
             <Route
               path='/admin/productlist'

@@ -4,9 +4,14 @@ import { Container, Table, Button, Badge, Modal, Alert } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   deleteUserAction,
-  getUserListAction,
+  // getUserListAction,
   resetUserListAlertAction,
 } from '@actions/user.actions';
+import {
+  // deleteUserAction,
+  getUserListAction,
+  // resetUserListAlertAction,
+} from '@actions/v2/user.actions';
 import Message from '@components/Message';
 import Loader from '@components/Loader';
 import BreadcrumbContainer from '@components/BreadcrumbContainer';
@@ -30,8 +35,7 @@ const AdminUserListScreen = ({ history }) => {
 
   const { loading: loadingDelete } = useSelector(state => state.userDelete);
 
-  const userLogin = useSelector(state => state.userLogin);
-  const { userInfo } = userLogin;
+  const { userInfo } = useSelector(state => state.session);
 
   React.useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
