@@ -1,5 +1,4 @@
-import axios from 'axios';
-import { axiosPrivate } from '@utils/api';
+import axiosApi, { axiosPrivate } from '@utils/api';
 import {
   CART_ADD_ITEM_REQ,
   CART_ADD_ITEM_SUCCESS,
@@ -26,7 +25,7 @@ export const addToCart = (id, qty) => async (dispatch, getState) => {
   });
 
   try {
-    const getProduct = await axios.get(`/api/products/${id}`);
+    const getProduct = await axiosApi.get(`/products/${id}`);
 
     const { product } = getProduct.data;
     let updatedCartItems = cartItems;
