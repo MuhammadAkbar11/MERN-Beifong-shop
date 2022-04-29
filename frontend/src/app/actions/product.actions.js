@@ -1,4 +1,3 @@
-import axios from 'axios';
 import {
   PRODUCT_ADMIN_ALERT,
   PRODUCT_ADMIN_ALERT_CLOSE,
@@ -31,7 +30,9 @@ import {
   PRODUCT_UPDATE_SUCCESS,
   PRODUCT_DETAILS_RESET,
 } from '@constants/product.constants';
+import { LOGOUT_SESSION } from '@constants/session.contants';
 import queriesToString from '@utils/queriesToString';
+import axiosApi, { axiosPrivate } from '@utils/api';
 
 /* eslint-disable */
 export const listProducts = ({
@@ -50,7 +51,7 @@ export const listProducts = ({
 
     const queriesString = queriesToString(queries);
 
-    const { data } = await axios.get(`/api/products?${queriesString}`);
+    const { data } = await axiosApi.get(`/products?${queriesString}`);
 
     dispatch({
       type: PRODUCT_LIST_SUCCESS,
@@ -85,7 +86,7 @@ export const resetProductListAlertAction = () => async dispatch => {
 export const listProductDetails = id => async dispatch => {
   try {
     dispatch({ type: PRODUCT_DETAILS_REQ });
-    const { data } = await axios.get(`/api/products/${id}`);
+    const { data } = await axiosApi.get(`/products/${id}`);
 
     dispatch({
       type: PRODUCT_DETAILS_SUCCESS,
@@ -113,23 +114,13 @@ export const resetProductDetailsAction = () => dispatch => {
   dispatch({ type: PRODUCT_DETAILS_RESET });
 };
 
-export const deleteProductAction = productID => async (dispatch, getState) => {
-  const {
-    userLogin: { userInfo },
-  } = getState();
-
+export const deleteProductAction = productID => async dispatch => {
   try {
     dispatch({
       type: PRODUCT_DELETE_REQ,
     });
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
-
-    const { data } = await axios.delete(`/api/products/${productID}`, config);
+    const { data } = await axiosPrivate.delete(`/products/${productID}`);
 
     dispatch({
       type: PRODUCT_DELETE_SUCCESS,
@@ -156,6 +147,15 @@ export const deleteProductAction = productID => async (dispatch, getState) => {
       };
     }
 
+    if (error.response.data?.errors?.notAuth) {
+      dispatch({
+        type: LOGOUT_SESSION,
+        payload: {
+          isLogout: true,
+        },
+      });
+    }
+
     dispatch({
       type: PRODUCT_DELETE_FAIL,
       payload: {
@@ -180,23 +180,13 @@ export const deleteProductAction = productID => async (dispatch, getState) => {
   }
 };
 
-export const createProductAction = () => async (dispatch, getState) => {
-  const {
-    userLogin: { userInfo },
-  } = getState();
-
+export const createProductAction = () => async dispatch => {
   try {
     dispatch({
       type: PRODUCT_CREATE_REQ,
     });
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
-
-    const { data } = await axios.post(`/api/products`, {}, config);
+    const { data } = await axiosPrivate.post(`/products`, {});
 
     dispatch({
       type: PRODUCT_CREATE_SUCCESS,
@@ -217,6 +207,15 @@ export const createProductAction = () => async (dispatch, getState) => {
       };
     }
 
+    if (error.response.data?.errors?.notAuth) {
+      dispatch({
+        type: LOGOUT_SESSION,
+        payload: {
+          isLogout: true,
+        },
+      });
+    }
+
     dispatch({
       type: PRODUCT_CREATE_FAIL,
       payload: errData,
@@ -227,21 +226,10 @@ export const createProductAction = () => async (dispatch, getState) => {
 };
 
 export const updateProductAction = product => async (dispatch, getState) => {
-  const {
-    userLogin: { userInfo },
-  } = getState();
-
   try {
     dispatch({
       type: PRODUCT_UPDATE_REQ,
     });
-
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
 
     const postData = {
       name: product.name,
@@ -258,15 +246,15 @@ export const updateProductAction = product => async (dispatch, getState) => {
       const uploadConfig = {
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${userInfo.token}`,
         },
+        withCredentials: true,
       };
       const file = product.uploading?.file;
       const formData = new FormData();
       formData.append('filename', 'product-' + product._id);
       formData.append('image', file);
-      const { data: uploadedImage } = await axios.post(
-        '/api/upload',
+      const { data: uploadedImage } = await axiosPrivate.post(
+        '/upload',
         formData,
         uploadConfig
       );
@@ -275,10 +263,9 @@ export const updateProductAction = product => async (dispatch, getState) => {
       postData.uploading = true;
     }
 
-    const { data } = await axios.put(
-      `/api/products/${product._id}`,
-      postData,
-      config
+    const { data } = await axiosPrivate.put(
+      `/products/${product._id}`,
+      postData
     );
 
     dispatch({
@@ -307,6 +294,15 @@ export const updateProductAction = product => async (dispatch, getState) => {
       };
     }
 
+    if (error.response.data?.errors?.notAuth) {
+      dispatch({
+        type: LOGOUT_SESSION,
+        payload: {
+          isLogout: true,
+        },
+      });
+    }
+
     dispatch({
       type: PRODUCT_UPDATE_FAIL,
       payload: errData,
@@ -320,25 +316,14 @@ export const createProductReviewAction = product => async (
   dispatch,
   getState
 ) => {
-  const {
-    userLogin: { userInfo },
-  } = getState();
-
   try {
     dispatch({
       type: PRODUCT_CREATE_REVIEW_REQ,
     });
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
-
-    const { data } = await axios.post(
-      `/api/products/${product._id}/reviews`,
-      { ...product },
-      config
+    const { data } = await axiosPrivate.post(
+      `/products/${product._id}/reviews`,
+      { ...product }
     );
 
     dispatch({
@@ -359,6 +344,15 @@ export const createProductReviewAction = product => async (
       };
     }
 
+    if (error.response.data?.errors?.notAuth) {
+      dispatch({
+        type: LOGOUT_SESSION,
+        payload: {
+          isLogout: true,
+        },
+      });
+    }
+
     dispatch({
       type: PRODUCT_CREATE_REVIEW_FAIL,
       payload: errData,
@@ -372,7 +366,7 @@ export const topListProductAction = ({ limit }) => async dispatch => {
   dispatch({ type: PRODUCT_TOP_REQ });
 
   try {
-    const { data } = await axios.get(`/api/products/top?limit=${limit}`);
+    const { data } = await axiosApi.get(`/products/top?limit=${limit}`);
 
     dispatch({
       type: PRODUCT_TOP_SUCCESS,
@@ -403,8 +397,8 @@ export const relatedListProductAction = ({
   dispatch({ type: PRODUCT_RELATED_REQ });
 
   try {
-    const { data } = await axios.get(
-      `/api/products/${prodID}/related?limit=${limit}`
+    const { data } = await axiosApi.get(
+      `/products/${prodID}/related?limit=${limit}`
     );
 
     dispatch({
@@ -444,8 +438,8 @@ export const listProductByCategoryAction = ({
 
     const queriesString = queriesToString(queries);
 
-    const { data } = await axios.get(
-      `/api/products/category/${slug}?${queriesString}`
+    const { data } = await axiosApi.get(
+      `/products/category/${slug}?${queriesString}`
     );
 
     dispatch({
