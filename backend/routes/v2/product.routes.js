@@ -8,9 +8,9 @@ import {
   getRelatedProducts,
   getTopProducts,
   updateProduct,
-} from "../../controllers/product.controller";
-import { adminProtect, protect } from "../../middleware/v2/auth.middleware";
-import productsValidation from "../../middleware/validations/products.validation";
+} from "../../controllers/product.controller.js";
+import { adminProtect, protect } from "../../middleware/v2/auth.middleware.js";
+import productsValidation from "../../middleware/validations/products.validation.js";
 
 function ProductRoutes(app, prefix) {
   app.route(prefix).get(getProducts).post(protect, adminProtect, createProduct);
