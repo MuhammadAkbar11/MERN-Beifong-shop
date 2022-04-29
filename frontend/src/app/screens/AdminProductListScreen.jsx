@@ -54,7 +54,7 @@ const AdminProductListScreen = ({ history, match }) => {
     // product: createdProduct,
   } = useSelector(state => state.productCreate);
 
-  const userLogin = useSelector(state => state.userLogin);
+  const userLogin = useSelector(state => state.session);
   const { userInfo } = userLogin;
 
   React.useEffect(() => {
