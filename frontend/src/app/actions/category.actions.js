@@ -1,4 +1,5 @@
-import axios from 'axios';
+import axiosApi, { axiosPrivate } from '@utils/api';
+import { LOGOUT_SESSION } from '@constants/session.contants';
 import {
   CATEGORY_ADMIN_ALERT,
   CATEGORY_ADMIN_ALERT_CLOSE,
@@ -20,7 +21,7 @@ import {
 export const listCategoriesAction = () => async dispatch => {
   try {
     dispatch({ type: CATEGORY_LIST_REQ });
-    const { data } = await axios.get('/api/categories');
+    const { data } = await axiosApi.get('/categories');
     dispatch({
       type: CATEGORY_LIST_SUCCESS,
       payload: data.categories,
@@ -47,29 +48,13 @@ export const resetListCategoryAlertAction = () => async dispatch => {
   dispatch({ type: CATEGORY_ADMIN_ALERT_CLOSE });
 };
 
-export const deleteCategoryAction = categoryID => async (
-  dispatch,
-  getState
-) => {
-  const {
-    userLogin: { userInfo },
-  } = getState();
-
+export const deleteCategoryAction = categoryID => async dispatch => {
   try {
     dispatch({
       type: CATEGORY_DELETE_REQ,
     });
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
-
-    const { data } = await axios.delete(
-      `/api/categories/${categoryID}`,
-      config
-    );
+    const { data } = await axiosPrivate.delete(`/categories/${categoryID}`);
 
     dispatch({
       type: CATEGORY_DELETE_SUCCESS,
@@ -96,6 +81,15 @@ export const deleteCategoryAction = categoryID => async (
       };
     }
 
+    if (error.response.data?.errors?.notAuth) {
+      dispatch({
+        type: LOGOUT_SESSION,
+        payload: {
+          isLogout: true,
+        },
+      });
+    }
+
     dispatch({
       type: CATEGORY_DELETE_FAIL,
       payload: errData,
@@ -115,30 +109,21 @@ export const deleteCategoryAction = categoryID => async (
   }
 };
 
-export const createCategoryAction = ({ name, slug, icon }) => async (
-  dispatch,
-  getState
-) => {
-  const {
-    userLogin: { userInfo },
-  } = getState();
-
+export const createCategoryAction = ({
+  name,
+  slug,
+  icon,
+}) => async dispatch => {
   try {
     dispatch({
       type: CATEGORY_CREATE_REQ,
     });
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
-
-    const { data } = await axios.post(
-      `/api/categories`,
-      { name, slug, icon },
-      config
-    );
+    const { data } = await axiosPrivate.post(`/categories`, {
+      name,
+      slug,
+      icon,
+    });
 
     dispatch({
       type: CATEGORY_CREATE_SUCCESS,
@@ -168,6 +153,15 @@ export const createCategoryAction = ({ name, slug, icon }) => async (
       };
     }
 
+    if (error.response.data?.errors?.notAuth) {
+      dispatch({
+        type: LOGOUT_SESSION,
+        payload: {
+          isLogout: true,
+        },
+      });
+    }
+
     dispatch({
       type: CATEGORY_CREATE_FAIL,
       payload: errData,
@@ -193,27 +187,17 @@ export const updateCategoryAction = ({
   name,
   slug,
   icon,
-}) => async (dispatch, getState) => {
-  const {
-    userLogin: { userInfo },
-  } = getState();
-
+}) => async dispatch => {
   try {
     dispatch({
       type: CATEGORY_UPDATE_REQ,
     });
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
-
-    const { data } = await axios.put(
-      `/api/categories/${categoryID}`,
-      { name, slug, icon },
-      config
-    );
+    const { data } = await axiosPrivate.put(`/api/categories/${categoryID}`, {
+      name,
+      slug,
+      icon,
+    });
 
     dispatch({
       type: CATEGORY_UPDATE_SUCCESS,
@@ -243,22 +227,20 @@ export const updateCategoryAction = ({
       };
     }
 
+    if (error.response.data?.errors?.notAuth) {
+      dispatch({
+        type: LOGOUT_SESSION,
+        payload: {
+          isLogout: true,
+        },
+      });
+    }
+
     dispatch({
       type: CATEGORY_UPDATE_FAIL,
       payload: errData,
     });
 
     throw errData;
-    // dispatch({
-    //   type: CATEGORY_ADMIN_ALERT,
-    //   payload: {
-    //     open: true,
-    //     type: 'success',
-    //     message:
-    //       errData?.message ||
-    //       errData?.errors?.message ||
-    //       'Failed to update category',
-    //   },
-    // });
   }
 };
