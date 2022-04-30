@@ -4,6 +4,7 @@ import {
   getConvertCurrency,
   getPaypalId,
 } from "../../controllers/config.controller.js";
+import CategoryRoutes from "./category.routes.js";
 import OrderRoutes from "./order.routes.js";
 import ProductRoutes from "./product.routes.js";
 import UploadRoutes from "./upload.routes.js";
@@ -27,6 +28,9 @@ function AppRoutesV2(app) {
 
   // Products Routes
   ProductRoutes(app, `${PREFIX_VERSION}/products`);
+
+  // Categories Routes
+  CategoryRoutes(app, `${PREFIX_VERSION}/categories`);
 
   // Order Routes
   OrderRoutes(app, `${PREFIX_VERSION}/orders`);
