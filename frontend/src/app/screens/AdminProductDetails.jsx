@@ -9,14 +9,18 @@ import Rating from '@components/Rating';
 
 /* eslint-disable */
 
-const AdminProductDetails = ({ match }) => {
+const AdminProductDetails = ({ match, history }) => {
   // const [qty]
   const dispatch = useDispatch();
   const { product, loading } = useSelector(state => state.productDetails);
-
+  const { userInfo } = useSelector(state => state.session);
   React.useEffect(() => {
-    dispatch(listProductDetails(match.params.id));
-  }, [dispatch, match]);
+    if (userInfo && userInfo.isAdmin) {
+      dispatch(listProductDetails(match.params.id));
+    } else {
+      history.push('/');
+    }
+  }, [dispatch, match, userInfo, history]);
 
   const breadcrumbItems = [
     { name: 'Administrator', href: '/admin' },
@@ -55,7 +59,15 @@ const AdminProductDetails = ({ match }) => {
                   </Link>
                 </ListGroup.Item> */}
                 <ListGroup.Item className='border-top-0 border-bottom-0 pb-0'>
-                  <h3>{product.name}</h3>
+                  <div className='d-flex'>
+                    <h3>{product.name} </h3>
+                    <Link
+                      className='mt-n1 ml-2 text-slate '
+                      to={`/admin/product/${product?._id}/edit`}
+                    >
+                      <i className='fas fa-edit'></i>
+                    </Link>
+                  </div>
                   <p className='my-0'>{product?.brand}</p>
                 </ListGroup.Item>
                 <ListGroup.Item
