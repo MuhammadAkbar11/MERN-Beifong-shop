@@ -193,7 +193,7 @@ export const updateCategoryAction = ({
       type: CATEGORY_UPDATE_REQ,
     });
 
-    const { data } = await axiosPrivate.put(`/api/categories/${categoryID}`, {
+    const { data } = await axiosPrivate.put(`/categories/${categoryID}`, {
       name,
       slug,
       icon,
