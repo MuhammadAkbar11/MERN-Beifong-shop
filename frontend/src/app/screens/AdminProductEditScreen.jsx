@@ -43,7 +43,7 @@ const AdminProductEditScreen = ({ match, history }) => {
   );
 
   // userInfo
-  const userLogin = useSelector(state => state.userLogin);
+  const userLogin = useSelector(state => state.session);
   const { userInfo } = userLogin;
 
   const breadcrumbItems = [
@@ -54,9 +54,7 @@ const AdminProductEditScreen = ({ match, history }) => {
   ];
 
   React.useEffect(() => {
-    if (!userInfo && !userInfo.isAdmin) {
-      history.push('/');
-    } else {
+    if (userInfo && userInfo.isAdmin) {
       if (!product?.name || product?._id !== productID) {
         dispatch(listProductDetails(productID));
         dispatch(listCategoriesAction());
@@ -71,6 +69,8 @@ const AdminProductEditScreen = ({ match, history }) => {
           description: product.description,
         });
       }
+    } else {
+      history.push('/');
     }
   }, [dispatch, userInfo, product, productID, history]);
 

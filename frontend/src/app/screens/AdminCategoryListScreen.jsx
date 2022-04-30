@@ -55,7 +55,7 @@ const AdminCategoryListScreen = ({ history }) => {
     state => state.categoryUpdate
   );
 
-  const userLogin = useSelector(state => state.userLogin);
+  const userLogin = useSelector(state => state.session);
   const { userInfo } = userLogin;
 
   React.useEffect(() => {

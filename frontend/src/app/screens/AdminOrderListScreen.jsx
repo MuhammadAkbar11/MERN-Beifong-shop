@@ -32,7 +32,7 @@ const AdminOrderListScreen = ({ history }) => {
     state => state.orderConfirmDeliver
   );
   // const loadingConfirmDeliver = false;
-  const userLogin = useSelector(state => state.userLogin);
+  const userLogin = useSelector(state => state.session);
   const { userInfo } = userLogin;
 
   React.useEffect(() => {

@@ -24,7 +24,7 @@ const AdminDetailsOrderScreen = ({ match }) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const { userInfo } = useSelector(state => state.userLogin);
+  const { userInfo } = useSelector(state => state.session);
   const orderDetails = useSelector(state => state.orderDetails);
   const { loading, order, error } = orderDetails;
 
