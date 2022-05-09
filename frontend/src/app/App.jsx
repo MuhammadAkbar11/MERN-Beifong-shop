@@ -75,9 +75,9 @@ const App = () => {
               path='/admin/product/:id'
               component={AdminProductDetails}
             />
-            <Route
+            <RoutePrivate
               path='/admin/categorylist'
-              render={props => <AdminCategoryListScreen {...props} />}
+              component={AdminCategoryListScreen}
             />
             <RoutePrivate
               path='/admin/user/:id/edit'
@@ -90,11 +90,9 @@ const App = () => {
               }}
             />
 
-            <Route
+            <RoutePrivate
               path='/admin/orderlist'
-              render={props => {
-                return <AdminOrderListScreen {...props} />;
-              }}
+              component={AdminOrderListScreen}
             />
 
             <RouteGuest
