@@ -4,6 +4,8 @@ import ResponseError from "../utils/responseError.js";
 import convertRupiah from "../utils/convertRupiah.js";
 import UserModel from "../models/userModel.js";
 
+const rgx = pattern => new RegExp(`.*${pattern}.*`);
+
 // @desc c  Create a new orders
 // @route   GET /api/products
 // @access  Private
@@ -188,10 +190,22 @@ const getMyOrders = asyncHandler(async (req, res) => {
 // @route   GET /api/orders
 // @access  Private/Admin
 const getOrders = asyncHandler(async (req, res) => {
+  const { pageNumber, result } = req.query;
+
+  const pageSize = Number(result) || 2;
+  const page = Number(pageNumber) || 1;
+
   try {
-    const orders = await OrderModel.find({}).populate("user", "name email");
+    const count = await OrderModel.countDocuments({});
+    const orders = await OrderModel.find({})
+      .populate("user", "name email")
+      .limit(pageSize)
+      .skip(pageSize * (page - 1));
+
     res.json({
       status: true,
+      page,
+      pages: Math.ceil(count / pageSize),
       orders,
     });
   } catch (error) {
