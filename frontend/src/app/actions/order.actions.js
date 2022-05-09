@@ -1,5 +1,5 @@
 /* eslint-disable */
-import axios from 'axios';
+import queriesToString from '@utils/queriesToString';
 import { axiosPrivate } from '@utils/api';
 import { CART_RESET_ITEMS } from '@constants/cart.constants';
 import {
@@ -288,21 +288,30 @@ export const orderListAlertResetAction = () => (dispatch, getState) => {
   });
 };
 
-export const getListOrderAction = () => async (dispatch, getState) => {
-  const {
-    userLogin: { userInfo },
-  } = getState();
-
+export const getListOrderAction = ({
+  pageNumber = '',
+  result = 3,
+}) => async dispatch => {
   try {
     dispatch({
       type: ORDER_LIST_REQUEST,
     });
 
-    const { data } = await axiosPrivate.get(`/orders`);
+    const queries = {
+      pageNumber: pageNumber,
+      result: result,
+    };
+    const queriesString = queriesToString(queries);
+    const { data } = await axiosPrivate.get(`/orders?${queriesString}`);
 
     dispatch({
       type: ORDER_LIST_SUCCESS,
-      payload: data.orders,
+      payload: {
+        loading: false,
+        orders: data.orders,
+        page: data?.page || null,
+        pages: data?.pages || null,
+      },
     });
   } catch (error) {
     let errData = {

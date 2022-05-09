@@ -9,6 +9,7 @@ import {
 } from '@actions/order.actions';
 import Message from '@components/Message';
 import Loader from '@components/Loader';
+import Paginate from '@components/Paginate';
 import BreadcrumbContainer from '@components/BreadcrumbContainer';
 
 /* eslint-disable */
@@ -19,13 +20,15 @@ const AdminOrderListScreen = ({ history }) => {
     { name: '', isActive: true },
   ];
 
+  const [pageNumber, setPageNumber] = React.useState(1);
+  const [result, setResult] = React.useState(10);
   const [confirmDelivered, setConfirmDelivered] = React.useState(false);
   const [selectedOrder, setSelecteOrder] = React.useState(null);
 
   const dispacth = useDispatch();
 
   const orderList = useSelector(state => state.orderList);
-  const { loading, error, orders } = orderList;
+  const { loading, error, orders, page, pages } = orderList;
   const orderListAlert = useSelector(state => state.orderListAlert);
 
   const { loading: loadingConfirmDeliver } = useSelector(
@@ -37,11 +40,11 @@ const AdminOrderListScreen = ({ history }) => {
 
   React.useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
-      dispacth(getListOrderAction());
+      dispacth(getListOrderAction({ pageNumber, result }));
     } else {
       history.push('/');
     }
-  }, [dispacth, userInfo, history]);
+  }, [dispacth, userInfo, history, pageNumber, result]);
 
   React.useEffect(() => {
     if (orderListAlert && orderListAlert.open) {
@@ -68,6 +71,10 @@ const AdminOrderListScreen = ({ history }) => {
     setConfirmDelivered(false);
   };
 
+  const handleChangePagination = value => {
+    setPageNumber(value);
+  };
+
   return (
     <Container fluid className='px-0  py-3 h-100 '>
       <BreadcrumbContainer parentClass='ml-n3' items={breadcrumbItems} />
@@ -85,91 +92,103 @@ const AdminOrderListScreen = ({ history }) => {
           {error?.message || error?.errors?.message || 'Something went wrong'}
         </Message>
       ) : (
-        <Table responsive striped bordered hover size='sm'>
-          <thead>
-            <tr>
-              <th>DATE</th>
-              <th>COSTUMER</th>
-              <th>ID</th>
-              <th>TOTAL</th>
-              <th>PAID</th>
-              <th>DELIVERED</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-          <tbody>
-            {orders.length !== 0 ? (
-              orders.map(order => {
-                return (
-                  <tr key={order._id}>
-                    <td>{order?.createdAt.substring(0, 10)}</td>
-                    <td>{order?.user?.name}</td>
-                    <td>{order?._id}</td>
-                    <td>{order?.totalPrice?.rupiah}</td>
-                    <td>
-                      {order.isPaid ? (
-                        <span className=' text-success font-weight-bold '>
-                          {order?.paidAt?.substring(0, 10)}
-                        </span>
-                      ) : (
-                        <span className='badge badge-danger '>
-                          <i className=' fa fa-times '></i>
-                        </span>
-                      )}
-                    </td>
-                    <td className='text-center'>
-                      {order.isDelivered ? (
-                        <span className=' text-success font-weight-bold '>
-                          {order?.deliveredAt?.substring(0, 10)}
-                        </span>
-                      ) : (
-                        <span className='badge badge-danger '>
-                          <i className=' fa fa-times '></i>
-                        </span>
-                      )}
-                    </td>
-                    <td>
-                      <div
-                        style={{
-                          gap: '.5rem',
-                        }}
-                        className=' d-flex align-items-center '
-                      >
-                        <LinkContainer to={`/admin/order/${order._id}`}>
-                          <Button variant='light' size='sm'>
-                            <i className='fas fa-info '></i>
-                          </Button>
-                        </LinkContainer>
-                        {order.isPaid && !order.isDelivered && (
-                          <Button
-                            variant='primary'
-                            size='sm'
-                            className='text-nowrap'
-                            onClick={() => {
-                              setConfirmDelivered(true);
-                              setSelecteOrder(order);
-                            }}
-                          >
-                            Mark As Delivered
-                          </Button>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })
-            ) : (
+        <>
+          <Table responsive striped bordered hover size='sm'>
+            <thead>
               <tr>
-                <td colSpan={5}>
-                  <Alert variant='info' className='text-center'>
-                    Orders is empty
-                  </Alert>
-                </td>
+                <th>DATE</th>
+                <th>COSTUMER</th>
+                <th>ID</th>
+                <th>TOTAL</th>
+                <th>PAID</th>
+                <th>DELIVERED</th>
+                <th></th>
               </tr>
-            )}
-          </tbody>
-        </Table>
+            </thead>
+            <tbody></tbody>
+            <tbody>
+              {orders.length !== 0 ? (
+                orders.map(order => {
+                  return (
+                    <tr key={order._id}>
+                      <td>{order?.createdAt.substring(0, 10)}</td>
+                      <td>{order?.user?.name}</td>
+                      <td>{order?._id}</td>
+                      <td>{order?.totalPrice?.rupiah}</td>
+                      <td>
+                        {order.isPaid ? (
+                          <span className=' text-success font-weight-bold '>
+                            {order?.paidAt?.substring(0, 10)}
+                          </span>
+                        ) : (
+                          <span className='badge badge-danger '>
+                            <i className=' fa fa-times '></i>
+                          </span>
+                        )}
+                      </td>
+                      <td className='text-center'>
+                        {order.isDelivered ? (
+                          <span className=' text-success font-weight-bold '>
+                            {order?.deliveredAt?.substring(0, 10)}
+                          </span>
+                        ) : (
+                          <span className='badge badge-danger '>
+                            <i className=' fa fa-times '></i>
+                          </span>
+                        )}
+                      </td>
+                      <td>
+                        <div
+                          style={{
+                            gap: '.5rem',
+                          }}
+                          className=' d-flex align-items-center '
+                        >
+                          <LinkContainer to={`/admin/order/${order._id}`}>
+                            <Button variant='light' size='sm'>
+                              <i className='fas fa-info '></i>
+                            </Button>
+                          </LinkContainer>
+                          {order.isPaid && !order.isDelivered && (
+                            <Button
+                              variant='primary'
+                              size='sm'
+                              className='text-nowrap'
+                              onClick={() => {
+                                setConfirmDelivered(true);
+                                setSelecteOrder(order);
+                              }}
+                            >
+                              Mark As Delivered
+                            </Button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr>
+                  <td colSpan={5}>
+                    <Alert variant='info' className='text-center'>
+                      Orders is empty
+                    </Alert>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </Table>
+          {orders.length !== 0 && (
+            <section className='d-flex justify-content-center mt-4'>
+              <Paginate
+                isAdmin
+                page={page}
+                pages={pages}
+                onChangePage={handleChangePagination}
+              />
+            </section>
+          )}
+        </>
       )}
 
       <Modal

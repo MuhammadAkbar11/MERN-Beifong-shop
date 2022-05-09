@@ -167,8 +167,7 @@ export const orderListReducer = (
       };
     case ORDER_LIST_SUCCESS:
       return {
-        orders: action.payload,
-        loading: false,
+        ...action.payload,
       };
     case ORDER_LIST_FAIL:
       return {
