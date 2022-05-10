@@ -1,8 +1,25 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
+import {
+  createCategoryAction,
+  deleteCategoryAction,
+  listCategoriesAction,
+  resetListCategoryAlertAction,
+  updateCategoryAction,
+} from '@actions/category.actions';
 
 const Footer = () => {
+  const dispacth = useDispatch();
+
+  const categoryList = useSelector(state => state.categoryList);
+  const { loading, error, categories } = categoryList;
+
+  React.useEffect(() => {
+    dispacth(listCategoriesAction());
+  }, [dispacth]);
+
   return (
     <footer className='footer '>
       <Container>
@@ -27,26 +44,19 @@ const Footer = () => {
             <div>
               <h2 className='footer-heading'>Categories</h2>
               <ul className='list-unstyled text-light'>
-                <li>
-                  <a href='/#' className='py-1 d-block'>
-                    Buy &amp; Sell
-                  </a>
-                </li>
-                <li>
-                  <a href='/#' className='py-1 d-block'>
-                    Merchant
-                  </a>
-                </li>
-                <li>
-                  <a href='/#' className='py-1 d-block'>
-                    Giving back
-                  </a>
-                </li>
-                <li>
-                  <a href='/#' className='py-1 d-block'>
-                    Help &amp; Support
-                  </a>
-                </li>
+                {categories.length !== 0 &&
+                  categories.slice(0, 5).map(category => {
+                    return (
+                      <li>
+                        <a
+                          href={`/categories/${category?.slug}`}
+                          className='py-1 d-block'
+                        >
+                          {category?.name}
+                        </a>
+                      </li>
+                    );
+                  })}
               </ul>
             </div>
           </Col>
@@ -65,8 +75,8 @@ const Footer = () => {
                   </a>
                 </li>
                 <li>
-                  <a href='/#' className='py-1 d-block'>
-                    Giving back
+                  <a href='/about' className='py-1 d-block'>
+                    About Us
                   </a>
                 </li>
                 <li>
