@@ -65,7 +65,7 @@ const AdminOrderListScreen = ({ history }) => {
       return dispacth(confirmOrderDeliverAction(selectedOrder._id)).then(() => {
         setConfirmDelivered(false);
         setSelecteOrder(null);
-        dispacth(getListOrderAction());
+        dispacth(getListOrderAction({ pageNumber, result }));
       });
     }
     setConfirmDelivered(false);
@@ -96,6 +96,7 @@ const AdminOrderListScreen = ({ history }) => {
           <Table responsive striped bordered hover size='sm'>
             <thead>
               <tr>
+                <th>{'>'}</th>
                 <th>DATE</th>
                 <th>COSTUMER</th>
                 <th>ID</th>
@@ -111,6 +112,7 @@ const AdminOrderListScreen = ({ history }) => {
                 orders.map(order => {
                   return (
                     <tr key={order._id}>
+                      <td>expand</td>
                       <td>{order?.createdAt.substring(0, 10)}</td>
                       <td>{order?.user?.name}</td>
                       <td>{order?._id}</td>
