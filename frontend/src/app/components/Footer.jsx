@@ -36,18 +36,23 @@ const Footer = () => {
                 with the necessary regelialia.
               </p>
               <Link className='btn btn-link p-0 shadow-none' to='/about'>
-                read more <i className='fas fa-arrow-right' />
+                <small>
+                  read more <i className='fas fa-arrow-right' />
+                </small>
               </Link>
             </div>
           </Col>
           <Col md={6} lg={3} className='mb-md-0 mb-4'>
             <div>
               <h2 className='footer-heading'>Categories</h2>
-              <ul className='list-unstyled text-light'>
+              <ul className='list-unstyled text-light d-block  '>
                 {categories.length !== 0 &&
-                  categories.slice(0, 5).map(category => {
+                  categories.slice(0, 10).map((category, i) => {
+                    const oddClass = i % 2 !== 0 ? 'pl-md-2' : '';
                     return (
-                      <li>
+                      <li
+                        className={`float-none float-md-left w-50 ${oddClass} `}
+                      >
                         <a
                           href={`/categories/${category?.slug}`}
                           className='py-1 d-block'
@@ -65,13 +70,8 @@ const Footer = () => {
               <h2 className='footer-heading'>Links</h2>
               <ul className='list-unstyled text-light'>
                 <li>
-                  <a href='/#' className='py-1 d-block'>
-                    Buy &amp; Sell
-                  </a>
-                </li>
-                <li>
-                  <a href='/#' className='py-1 d-block'>
-                    Merchant
+                  <a href='/products' className='py-1 d-block'>
+                    Products
                   </a>
                 </li>
                 <li>
@@ -110,7 +110,7 @@ const Footer = () => {
             </div>
             <div>
               <h2 className='footer-heading mt-5'>Follow us</h2>
-              <ul className='footer-social p-0'>
+              <ul className='footer-social  p-0'>
                 <li>
                   <a href='/#' title='Twitter' className='bg-dark'>
                     <i className='fab fa-twitter' />

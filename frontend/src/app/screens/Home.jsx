@@ -34,10 +34,9 @@ const Home = () => {
       <br />
       <div className=' d-flex flex-column flex-sm-row  justify-content-between align-items-sm-center '>
         <h1>Latets Products</h1>
-        <Link to={'/products'} className=''>
-          see more{' '}
+        <Link to={'/products'} className=' text-uppercase '>
           <small>
-            <i className='fa fa-arrow-right '></i>
+            see more <i className='fa fa-arrow-right '></i>
           </small>
         </Link>
       </div>
