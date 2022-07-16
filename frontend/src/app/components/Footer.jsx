@@ -2,19 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
-import {
-  createCategoryAction,
-  deleteCategoryAction,
-  listCategoriesAction,
-  resetListCategoryAlertAction,
-  updateCategoryAction,
-} from '@actions/category.actions';
+import { listCategoriesAction } from '@actions/category.actions';
 
 const Footer = () => {
   const dispacth = useDispatch();
 
   const categoryList = useSelector(state => state.categoryList);
-  const { loading, error, categories } = categoryList;
+  const { categories } = categoryList;
 
   React.useEffect(() => {
     dispacth(listCategoriesAction());
@@ -49,8 +43,10 @@ const Footer = () => {
                 {categories.length !== 0 &&
                   categories.slice(0, 10).map((category, i) => {
                     const oddClass = i % 2 !== 0 ? 'pl-md-2' : '';
+                    const key = i;
                     return (
                       <li
+                        key={key}
                         className={`float-none float-md-left w-50 ${oddClass} `}
                       >
                         <a
