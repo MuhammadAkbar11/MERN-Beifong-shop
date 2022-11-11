@@ -75,6 +75,12 @@ const productModel = mongoose.Schema({
     required: true,
     default: 0,
   },
+  createdAt: {
+    type: String,
+  },
+  updatedAt: {
+    type: String,
+  },
 });
 
 const ProductModel = mongoose.model("ProductModel", productModel, "products");
