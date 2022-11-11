@@ -10,6 +10,7 @@ import OrderModel from "./models/orderModel.js";
 import ProductModel from "./models/productModel.js";
 import UserModel from "./models/userModel.js";
 import convertRupiah from "./utils/convertRupiah.js";
+import SessionModel from "./models/sessionModel.js";
 
 dotenv.config({ path: ".env.dev" });
 
@@ -34,6 +35,8 @@ const importData = async () => {
           num: product.price,
           rupiah: convertRupiah(product.price),
         },
+        createdAt: new Date().toISOString(),
+        updatedAt: null,
       };
     });
 
@@ -52,6 +55,7 @@ const destroyData = async () => {
     await OrderModel.deleteMany();
     await ProductModel.deleteMany();
     await UserModel.deleteMany();
+    await SessionModel.deleteMany();
 
     console.log(`Data Destroyed`.red.inverse);
     process.exit();
