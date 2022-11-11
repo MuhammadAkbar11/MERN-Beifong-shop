@@ -11,10 +11,10 @@ import userRoutes from "./routes/user.routes.js";
 import orderRoutes from "./routes/order.routes.js";
 import uploadRoutes from "./routes/uploads.routes.js";
 import { errorHandler, notFound } from "./middleware/error.middleware.js";
-import convertCurrency from "./utils/convertCurrency.js";
 import { getConvertCurrency } from "./controllers/config.controller.js";
 import AppRoutesV2 from "./routes/v2/index.routes.js";
 import { deserializeUser } from "./middleware/v2/auth.middleware.js";
+import { NODE_ENV } from "./configs/constants.js";
 
 const __dirname = path.resolve();
 
@@ -46,6 +46,11 @@ if (MODE === "development") {
 }
 
 const staticFile = express.static(path.join(__dirname, "/uploads"));
+if (NODE_ENV == "development") {
+  console.log("using static folder from .dev");
+  app.use(express.static(path.join(__dirname, ".dev")));
+}
+
 app.use("/uploads", staticFile);
 
 app.use("/api/products", productRoutes);

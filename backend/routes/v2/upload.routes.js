@@ -1,11 +1,10 @@
 import path from "path";
 import multer from "multer";
-
-const __dirname = path.resolve();
+import { UPLOAD_DIR } from "../../configs/constants.js";
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "uploads/");
+    cb(null, UPLOAD_DIR);
   },
   filename: function (req, file, cb) {
     let filename = req.body.filename;
@@ -13,6 +12,7 @@ const storage = multer.diskStorage({
     if (!filename) {
       filename = file.fieldname;
     }
+
     cb(null, `${filename}-${Date.now()}${path.extname(file.originalname)}`);
   },
 });
@@ -38,16 +38,9 @@ const upload = multer({
 
 function UploadRoutes(app, prefix) {
   app.post(prefix + "/", upload.single("image"), (req, res) => {
-    // const oldImagePath = req.body.oldImage
-    // if(oldImagePath !== "/uploads/images/sample-box.jpg") {
-    //   fs.unlink(path.join(__dirname, ), err => {
-    //     if (err) {
-    //       throw new Error(err);
-    //     }
-    //   });
-    // }
-
-    res.send(`/${req.file.path}`);
+    let filePath = req.file.path;
+    filePath = filePath.replace(/.dev\//g, "/");
+    res.send(`${filePath}`);
   });
 }
 
