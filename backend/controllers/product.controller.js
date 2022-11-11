@@ -15,9 +15,10 @@ const rgx = pattern => new RegExp(`.*${pattern}.*`);
 // @route GET /api/products
 // @access Public
 const getProducts = asyncHandler(async (req, res) => {
-  const { keyword, pageNumber, result } = req.query;
+  const { keyword, pageNumber, result, orderBy } = req.query;
   // console.log(keyword);
 
+  const sortBy = orderBy ?? "name";
   const searchRgx = rgx(keyword);
 
   const pageSize = Number(result) || 2;
@@ -31,12 +32,20 @@ const getProducts = asyncHandler(async (req, res) => {
       }
     : {};
 
+  const sorting = {
+    latest: "-1",
+    name: {
+      name: 1,
+    },
+  };
+  console.log(sorting, sortBy, sorting[sortBy]);
   const count = await ProductModel.countDocuments({ ...query });
 
   const products = await ProductModel.find({ ...query })
     .populate("category", "name slug icon")
     .limit(pageSize)
-    .skip(pageSize * (page - 1));
+    .skip(pageSize * (page - 1))
+    .sort(sorting[sortBy]);
 
   return res.json({
     status: true,
@@ -145,6 +154,8 @@ const createProduct = asyncHandler(async (req, res) => {
       countInStock: 0,
       description,
       reviews: [],
+      createdAt: new Date().toISOString(),
+      updatedAt: null,
     });
     const createdProduct = await product.save();
     res.status(201).json({
@@ -201,6 +212,7 @@ const updateProduct = asyncHandler(async (req, res) => {
       product.description = description;
       product.countInStock = countInStock || 0;
       product.image = image || product.image;
+      product.updatedAt = new Date().toISOString();
 
       const updateProduct = await product.save();
 
