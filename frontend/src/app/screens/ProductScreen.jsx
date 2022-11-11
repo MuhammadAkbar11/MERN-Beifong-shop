@@ -39,7 +39,11 @@ const ProductScreen = ({ history, match }) => {
   });
 
   React.useEffect(() => {
-    dispatch(listProductDetails(match.params.id));
+    if (match.params.id) {
+      dispatch(listProductDetails(match.params.id));
+    } else {
+      history.push('/products');
+    }
 
     window.scrollTo({
       top: 0,
@@ -64,11 +68,11 @@ const ProductScreen = ({ history, match }) => {
         <title>Beifong Shop | {product?.name || 'No product found'}</title>
       </Helmet>
       <Container fluid className='px-0 py-3'>
-        {!error && (
+        {!error ? (
           <Link to='/products' className='btn btn-light'>
             Back to products
           </Link>
-        )}
+        ) : null}
         <Row className='pt-3 align-items-stretch  '>
           {!loading && error && (
             <Col xs={12}>

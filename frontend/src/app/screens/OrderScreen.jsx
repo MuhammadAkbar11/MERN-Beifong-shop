@@ -142,7 +142,7 @@ const OrderScreen = ({ match }) => {
         ) : (
           <>
             <Row className=' px-0'>
-              <Col md={8} className='px-0'>
+              <Col md={12} lg={8} className='px-0'>
                 <ListGroup variant='flush'>
                   <ListGroup.Item className='border-0 py-1 '>
                     <h6 className='text-primary'>Order ID</h6>
@@ -259,7 +259,7 @@ const OrderScreen = ({ match }) => {
                   </ListGroup.Item>
                 </ListGroup>
               </Col>
-              <Col md={4}>
+              <Col md={12} lg={4}>
                 <Card className='bg-slate-light border-0 pt-4 pb-3'>
                   <ListGroup variant='flush' className=' bg-transparent px-4 '>
                     <ListGroup.Item className=' bg-transparent px-0 border-bottom-0 pb-0 '>

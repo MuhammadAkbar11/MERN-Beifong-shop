@@ -17,7 +17,7 @@ const Home = () => {
 
   React.useEffect(() => {
     /* eslint-disable */
-    dispatch(listProducts({ result: 8 }));
+    dispatch(listProducts({ result: 8, orderBy: 'latest' }));
     return () => {};
   }, [dispatch]);
 

@@ -62,7 +62,7 @@ const AdminProductListScreen = ({ history, match }) => {
     if (!userInfo.isAdmin) {
       history.push('/');
     } else {
-      dispacth(listProducts({ pageNumber, result }));
+      dispacth(listProducts({ pageNumber, result, orderBy: 'latest' }));
     }
   }, [dispacth, userInfo, history, pageNumber]);
 
@@ -86,7 +86,7 @@ const AdminProductListScreen = ({ history, match }) => {
       return dispacth(deleteProductAction(selectedProduct._id)).then(() => {
         setConfirmDelete(false);
         setSelectedProduct(null);
-        dispacth(listProducts());
+        dispacth(listProducts({ pageNumber, result }));
       });
     }
     setConfirmDelete(false);

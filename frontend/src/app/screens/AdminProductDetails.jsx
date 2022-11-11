@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { listProductDetails } from '@actions/product.actions';
 import BreadcrumbContainer from '@components/BreadcrumbContainer';
+import ProductNotFound from '@components/ProductNotFound';
+import ProductDetailsError from '@components/ProductDetailsError';
 import Loader from '@components/Loader';
 import Rating from '@components/Rating';
 
@@ -12,7 +14,10 @@ import Rating from '@components/Rating';
 const AdminProductDetails = ({ match, history }) => {
   // const [qty]
   const dispatch = useDispatch();
-  const { product, loading } = useSelector(state => state.productDetails);
+  const { product, loading, error } = useSelector(
+    state => state.productDetails
+  );
+
   const { userInfo } = useSelector(state => state.session);
   React.useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
@@ -37,27 +42,22 @@ const AdminProductDetails = ({ match, history }) => {
       <Row className='pt-3 align-items-stretch  '>
         {/* {loading ? } */}
         <Col md={6} lg={5} className={`${!loading && 'pb-5'}`}>
-          {loading || product.image === undefined ? (
+          {loading ? (
             <div
               className='d-flex justify-content-center align-items-cente'
               style={{ height: 200, width: '100%' }}
             >
               <Loader height={200} width={200} />
             </div>
-          ) : (
-            <Image fluid src={`${product.image}`} alt={product.name} />
-          )}
+          ) : null}
+          {!loading && product ? (
+            <Image fluid src={`${product?.image}`} alt={product.name} />
+          ) : null}
         </Col>
-        {!loading ? (
+        {!loading && !error ? (
           <>
             <Col md={8} lg={6}>
               <ListGroup variant='flush'>
-                {/* <ListGroup.Item className='pt-0 border-bottom-0'>
-                  <Link className='btn btn-sm btn-primary'>
-                    <i className=' fa fa-edit mr-2 ' />
-                    Edit{' '}
-                  </Link>
-                </ListGroup.Item> */}
                 <ListGroup.Item className='border-top-0 border-bottom-0 pb-0'>
                   <div className='d-flex'>
                     <h3>{product.name} </h3>
@@ -132,13 +132,22 @@ const AdminProductDetails = ({ match, history }) => {
               </Card>
             </Col>
           </>
-        ) : (
+        ) : null}
+
+        {loading ? (
           <Col md={12} lg={6}>
             <div className='mt-2 h-100  d-flex justify-content-center align-items-center'>
               <Loader height={200} width={200} />
             </div>
           </Col>
-        )}
+        ) : null}
+
+        {!loading && error ? (
+          <Col xs={12}>
+            {error?.message === 'Product not found' && <ProductNotFound />}
+            {error?.message !== 'Product not found' && <ProductDetailsError />}
+          </Col>
+        ) : null}
       </Row>
     </Container>
   );
