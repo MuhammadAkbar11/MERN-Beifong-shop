@@ -18,7 +18,7 @@ const Footer = () => {
     <footer className='footer '>
       <Container>
         <Row>
-          <Col md={6} lg={3} className='mb-md-0 mb-4'>
+          <Col md={6} lg={3} className='mb-md-3 mb-4'>
             <h2 className='footer-heading'>
               <Link to='/' className='logo'>
                 Beifong Shop
@@ -36,32 +36,34 @@ const Footer = () => {
               </Link>
             </div>
           </Col>
-          <Col md={6} lg={3} className='mb-md-0 mb-4'>
+          <Col md={6} lg={3} className='mb-md-3 mb-4'>
             <div>
               <h2 className='footer-heading'>Categories</h2>
               <ul className='list-unstyled text-light d-block  '>
-                {categories.length !== 0 &&
-                  categories.slice(0, 10).map((category, i) => {
-                    const oddClass = i % 2 !== 0 ? 'pl-md-2' : '';
-                    const key = i;
-                    return (
-                      <li
-                        key={key}
-                        className={`float-none float-md-left w-50 ${oddClass} `}
-                      >
-                        <a
-                          href={`/categories/${category?.slug}`}
-                          className='py-1 d-block'
+                {categories
+                  ? categories.length !== 0 &&
+                    categories.slice(0, 10).map((category, i) => {
+                      const oddClass = i % 2 !== 0 ? 'pl-md-2' : '';
+                      const key = i;
+                      return (
+                        <li
+                          key={key}
+                          className={`float-none float-md-left w-50 ${oddClass} `}
                         >
-                          {category?.name}
-                        </a>
-                      </li>
-                    );
-                  })}
+                          <a
+                            href={`/categories/${category?.slug}`}
+                            className='py-1 d-block'
+                          >
+                            {category?.name}
+                          </a>
+                        </li>
+                      );
+                    })
+                  : null}
               </ul>
             </div>
           </Col>
-          <Col md={6} lg={3} className='mb-md-0 mb-4'>
+          <Col md={6} lg={3} className='mb-md-3 mb-4'>
             <div>
               <h2 className='footer-heading'>Links</h2>
               <ul className='list-unstyled text-light'>
@@ -83,7 +85,7 @@ const Footer = () => {
               </ul>
             </div>
           </Col>
-          <Col md={6} lg={3} className='mb-md-0 mb-4'>
+          <Col md={6} lg={3} className='mb-md-3 mb-4'>
             <div>
               <h2 className='footer-heading'>Subcribe</h2>
               <Form action='/#' className='subscribe-form'>
