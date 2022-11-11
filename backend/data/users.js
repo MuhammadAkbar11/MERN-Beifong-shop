@@ -13,7 +13,7 @@ const users = [
   },
   {
     name: "Dubu",
-    email: "dubu@example.com",
+    email: "dubu@dubu.com",
     password: bcrypt.hashSync("dubu1998", 10),
     image: "/uploads/images/sample-guest.png",
     isAdmin: false,
@@ -23,7 +23,7 @@ const users = [
   },
   {
     name: "bae",
-    email: "bae@example.com",
+    email: "bae@bae.com",
     password: bcrypt.hashSync("bae1994", 10),
     image: "/uploads/images/sample-guest.png",
     isAdmin: false,
