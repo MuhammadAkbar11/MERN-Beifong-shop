@@ -1,6 +1,6 @@
 import path from "path";
 import multer from "multer";
-import { UPLOAD_DIR } from "../../configs/constants.js";
+import { NODE_ENV, UPLOAD_DIR } from "../../configs/constants.js";
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -39,7 +39,11 @@ const upload = multer({
 function UploadRoutes(app, prefix) {
   app.post(prefix + "/", upload.single("image"), (req, res) => {
     let filePath = req.file.path;
+
     filePath = filePath.replace(/.dev\//g, "/");
+
+    if (NODE_ENV !== "development") filePath = "/" + filePath;
+
     res.send(`${filePath}`);
   });
 }
