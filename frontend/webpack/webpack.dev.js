@@ -7,7 +7,7 @@ module.exports = {
   mode: 'development',
   devtool: 'eval-cheap-source-map',
   output: {
-    path: path.resolve(__dirname, '../', 'build-dev'),
+    path: path.resolve(__dirname, '../', '.webpack'),
     filename: 'js/[name].bundle-[contenthash].js',
     chunkFilename: 'js/chunk-[name]-[contenthash].js',
     assetModuleFilename: 'assets/[name]-[hash][ext][query]',

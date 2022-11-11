@@ -64,7 +64,7 @@ app.use(webpackHotMiddleware);
 app.use('/api', proxyMiddleware);
 app.use('/uploads', assetsMiddleware);
 
-const staticFile = path.join(__dirname, '../', '../', 'build-dev');
+const staticFile = path.join(__dirname, '../', '../', '.webpack');
 
 app.use(express.static(staticFile));
 
