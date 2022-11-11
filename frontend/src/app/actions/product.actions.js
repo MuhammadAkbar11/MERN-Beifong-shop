@@ -39,6 +39,7 @@ export const listProducts = ({
   keyword = '',
   pageNumber = '',
   result = 5,
+  orderBy = 'name',
 }) => async dispatch => {
   try {
     dispatch({ type: PRODUCT_LIST_REQ });
@@ -47,6 +48,7 @@ export const listProducts = ({
       keyword: keyword,
       pageNumber: pageNumber,
       result: result,
+      orderBy: orderBy,
     };
 
     const queriesString = queriesToString(queries);
