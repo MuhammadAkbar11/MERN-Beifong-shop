@@ -64,7 +64,7 @@ const AdminProductEditScreen = ({ match, history }) => {
           price: product.price?.num,
           image: product.image,
           brand: product.brand,
-          category: product.category._id,
+          category: product.category?._id,
           countInStock: product.countInStock,
           description: product.description,
         });
@@ -196,8 +196,9 @@ const AdminProductEditScreen = ({ match, history }) => {
                       as='select'
                       custom
                       onChange={handleChange}
-                      defaultValue={product.category._id}
+                      defaultValue={product.category?._id}
                     >
+                      <option value=''>Select Category</option>
                       {categories.map(ct => {
                         return (
                           <option value={ct._id} key={ct._id}>
